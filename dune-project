@@ -1,4 +1,6 @@
-(lang dune 3.15)
+(lang dune 3.0)
+
+(using menhir 2.0)
 
 (name mra_bi_assembler)
 
@@ -19,7 +21,12 @@
  (name mra_bi_assembler)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune)
+ (depends
+   ocaml
+   dune
+   menhir
+   (ppx_deriving :build)
+   )
  (tags
   (topics "to describe" your project)))
 

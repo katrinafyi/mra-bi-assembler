@@ -1,2 +1,15 @@
 (library
- (name mra_bi_assembler))
+ (name mra_bi_assembler)
+ (modules asm_lexer asm_parser)
+ (libraries (re_export asm_types)))
+
+(menhir
+ (modules asm_parser))
+
+(ocamllex
+ (modules asm_lexer))
+
+(library
+  (name asm_types)
+  (modules asm_types)
+  (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord)))
