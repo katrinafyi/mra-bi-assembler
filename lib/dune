@@ -1,18 +1,5 @@
 (library
- (name mra_bi_assembler)
- (modules)
- (libraries spec_asm)
- )
- ; (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
-
-(library
  (name spec)
- (modules spec)
- (libraries ppx_deriving_yojson.runtime)
+ (modules common parse)
+ (libraries ppx_deriving_yojson.runtime angstrom faraday)
  (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
-
-
-(library
- (name spec_asm)
- (modules spec_asm)
- (libraries spec))

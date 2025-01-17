@@ -1,5 +1,5 @@
 type parseable =
-  | Spec of spec * string option
+  | Spec of spec
   | Or of parseable list
   | Seq of parseable list
   | Lit of string
@@ -11,3 +11,4 @@ and spec = {
 
 let literals lits = Or (List.map (fun x -> Lit x) lits)
 
+module StringMap = Map.Make(String)

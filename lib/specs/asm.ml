@@ -1,4 +1,4 @@
-open Spec
+open Spec.Common
 
 let reg : spec = {
   name = "register";
@@ -7,5 +7,5 @@ let reg : spec = {
 
 let add_x1 : spec = {
   name = "a";
-  syntax = Seq [Lit "adds"; Spec (reg, None)];
+  syntax = Seq [Lit "adds"; Spec reg];
 }
