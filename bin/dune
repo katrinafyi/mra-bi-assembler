@@ -1,0 +1,4 @@
+(executable
+ (public_name mra_bi_assembler)
+ (name main)
+ (libraries mra_bi_assembler))
