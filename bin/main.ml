@@ -2,7 +2,7 @@ let () =
   let fname = Sys.argv.(1) in
 
 
-  let spec = Spec_files.Asm.add_x1 in
+  let spec = Spec_files.Add.add_x1 in
   print_endline @@ Spec.Common.show_spec @@ spec;
   print_endline @@ Yojson.Safe.to_string @@ Spec.Common.spec_to_yojson spec;
 

@@ -15,6 +15,7 @@ depends: [
   "angstrom"
   "faraday"
   "ppx_deriving" {build}
+  "ppx_deriving_yojson" {build}
   "odoc" {with-doc}
 ]
 build: [

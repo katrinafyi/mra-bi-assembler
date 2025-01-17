@@ -8,13 +8,6 @@ let make_failure_message (ss: string list) =
 
 type fields = string StringMap.t
 
-let rec describe_parseable =
-  function
-  | Or orrs -> "one of " ^ String.concat ", " (List.map describe_parseable orrs)
-  | Seq seqs -> String.concat "; " (List.map describe_parseable seqs)
-  | Spec {name; _} -> name
-  | Lit s -> "\"" ^ s ^ "\""
-
 let join_fields f1 f2: fields =
   let f k l r = Some r in
   StringMap.union f f1 f2
@@ -23,9 +16,13 @@ module AngstromSyntax = struct
   let (let+) = Angstrom.(let+)
   let (let*) = Angstrom.(let*)
   let (and+) = Angstrom.(and+)
+  let (<*) = Angstrom.(<*)
+  let ( *> ) = Angstrom.( *> )
 
   let (<?>) = Angstrom.(<?>)
 end
+
+let space = Angstrom.skip_while (fun x -> List.mem x [' '; '\t'])
 
 let rec run_parse_with_stack (p: parseable) (stack: string list): (string * fields) Angstrom.t =
   let open AngstromSyntax in
@@ -37,7 +34,7 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (string * fiel
   match p with
   | Or orrs -> Angstrom.choice ~failure_msg (List.map recurse orrs)
   | Seq seqs ->
-      let+ result = Angstrom.list (List.map recurse seqs) <?> failure_msg in
+      let+ result = Angstrom.list (List.map (fun x -> recurse x <* Angstrom.option () space) seqs) <?> failure_msg in
       let fields = List.fold_left join_fields StringMap.empty (List.map snd result) in
       ("", fields)
   | Spec {name;syntax} ->
