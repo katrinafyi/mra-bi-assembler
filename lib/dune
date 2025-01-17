@@ -1,10 +1,11 @@
 (library
  (name mra_bi_assembler)
  (modules asm_lexer asm_parser)
- (libraries (re_export asm_types)))
+ (libraries asm_types menhirLib menhirCST))
 
 (menhir
- (modules asm_parser))
+ (modules asm_parser)
+ (flags --unparsing --table))
 
 (ocamllex
  (modules asm_lexer))
