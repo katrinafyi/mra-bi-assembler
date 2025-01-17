@@ -1,16 +1,18 @@
 (library
  (name mra_bi_assembler)
- (modules asm_lexer asm_parser)
- (libraries asm_types menhirLib menhirCST))
-
-(menhir
- (modules asm_parser)
- (flags --unparsing --table))
-
-(ocamllex
- (modules asm_lexer))
+ (modules)
+ (libraries spec_asm)
+ )
+ ; (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
 
 (library
-  (name asm_types)
-  (modules asm_types)
-  (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord)))
+ (name spec)
+ (modules spec)
+ (libraries ppx_deriving_yojson.runtime)
+ (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
+
+
+(library
+ (name spec_asm)
+ (modules spec_asm)
+ (libraries spec))

@@ -12,7 +12,8 @@ bug-reports: "https://github.com/username/reponame/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.0"}
-  "menhir"
+  "angstrom"
+  "faraday"
   "ppx_deriving" {build}
   "odoc" {with-doc}
 ]

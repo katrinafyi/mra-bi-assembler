@@ -24,7 +24,8 @@
  (depends
    ocaml
    dune
-   menhir
+   angstrom
+   faraday
    (ppx_deriving :build)
    )
  (tags
