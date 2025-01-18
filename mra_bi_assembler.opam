@@ -14,8 +14,10 @@ depends: [
   "dune" {>= "3.10"}
   "angstrom"
   "faraday"
+  "containers"
   "ppx_deriving" {build}
   "ppx_deriving_yojson" {build}
+  "ppx_expect" {test}
   "odoc" {with-doc}
 ]
 build: [

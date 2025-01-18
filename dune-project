@@ -26,8 +26,10 @@
    dune
    angstrom
    faraday
+   containers
    (ppx_deriving :build)
    (ppx_deriving_yojson :build)
+   (ppx_expect :test)
    )
  (tags
   (topics "to describe" your project)))

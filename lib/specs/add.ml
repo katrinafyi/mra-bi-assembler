@@ -7,7 +7,7 @@
 open Spec.Common
 
 let xreg : parseable = literals @@ List.init 31 (Printf.sprintf "x%d")
-let wreg : parseable = literals @@ List.init 31 (Printf.sprintf "x%d")
+let wreg : parseable = literals @@ List.init 31 (Printf.sprintf "w%d")
 
 let with_x31 sp regs = Or [literals [sp]; just regs]
 
