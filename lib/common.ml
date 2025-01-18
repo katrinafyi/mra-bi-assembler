@@ -16,6 +16,7 @@ type parseable =
   | Or of parseable list (** A choice between a given list of alternatives. Backtracking occurs within a single Or pattern. *)
   | Seq of parseable list (** A sequential composition of the given parseables. *)
   | Lit of string (** A literal string. *)
+  | Space (** Zero or more within-line space characters (space or tab). *)
   | Return of string (** A parser that always succeeds, returning the given string. Consumes no input. *)
   | Eof (** A parser that succeeds only at the end of the text. *)
 
@@ -33,6 +34,7 @@ and spec = {
 
 (** {2 Output definitions} *)
 
+module StringSet = CCSet.Make(String)
 module StringMap = CCMap.Make(String)
 
 (** Currently, all parseables will produce [string list] when parsed. *)
@@ -84,9 +86,10 @@ let rec describe_parseable =
   | Or [x; Seq []] -> "(" ^ describe_parseable x ^ ")?"
 
   | Or orrs -> "(" ^ (String.concat " | " (List.map describe_parseable orrs)) ^ ")"
-  | Seq seqs -> String.concat " " (List.map describe_parseable seqs)
+  | Seq seqs -> String.concat "" (List.map describe_parseable seqs)
   | Spec {name; _} -> name
   | Lit s -> quote s
+  | Space -> " "
 
 (** Given a [Format]-style [pp] function, converts it to a simple function returning a string. *)
 let show (printer: Format.formatter -> 'a -> unit) (x: 'a) =

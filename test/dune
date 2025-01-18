@@ -1,6 +1,8 @@
 
 (library
- (name test_combinators)
- (libraries spec)
+ (name expect_tests)
+ (modules test_analysis test_combinators)
+ (libraries spec spec_files)
  (inline_tests)
-  (preprocess (pps ppx_expect)))
+ (preprocess (pps ppx_expect)))
+

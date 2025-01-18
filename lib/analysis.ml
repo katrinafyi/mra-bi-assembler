@@ -5,6 +5,7 @@ open Common
 (** Determines if the given parseable accepts the empty string. *)
 let rec matches_empty =
   function
+  | Space -> true
   | Eof -> false
   | Return _ | Lit "" -> true
   | Lit _ -> false
@@ -20,6 +21,7 @@ let rec matches_empty =
 let rec seq_inner l r =
   let recurse x = seq_inner x r in
   match l with
+  | Space -> Seq [Space; r]
   | Eof -> Eof
   | Return _ | Lit _ -> Seq [l; r]
   | Or xs -> Or (List.map recurse xs)
@@ -31,3 +33,24 @@ let rec seq_inner l r =
   | Spec {name; syntax} -> Spec {name; syntax=recurse syntax}
 
 let to_eof p = seq_inner p eof
+
+let rec vars = function
+  | Spec {name; syntax} -> StringSet.(union (singleton name) (vars syntax))
+  | Space | Lit _ | Eof | Return _ -> StringSet.empty
+  | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
+
+let rec unparse (p: parseable) (fields: fields): string list =
+  let recurse x = unparse x fields in
+  match p with
+  | Space -> [" "]
+  | Lit x -> [x]
+  | Return _ | Eof -> []
+  | Spec {name; _} -> StringMap.find name fields
+  | Seq xs -> List.concat_map recurse xs
+  | Or xs ->
+    (* XXX: we must make sure that longer Or alternatives are first. *)
+    let rec go = function
+      | [] -> raise Not_found
+      | x::xs -> try recurse x with | Not_found -> go xs
+    in go xs
+

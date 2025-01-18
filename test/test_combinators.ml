@@ -24,7 +24,7 @@ let%expect_test "optional" =
 let%expect_test "or" =
   let orr = literals ["x1"; "x3"; "x33"] in
   parse_and_print orr "x";
-  [%expect {| error: : ("x33" | "x3" | "x1") |}];
+  [%expect {| error: : ("x33" | "x1" | "x3") |}];
   parse_and_print orr "x3";
   [%expect {| ok: tokens=["x3"] fields={  } |}];
   parse_and_print orr "x33";
