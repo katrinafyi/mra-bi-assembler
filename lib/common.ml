@@ -1,16 +1,40 @@
+(** Common base classes for defining a parseable AST. *)
+
+(** A parseable structure.
+
+    The syntax allowed is intentionally very restrictive,
+    to allow for tractable analysis and manipulation.
+    Grammars definable by this structure will have
+    no unbounded repetition and no context-sensitivity.
+    This makes it less powerful, even, than the regular languages.
+
+    Currently, all parseables will produce [string list] when parsed.
+    *)
 type parseable =
-  | Spec of spec
-  | Or of parseable list
-  | Seq of parseable list
-  | Lit of string
-  | Return of string
-  | Eof
+  | Spec of spec (** A subparser, binding its result into the associated name. See {!type:spec}. *)
+  | Or of parseable list (** A choice between a given list of alternatives. Backtracking occurs within a single Or pattern. *)
+  | Seq of parseable list (** A sequential composition of the given parseables. *)
+  | Lit of string (** A literal string. *)
+  | Return of string (** A parser that always succeeds, returning the given string. Consumes no input. *)
+  | Eof (** A parser that succeeds only at the end of the text. *)
+
+(** A parseable and a name.
+
+    When parsed, associates the parse result of {!field:syntax} with {!field: name}.
+    This is used to extract interesting information from the parseable, particularly
+    in the case of {!constructor:Or} parsers.
+*)
 and spec = {
   name: string;
   syntax: parseable;
 }
 [@@deriving show, eq, ord, yojson]
 
+(** Creates a parseable which accepts any of the given list.
+
+    Note: the parser will re-order literals to be longest first, to avoid
+    problems when one alternative is a prefix of another.
+*)
 let literals lits =
   let lits = List.sort (fun l r -> -String.(length l - length r)) lits in
   Or (List.map (fun x -> Lit x) lits)
