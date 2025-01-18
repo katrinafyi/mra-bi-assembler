@@ -1,4 +1,6 @@
-(** Common base classes for defining a parseable AST. *)
+(** Common base classes for defining a parseable object. *)
+
+(** {1 Basic definitions} *)
 
 (** A parseable structure.
 
@@ -8,7 +10,6 @@
     no unbounded repetition and no context-sensitivity.
     This makes it less powerful, even, than the regular languages.
 
-    Currently, all parseables will produce [string list] when parsed.
     *)
 type parseable =
   | Spec of spec (** A subparser, binding its result into the associated name. See {!type:spec}. *)
@@ -30,7 +31,19 @@ and spec = {
 }
 [@@deriving show, eq, ord, yojson]
 
-(** Creates a parseable which accepts any of the given list.
+(** {2 Output definitions} *)
+
+module StringMap = CCMap.Make(String)
+
+(** Currently, all parseables will produce [string list] when parsed. *)
+type output = string list
+
+(** Fields named by {!type:spec} values are returned as a map alongside the main result. *)
+type fields = string list StringMap.t
+
+(** {1 Combinators} *)
+
+(** Creates a parseable which accepts any of the given strings.
 
     Note: the parser will re-order literals to be longest first, to avoid
     problems when one alternative is a prefix of another.
@@ -39,8 +52,28 @@ let literals lits =
   let lits = List.sort (fun l r -> -String.(length l - length r)) lits in
   Or (List.map (fun x -> Lit x) lits)
 
+(** Places double quotes around the given string. *)
 let quote x = "\"" ^ x ^ "\""
 
+let eof = Eof
+let empty = Seq []
+let fail = Or []
+let just x = Or [x]
+let optional x = Or [x; empty]
+
+let spec name syntax = Spec {name; syntax}
+let bracketed ?(l = Lit "[") ?(r = Lit "]") x = Seq [l; x; r]
+
+(** {1 Printing functions} *)
+
+(** Produces a human-readable description of the given parseable.
+
+    For example,
+    {[
+    describe_parseable @@ optional (Or [Lit "a"; Lit "b"])
+    ]}
+    produces [("a" | "b")?].
+    *)
 let rec describe_parseable =
   function
   | Return x -> "empty:"^x
@@ -55,59 +88,24 @@ let rec describe_parseable =
   | Spec {name; _} -> name
   | Lit s -> quote s
 
-let eof = Eof
-let empty = Seq []
-let fail = Or []
-let just x = Or [x]
-let optional x = Or [x; empty]
-
-let spec name syntax = Spec {name; syntax}
-let bracketed x = Seq [Lit "["; x; Lit "]"]
-
-
-module StringMap = CCMap.Make(String)
-
-type fields = string list StringMap.t
-
+(** Given a [Format]-style [pp] function, converts it to a simple function returning a string. *)
 let show (printer: Format.formatter -> 'a -> unit) (x: 'a) =
   let open Format in
   let () = printer str_formatter x in
   flush_str_formatter ()
 
+(** Shows a list of strings. *)
 let show_string_list x =
   "[" ^ String.concat ", " (List.map quote x) ^ "]"
 
-let show_fields x =
+(** Shows a map of field values. *)
+let show_fields (x: fields) =
   let pairs = List.map (fun (k,v) -> k ^ "=" ^ show_string_list v) @@ StringMap.bindings  x in
   "{ " ^ String.concat "; " pairs ^ " }"
 
+(** Shows the result of running a parseable through Angstrom. *)
 let show_parse_result =
   function
   | Ok (x, fields) -> "ok: tokens=" ^ show_string_list x ^ " fields=" ^ show_fields fields
   | Error x -> "error: " ^ x
 
-let rec matches_empty =
-  function
-  | Eof -> false
-  | Return _ | Lit "" -> true
-  | Lit _ -> false
-  | Or xs -> List.exists matches_empty xs
-  | Seq xs -> List.for_all matches_empty xs
-  | Spec {syntax; _} -> matches_empty syntax
-
-(* XXX: broken, in order for this to work, we also need to copy all possible suffixes into
-   every earlier choice. this is obviously extremely inefficient. *)
-let rec seq_inner l r =
-  let recurse x = seq_inner x r in
-  match l with
-  | Eof -> Eof
-  | Return _ | Lit _ -> Seq [l; r]
-  | Or xs -> Or (List.map recurse xs)
-  | Seq [] -> r
-  | Seq xs ->
-    let xs = empty :: List.rev xs in
-    let possibly_empty_tail, non_empty_head = CCList.take_drop_while matches_empty xs in
-    Seq (List.rev non_empty_head @ List.map recurse (List.rev possibly_empty_tail))
-  | Spec {name; syntax} -> Spec {name; syntax=recurse syntax}
-
-let to_eof p = seq_inner p eof
