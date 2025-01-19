@@ -30,7 +30,7 @@
    (ppx_deriving :build)
    (ppx_deriving_yojson :build)
    (js_of_ocaml :build)
-   (ppx_expect :test)
+   (ppx_expect :with-test)
    )
  (tags
   (topics "to describe" your project)))
