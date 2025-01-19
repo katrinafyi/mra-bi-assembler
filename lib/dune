@@ -1,7 +1,7 @@
 (library
  (name spec)
  (public_name mra_bi_assembler.spec)
- (modules common parse analysis spec)
+ (modules common parse analysis spec types)
  ; (ocamlc_flags (:standard -i))
  (libraries ppx_deriving_yojson.runtime angstrom faraday containers)
  (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
@@ -9,3 +9,4 @@
 (documentation
  (package mra_bi_assembler)
  (mld_files :standard))
+

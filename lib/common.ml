@@ -2,16 +2,21 @@
 
 (** {1 Basic definitions} *)
 
-(** A parseable structure.
+(** {2 Parseable structures} *)
 
-    The syntax allowed is intentionally very restrictive,
-    to allow for tractable analysis and manipulation.
-    Grammars definable by this structure will have
-    no unbounded repetition and no context-sensitivity.
-    This makes it less powerful, even, than the regular languages.
+(** @inline *)
+include (Types : sig
 
-    *)
-type parseable =
+  (** A parseable structure.
+
+      The syntax allowed is intentionally very restrictive,
+      to allow for tractable analysis and manipulation.
+      Grammars definable by this structure will have
+      no unbounded repetition and no context-sensitivity.
+      This makes it less powerful, even, than the regular languages.
+
+  *)
+  type parseable = Types.parseable =
   | Spec of spec (** A subparser, binding its result into the associated name. See {!type:spec}. *)
   | Or of parseable list (** A choice between a given list of alternatives. Backtracking occurs within a single Or pattern. *)
   | Seq of parseable list (** A sequential composition of the given parseables. *)
@@ -20,17 +25,19 @@ type parseable =
   | Return of string (** A parser that always succeeds, returning the given string. Consumes no input. *)
   | Eof (** A parser that succeeds only at the end of the text. *)
 
-(** A parseable and a name.
+  (** A parseable and a name.
 
-    When parsed, associates the parse result of {!field:syntax} with {!field: name}.
-    This is used to extract interesting information from the parseable, particularly
-    in the case of {!constructor:Or} parsers.
-*)
-and spec = {
-  name: string;
-  syntax: parseable;
-}
-[@@deriving show, eq, ord, yojson]
+      When parsed, associates the parse result of {!field:syntax} with {!field: name}.
+      This is used to extract interesting information from the parseable, particularly
+      in the case of {!constructor:Or} parsers.
+  *)
+  and spec = Types.spec = {
+    name: string;
+    syntax: parseable;
+  }
+
+end)
+
 
 (** {2 Output definitions} *)
 
@@ -44,6 +51,14 @@ type output = string list
 
     These are returned as a map alongside the main result. *)
 type fields = string list StringMap.t
+
+(** {2 Derived functions} *)
+
+(** Automatically-generated functions for {!type:parseable} and {!type:spec}.
+
+    @closed
+*)
+include (Types : sig include Types.Derived end)
 
 (** {1 Combinators} *)
 

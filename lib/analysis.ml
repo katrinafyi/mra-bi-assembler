@@ -45,6 +45,7 @@ let rec vars = function
   | Space | Lit _ | Eof | Return _ -> StringSet.empty
   | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
 
+
 (** Attempts to compute a list of string tokens which could have
     resulted in given parseable producing the given fields.
 
