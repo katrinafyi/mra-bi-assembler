@@ -32,13 +32,27 @@ let rec seq_inner l r =
     Seq (List.rev non_empty_head @ List.map recurse (List.rev possibly_empty_tail))
   | Spec {name; syntax} -> Spec {name; syntax=recurse syntax}
 
+    (** Attempts to modify the given parseable to require {!Common.parseable.Eof} immediately after it. *)
 let to_eof p = seq_inner p eof
 
+(** Obtains the set of names which are {i possibly} bound when parsing the given parseable.
+
+    Names are bound by {!constructor:Common.parseable.Spec} structures.
+*)
+(* TODO: compute intervals of variable occurence counts. *)
 let rec vars = function
   | Spec {name; syntax} -> StringSet.(union (singleton name) (vars syntax))
   | Space | Lit _ | Eof | Return _ -> StringSet.empty
   | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
 
+(** Attempts to compute a list of string tokens which could have
+    resulted in given parseable producing the given fields.
+
+    Warning: Makes various unspecified assumptions about the structure
+    of the parseable and the fields.
+
+    @raises Not_found when a required field is missing from the given fields map (that is, there is no valid parse without binding this name).
+*)
 let rec unparse (p: parseable) (fields: fields): string list =
   let recurse x = unparse x fields in
   match p with

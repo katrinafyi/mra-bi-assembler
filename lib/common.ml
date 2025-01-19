@@ -40,7 +40,9 @@ module StringMap = CCMap.Make(String)
 (** Currently, all parseables will produce [string list] when parsed. *)
 type output = string list
 
-(** Fields named by {!type:spec} values are returned as a map alongside the main result. *)
+(** Fields are the results of subtrees named by {!type:spec} values.
+
+    These are returned as a map alongside the main result. *)
 type fields = string list StringMap.t
 
 (** {1 Combinators} *)

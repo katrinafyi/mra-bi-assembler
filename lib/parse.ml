@@ -1,6 +1,6 @@
 open Common
 
-(** Functions concerning the execution of {!Common.parseable} objects as {!Angstrom.t} parser.
+(** Functions concerning the execution of {!Common.parseable} objects as {!Angstrom.t} parsers.
 
 {1 Utility methods}
 *)
@@ -31,7 +31,7 @@ let space = Angstrom.skip_while (fun x -> List.mem x [' '; '\t'])
 (** {1 Parser execution} *)
 
 (** Converts the given parseable to an Angstrum parser while building a parse stack for debugging messages. *)
-let rec run_parse_with_stack (p: parseable) (stack: string list): (string list * fields) Angstrom.t =
+let rec run_parse_with_stack (p: parseable) (stack: string list): (output * fields) Angstrom.t =
   let open AngstromSyntax in
 
   let failure_msg = describe_parseable p in
@@ -56,14 +56,14 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (string list *
   | Eof -> let+ () = Angstrom.end_of_input in no_fields []
 
 (** Converts the given parseable to an Angstrom parser. *)
-let run_parse (p: parseable): (string list * fields) Angstrom.t =
+let run_parse (p: parseable): (output * fields) Angstrom.t =
   run_parse_with_stack p []
 
 (** Executes the parseable on the given string by first converting it to Angstrom.
 
     The string must match entirely.
     *)
-let run_parse_of_string (p: parseable) (s: string) =
+let run_parse_of_string (p: parseable) (s: string): (output * fields, string) result =
   Angstrom.parse_string ~consume:Angstrom.Consume.All (run_parse p) s
 
 (* let rec run_parse_with_stack ({name; syntax}: spec) (stack: string list): fields Angstrom.t = *)
