@@ -63,9 +63,9 @@ let rec unparse (p: parseable) (fields: fields): string list =
   | Spec {name; _} -> StringMap.find name fields
   | Seq xs -> List.concat_map recurse xs
   | Or xs ->
-    (* XXX: we must make sure that longer Or alternatives are first. *)
-    let rec go = function
-      | [] -> raise Not_found
-      | x::xs -> try recurse x with | Not_found -> go xs
-    in go xs
-
+    let go x = try Some (recurse x) with | Not_found -> None in
+    let poss = CCList.keep_some @@ List.map go xs in
+    match poss with
+    | [x] -> x
+    | [] -> failwith "unparse failure: no possible choices at Or"
+    | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map show_string_list xs)

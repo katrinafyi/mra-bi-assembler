@@ -2,9 +2,15 @@ open Spec.Common
 open Spec.Parse
 open Spec.Analysis
 
+let () = Printexc.record_backtrace false
+
 let print_result x = print_endline @@ show_parse_result x
 
 let parse_and_print x s = print_result @@ run_parse_of_string x s
+
+let catch (f: unit -> 'a): 'a =
+  try f ()
+  with Failure x -> output_string stderr @@ "failure: " ^ x ^ "\n"
 
 let%expect_test "unparse" =
   let go (s: string) =
