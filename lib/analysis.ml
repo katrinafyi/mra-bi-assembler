@@ -53,32 +53,28 @@ let rec vars = function
     of the parseable and the fields.
 
     @raises Not_found when a required field is missing from the given fields map (that is, there is no valid parse without binding this name).
+    @raises Failure no feasible unparsing with given fields, {i or} multiple ambiguous unparses.
 *)
-let rec unparse_trees (p: parseable) (fields: fields): (output * fields) list =
-  let recurse x = unparse_trees x fields in
+let rec unparse (p: parseable) (fields: fields): output * fields =
+  let recurse x = unparse x fields in
   match p with
-  | Space -> [output1 " ", fields]
-  | Lit x -> [output1 x, fields]
-  | Return _ | Eof -> [output [], fields]
-  | Spec {name; _} ->
-    let fields' = StringMap.remove name fields in
-    List.map (fun x -> (x, fields')) (StringMap.find name fields)
-  | Seq [] -> [output [], fields]
+  | Space -> output_str " ", fields
+  | Lit x -> output_str x, fields
+    (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Specs. *)
+  | Return _ | Eof -> output [], fields
+  | Spec {name; _} -> fields_pop name fields
+  | Seq [] -> output [], fields
   | Seq (x::xs) ->
-    let (let*) = CCList.Infix.(>>=) in
-    let* out,flds = recurse x in
-    let* out2,flds2 = unparse_trees (Seq xs) flds in
-    [output_append out.output out2.output, flds2]
+    let out,flds = recurse x in
+    let out2,flds2 = unparse (Seq xs) flds in
+    output_append out.output out2.output, flds2
   | Or xs ->
     let go x = try Some (recurse x) with | Not_found -> None in
     let poss = CCList.keep_some @@ List.map go xs in
+    (* NOTE: select the alternative choice which consumes the most fields. *)
+    let poss = List.stable_sort (fun (_,x) (_,y) -> fields_compare x y) poss in
     match poss with
+    | [] -> failwith "unparse failure: no possible choices at Or with available fields"
     | [x] -> x
-    | [] -> failwith "unparse_trees failure: no possible choices at Or"
-    | _ as xs -> failwith @@ "unparse_trees failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map show_outputs xs)
-
-let unparse (p: parseable) (fields: fields): output =
-  match unparse_trees p fields with
-  | [x,_] -> x
-  | [] -> failwith "unparse failure: no possible choices at top level"
-  | _ as xs -> failwith @@ "unparse failure: ambiguous choices at top level: " ^ show_outputs xs
+    | x::y::_ when fields_compare (snd x) (snd y) = -1 -> x
+    | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map (fun x -> show_parse_result (Ok x)) xs)

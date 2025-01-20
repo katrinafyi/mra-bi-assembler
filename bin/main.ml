@@ -13,7 +13,7 @@ let () =
   let result = Angstrom.parse_string ~consume:Angstrom.Consume.All parser fname in
   print_endline @@ show_parse_result result;
   match result with
-  | Ok (_,fields) -> print_endline (show_outputs @@ Spec.Analysis.unparse_trees spec fields)
+  | Ok (_,fields) -> print_endline (show_parse_output @@ Spec.Analysis.unparse_trees spec fields)
   | Error x -> print_endline x
 
 

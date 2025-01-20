@@ -30,7 +30,7 @@ let space = Angstrom.skip_while (fun x -> List.mem x [' '; '\t'])
 
 (** {1 Parser execution} *)
 
-(** Converts the given parseable to an Angstrum parser while building a parse stack for debugging messages. *)
+(** Converts the given parseable to an Angstrom parser while building a parse stack for debugging messages. *)
 let rec run_parse_with_stack (p: parseable) (stack: string list): (output * fields) Angstrom.t =
   let open AngstromSyntax in
 
