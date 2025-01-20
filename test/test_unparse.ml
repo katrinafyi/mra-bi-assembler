@@ -14,9 +14,9 @@ let catch (f: unit -> unit): unit =
 
 let%expect_test "unparse_errors" =
   (* let syntax = Spec_files.Add.add_x1.syntax in *)
-  catch (fun () -> print_endline @@ show_parse_output @@ unparse (Or [Lit ""; Lit ""]) StringMap.empty);
+  catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_fields (Or [Lit ""; Lit ""]) StringMap.empty);
   [%expect {| failure: unparse failure: ambiguous choices at Or: ok: tokens=[""] fields={  } OR ok: tokens=[""] fields={  } |}];
-  catch (fun () -> print_endline @@ show_parse_output @@ unparse (Or [spec "a" eof; spec "b" eof]) StringMap.empty);
+  catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_fields (Or [spec "a" eof; spec "b" eof]) StringMap.empty);
   [%expect {| failure: unparse failure: no possible choices at Or with available fields |}]
 
 let%expect_test "unparse_round_trip" =
@@ -25,7 +25,7 @@ let%expect_test "unparse_round_trip" =
     let result = run_parse_of_string p s in
     print_result result;
     let _,fields = Result.get_ok result in
-    let unparsed = String.concat "" (fst @@ unparse p fields).output in
+    let unparsed = String.concat "" (fst @@ unparse_with_fields p fields).output in
     print_endline @@ unparsed;
     let result2 = run_parse_of_string p unparsed in
     print_result result2;

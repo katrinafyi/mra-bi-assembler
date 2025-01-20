@@ -1,6 +1,13 @@
 (library
  (name expect_tests)
- (modules test_analysis test_combinators)
+ (modules test_unparse test_combinators test_dnf)
  (libraries spec spec_files)
  (inline_tests (flags -verbose))
  (preprocess (pps ppx_expect)))
+
+(library
+ (name unit_tests)
+ (modules unit_tests)
+ (libraries spec spec_files)
+ (inline_tests (flags -verbose))
+ (preprocess (pps ppx_inline_test)))

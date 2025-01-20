@@ -120,9 +120,7 @@ include struct
     in
     let less_than_or_equal f1 f2 =
       StringMap.for_all
-      (fun k v ->
-        let right = StringMap.get_or ~default:[] k f2 in
-        List.(length v <> length right) && is_suffix_of v right)
+      (fun k v -> let right = StringMap.get_or ~default:[] k f2 in is_suffix_of v right)
       f1 in
     match less_than_or_equal f1 f2, less_than_or_equal f2 f1 with
     | true, true -> 0
@@ -130,6 +128,8 @@ include struct
     | false, true -> +1
     | false, false -> failwith "non-comparable fields"
 
+
+  let fields_equal f1 f2 = fields_compare f1 f2 = 0
 end
 
 (** {2 Derived functions} *)
@@ -153,13 +153,35 @@ let literals lits =
 
 
 let eof = Eof
-let empty = Seq []
-let fail = Or []
 let just x = Or [x]
+
+(** A parser that always succeeds, consumes no input (abbreviation for [Seq []]). *)
+let empty = Seq []
+
+(** A parser that always fails (abbreviation for [Or []]). *)
+let fail = Or []
+
+(** A parser that accepts the given parser or the empty string. *)
 let optional x = Or [x; empty]
 
+(** The constructor for {!constructor:Spec} in function form. *)
 let spec name syntax = Spec {name; syntax}
+
+(** Parses the given parser in between the given [l] and [r] delimiters.
+    Delimeters default to open- and close- square brackets.
+*)
 let bracketed ?(l = Lit "[") ?(r = Lit "]") x = Seq [l; x; r]
+
+(** Returns a parser which sequences the two parsers. Performs minor
+    optimisation when one or both of its arguments is {!constructor:Seq},
+    fusing them together if possible.
+    *)
+let parseable_cons x y =
+  match x,y with
+  | Seq l, Seq r -> Seq (l @ r)
+  | _, Seq tl -> Seq (x::tl)
+  | Seq x, _ -> Seq (x @ [y])
+  | _, tl -> Seq [x; tl]
 
 (** {1 Printing functions} *)
 

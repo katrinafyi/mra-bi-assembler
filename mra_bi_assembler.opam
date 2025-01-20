@@ -19,6 +19,7 @@ depends: [
   "ppx_deriving_yojson" {build}
   "js_of_ocaml" {build}
   "ppx_expect" {with-test}
+  "ppx_inline_test" {with-test}
   "odoc" {with-doc}
 ]
 build: [

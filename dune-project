@@ -22,16 +22,17 @@
  (synopsis "A short synopsis")
  (description "A longer description")
  (depends
-   ocaml
-   dune
-   angstrom
-   faraday
-   containers
-   (ppx_deriving :build)
-   (ppx_deriving_yojson :build)
-   (js_of_ocaml :build)
-   (ppx_expect :with-test)
-   )
+  ocaml
+  dune
+  angstrom
+  faraday
+  containers
+  (ppx_deriving :build)
+  (ppx_deriving_yojson :build)
+  (js_of_ocaml :build)
+  (ppx_expect :with-test)
+  (ppx_inline_test :with-test)
+ )
  (tags
   (topics "to describe" your project)))
 
