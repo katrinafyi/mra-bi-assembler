@@ -45,12 +45,24 @@ module StringSet = CCSet.Make(String)
 module StringMap = CCMap.Make(String)
 
 (** Currently, all parseables will produce [string list] when parsed. *)
-type output = string list
+include struct
+  type output = { output: string list }
+  [@@deriving show, eq, ord, yojson]
+
+  let output x: output = { output = x }
+  let output1 x: output = output [x]
+  let output_append x y = output (x @ y)
+  let output_concat xs = output @@ List.concat_map (fun x -> x.output) xs
+end
 
 (** Fields are the results of subtrees named by {!type:spec} values.
 
     These are returned as a map alongside the main result. *)
-type fields = string list StringMap.t
+type fields = output list StringMap.t
+let fields_add (k: string) (v: output) = StringMap.update k (function | None -> Some [v] | Some old -> Some (v :: old))
+
+type outputs = (output * fields) list
+
 
 (** {2 Derived functions} *)
 
@@ -118,14 +130,22 @@ let show (printer: Format.formatter -> 'a -> unit) (x: 'a) =
 let show_string_list x =
   "[" ^ String.concat ", " (List.map quote x) ^ "]"
 
+(** Shows a list of arbitrary objects. *)
+let show_list f x =
+  "[" ^ String.concat ", " (List.map f x) ^ "]"
+
 (** Shows a map of field values. *)
 let show_fields (x: fields) =
-  let pairs = List.map (fun (k,v) -> k ^ "=" ^ show_string_list v) @@ StringMap.bindings  x in
+  let pairs = List.map (fun (k,v) -> k ^ "=" ^ show_list show_output v) @@ StringMap.bindings  x in
   "{ " ^ String.concat "; " pairs ^ " }"
 
 (** Shows the result of running a parseable through Angstrom. *)
 let show_parse_result =
   function
-  | Ok (x, fields) -> "ok: tokens=" ^ show_string_list x ^ " fields=" ^ show_fields fields
+  | Ok (x, fields) -> "ok: tokens=" ^ show_output x ^ " fields=" ^ show_fields fields
   | Error x -> "error: " ^ x
+
+let show_outputs (o: outputs): string =
+  "possible outputs: " ^ String.concat "; " (List.map (fun (o,f) -> show_parse_result (Ok (o, f))) o)
+
 

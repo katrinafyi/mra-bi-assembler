@@ -18,7 +18,7 @@ let%expect_test "unparse" =
     let result = run_parse_of_string p s in
     print_result result;
     let _,fields = Result.get_ok result in
-    let unparsed = String.concat "" @@ unparse p fields in
+    let unparsed = String.concat "" (unparse p fields).output in
     print_endline @@ unparsed;
     let result2 = run_parse_of_string p unparsed in
     print_result result2;

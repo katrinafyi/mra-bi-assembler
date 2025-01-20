@@ -41,19 +41,19 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * fiel
   let no_fields x = (x, StringMap.empty) in
 
   match p with
-  | Space -> let+ () = space in no_fields []
-  | Return x -> Angstrom.return @@ no_fields [x]
+  | Space -> let+ () = space in no_fields (output [])
+  | Return x -> Angstrom.return @@ no_fields (output [x])
   | Or orrs -> Angstrom.choice ~failure_msg (List.map recurse orrs)
   | Seq seqs ->
       let+ result = Angstrom.list (List.map recurse seqs) <?> failure_msg in
       let results, fieldss = List.split result in
       let fields = List.fold_left join_fields StringMap.empty fieldss in
-      (List.concat results, fields)
+      (output_concat results, fields)
   | Spec {name;syntax} ->
       let+ result, fields = recurse syntax <?> failure_msg in
-      result, if name <> "" then StringMap.add name result fields else fields
-  | Lit s -> let+ s = Angstrom.string s in no_fields [s]
-  | Eof -> let+ () = Angstrom.end_of_input in no_fields []
+      result, if name <> "" then fields_add name result fields else fields
+  | Lit s -> let+ s = Angstrom.string s in no_fields (output [s])
+  | Eof -> let+ () = Angstrom.end_of_input in no_fields (output [])
 
 (** Converts the given parseable to an Angstrom parser. *)
 let run_parse (p: parseable): (output * fields) Angstrom.t =
