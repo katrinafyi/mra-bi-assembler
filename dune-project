@@ -33,6 +33,7 @@
   (js_of_ocaml :build)
   (ppx_expect :with-test)
   (ppx_inline_test :with-test)
+  (mdx (and :with-test (>= "2.3.0")))
  )
  (tags
   (topics "to describe" your project)))
