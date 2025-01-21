@@ -19,6 +19,8 @@ jobs:
 
       - run: opam install . --deps-only --with-doc
       - run: opam exec -- dune build @doc
+      - run: cp -v ./*/404.html .
+        working-directory: _build/default/_doc/_html
 
       - id: deployment
         uses: actions/upload-pages-artifact@v3
