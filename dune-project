@@ -1,6 +1,7 @@
 (lang dune 3.10)
 
 (using menhir 2.0)
+(using mdx 0.4)
 
 (name mra_bi_assembler)
 

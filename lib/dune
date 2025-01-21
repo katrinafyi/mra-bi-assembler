@@ -10,3 +10,5 @@
  (package mra_bi_assembler)
  (mld_files :standard))
 
+(mdx
+ (libraries mra_bi_assembler.lang))

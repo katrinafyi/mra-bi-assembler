@@ -6,6 +6,8 @@ let print_result x = print_endline @@ show_parse_result x
 
 let parse_and_print x s = print_result @@ run_parse_of_string x s
 
+let print_parse_output x = print_endline @@ show_parse_output x
+
 let catch (f: unit -> unit): unit =
   try f ()
   with
@@ -89,3 +91,17 @@ let%expect_test "nested bindings" =
     unparsed: tokens=["1", "3"] bindings={ a=[["3"]] }
     ... WARNING: unparse has unused bindings!
     ok: tokens=["1", "3"] bindings={ a=[["1", "3"], ["3"]] } |}]
+
+
+let%expect_test "unparse example" =
+  let spec_around_or = bind "Xd" (literals ["x1"; "x2"])
+  and spec_within_or = Or [bind "case1" (literals ["x1"]); bind "case2" (literals ["x2"])] in
+  print_parse_output @@ unparse_with_bindings spec_around_or (StringMap.singleton "Xd" [output_str "x1"]);
+  [%expect {| tokens=["x1"] bindings={ Xd=[] } |}];
+  print_parse_output @@ unparse_with_bindings spec_around_or (StringMap.singleton "Xd" [output_str "anything"]);
+  [%expect {| tokens=["anything"] bindings={ Xd=[] } |}];
+  print_parse_output @@ unparse_with_bindings spec_within_or (StringMap.singleton "case1" [output_str "x1"]);
+  [%expect {| tokens=["x1"] bindings={ case1=[] } |}];
+  print_parse_output @@ unparse_with_bindings spec_within_or (StringMap.singleton "case2" [output_str "anything"]);
+  [%expect {| tokens=["anything"] bindings={ case2=[] } |}]
+

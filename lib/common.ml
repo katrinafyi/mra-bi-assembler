@@ -88,6 +88,8 @@ type bindings = output list StringMap.t
 *)
 include struct
 
+  let binding k v: bindings = StringMap.singleton k [v]
+
   (** Adds a new output to the given binding name. The new output is added to the front of the output list. *)
   let bindings_add (k: string) (v: output) (flds: bindings): bindings =
     let prev = StringMap.get_or k ~default:[] flds in
@@ -157,8 +159,11 @@ include (Types : sig include Types.Derived end)
     problems when one alternative is a prefix of another.
 *)
 let literals lits =
-  let lits = List.sort (fun l r -> -String.(length l - length r)) lits in
-  Or (List.map (fun x -> Lit x) lits)
+  match lits with
+  | [x] -> Lit x
+  | _ ->
+    let lits = List.sort (fun l r -> -String.(length l - length r)) lits in
+    Or (List.map (fun x -> Lit x) lits)
 
 
 let eof = Eof
