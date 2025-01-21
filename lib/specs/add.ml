@@ -4,7 +4,7 @@
 
 (* for register formats: https://developer.arm.com/documentation/ddi0487/latest/ *)
 
-open Spec.Common
+open Lang.Common
 
 let xreg : parseable = literals @@ List.init 31 (Printf.sprintf "x%d")
 let wreg : parseable = literals @@ List.init 31 (Printf.sprintf "w%d")

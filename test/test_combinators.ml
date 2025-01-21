@@ -1,5 +1,5 @@
-open Spec.Common
-open Spec.Parse
+open Lang.Common
+open Lang.Parse
 
 let print_result x = print_endline @@ show_parse_result x
 

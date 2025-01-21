@@ -1,5 +1,5 @@
 (executable
  (public_name mra_bi_assembler)
  (name main)
- (libraries spec spec_files)
+ (libraries mra_bi_assembler.lang spec_files)
  (modes (best exe) (byte js)))

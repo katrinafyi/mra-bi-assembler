@@ -1,4 +1,4 @@
-open Spec.Common
+open Lang.Common
 
 let reg : spec = {
   name = "register";

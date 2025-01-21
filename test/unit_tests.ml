@@ -1,4 +1,4 @@
-open Spec.Common
+open Lang.Common
 
 let assert_raises f =
   try (ignore (f ()); assert false)

@@ -1,5 +1,5 @@
-open Spec.Common
-open Spec.Analysis
+open Lang.Common
+open Lang.Analysis
 
 let print_parseables = List.iter (fun x -> print_endline (show_parseable x))
 
