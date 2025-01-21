@@ -52,48 +52,48 @@ let rec vars = function
 
 
 (** Attempts to compute a list of string tokens which could have
-    resulted in given parseable producing the given fields.
-    Returns the unparsing and the remaining fields.
+    resulted in given parseable producing the given bindings.
+    Returns the unparsing and the remaining bindings.
 
     Warning: Makes various unspecified assumptions about the structure
-    of the parseable and the fields.
+    of the parseable and the bindings.
 
-    @raises Not_found when a required field is missing from the given fields map (that is, there is no valid parse without binding this name).
-    @raises Failure no feasible unparsing with given fields, {i or} multiple ambiguous unparses.
+    @raises Not_found when a required binding is missing from the given bindings map (that is, there is no valid parse without binding this name).
+    @raises Failure no feasible unparsing with given bindings, {i or} multiple ambiguous unparses.
 *)
-let rec unparse_with_fields (p: parseable) (fields: fields): output * fields =
-  let recurse x = unparse_with_fields x fields in
+let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bindings =
+  let recurse x = unparse_with_bindings x bindings in
   match p with
-  | Space -> output_str " ", fields
-  | Lit x -> output_str x, fields
+  | Space -> output_str " ", bindings
+  | Lit x -> output_str x, bindings
     (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Specs. *)
-  | Return _ | Eof -> output [], fields
-  | Spec {name; _} -> fields_pop name fields
-  | Seq [] -> output [], fields
+  | Return _ | Eof -> output [], bindings
+  | Spec {name; _} -> bindings_pop name bindings
+  | Seq [] -> output [], bindings
   | Seq (x::xs) ->
     let out,flds = recurse x in
-    let out2,flds2 = unparse_with_fields (Seq xs) flds in
+    let out2,flds2 = unparse_with_bindings (Seq xs) flds in
     output_append out.output out2.output, flds2
   | Or xs ->
     let go x = try Some (recurse x) with | Not_found -> None in
     let poss = CCList.keep_some @@ List.map go xs in
-    (* NOTE: select the alternative choice which consumes the most fields. *)
-    let poss = List.stable_sort (fun (_,x) (_,y) -> fields_compare x y) poss in
+    (* NOTE: select the alternative choice which consumes the most bindings. *)
+    let poss = List.stable_sort (fun (_,x) (_,y) -> bindings_compare x y) poss in
     match poss with
-    | [] -> failwith "unparse failure: no possible choices at Or with available fields"
+    | [] -> failwith "unparse failure: no possible choices at Or with available bindings"
     | [x] -> x
-    | x::y::_ when fields_compare (snd x) (snd y) = -1 -> x
+    | x::y::_ when bindings_compare (snd x) (snd y) = -1 -> x
     | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map (fun x -> show_parse_result (Ok x)) xs)
 
-(** Calls {!unparse_with_fields} and ensures that the final fields map is empty.
+(** Calls {!unparse_with_bindings} and ensures that the final bindings map is empty.
     This is what you should use to unparse a top-level parser.
 
     @raises Failure
 *)
-let unparse (p: parseable) (fields: fields): output =
-  match unparse_with_fields p fields with
-  | out, fs when fields_equal fs StringMap.empty -> out
-  | x -> failwith @@ "unparse failure: leftover fields in " ^ show_parse_output x
+let unparse (p: parseable) (bindings: bindings): output =
+  match unparse_with_bindings p bindings with
+  | out, fs when bindings_equal fs StringMap.empty -> out
+  | x -> failwith @@ "unparse failure: leftover bindings in " ^ show_parse_output x
 
 (** Converts the given parseable into its {i disjunctive clauses}.
 

@@ -27,7 +27,7 @@ include (Types : sig
 
   (** A parseable and a name.
 
-      When parsed, associates the parse result of {!field:syntax} with {!field: name}.
+      When parsed, associates the parse result of {!binding:syntax} with {!binding: name}.
       This is used to extract interesting information from the parseable, particularly
       in the case of {!constructor:Or} parsers.
   *)
@@ -39,7 +39,7 @@ include (Types : sig
 end)
 
 
-(** {2 Output and field definitions} *)
+(** {2 Output and binding definitions} *)
 
 module StringSet = CCSet.Make(String)
 module StringMap = CCMap.Make(String)
@@ -67,48 +67,48 @@ include struct
   let output_concat xs = output @@ List.concat_map (fun x -> x.output) xs
 end
 
-(** {3 Fields type} *)
+(** {3 Bindings type} *)
 
-(** Fields are the results of subtrees named by {!type:spec} values.
+(** Bindings are the results of subtrees named by {!type:spec} values.
 
     These are returned as a map alongside the main result.
-    A field name may be bound multiple times if its {!type:spec} name
+    A binding name may be bound multiple times if its {!type:spec} name
     appears and is matched more than once.
 *)
-type fields = output list StringMap.t
+type bindings = output list StringMap.t
 
-(** Functions on {!type:fields} objects. These should be used in preference
-    to the normal map functions, as they implement the semantics of fields
+(** Functions on {!type:bindings} objects. These should be used in preference
+    to the normal map functions, as they implement the semantics of bindings
     as a list of parse outputs.
 
     @closed
 *)
 include struct
 
-  (** Adds a new output to the given field name. The new output is added to the front of the output list. *)
-  let fields_add (k: string) (v: output) flds =
+  (** Adds a new output to the given binding name. The new output is added to the front of the output list. *)
+  let bindings_add (k: string) (v: output) flds =
     let prev = StringMap.get_or k ~default:[] flds in
     StringMap.add k (v::prev) flds
 
-  (** Pops one output associated to given name from the fields. Returns the output and the modified fields map.
+  (** Pops one output associated to given name from the bindings. Returns the output and the modified bindings map.
 
       @raises Not_found if the name is not bound or has no outputs remaining.
   *)
-  let fields_pop (k: string) flds =
+  let bindings_pop (k: string) flds =
     match StringMap.find k flds with
     | x::xs -> (x, StringMap.add k xs flds)
     | [] -> raise Not_found
 
-  (** Partial order on fields, comparing field maps by the number of outputs they contain.
+  (** Partial order on bindings, comparing two bindings by the number of outputs they contain.
 
-      A field map [f1] is {i strictly less than} [f2] if for every entry [(k,v1)] in [f1],
-      [f2] has a mapping for [k] and [v1] is a strict prefix of [f2(k)].
+      A bindings map [b1] is {i less than or equal to} [b2] if for every entry [(k,v1)] in [b1],
+      [b2] has a mapping for [k] and [v1] is a suffix of [f2(k)].
       For the purpose of this comparison, a mapping to the empty list is treated as if no
       mapping was present.
 
-      @raises Failure if the two maps are incomparable (neither is less than or equal to the other)
+      @raises Failure if the two bindings are incomparable (neither is less than or equal to the other)
   *)
-  let fields_compare (f1: fields) (f2: fields) =
+  let bindings_compare (f1: bindings) (f2: bindings) =
     let f1 = StringMap.filter (fun _ x -> List.length x <> 0) f1 in
     let f2 = StringMap.filter (fun _ x -> List.length x <> 0) f2 in
     let is_suffix_of suffix xs =
@@ -126,10 +126,10 @@ include struct
     | true, true -> 0
     | true, false -> -1
     | false, true -> +1
-    | false, false -> failwith "non-comparable fields"
+    | false, false -> failwith "non-comparable bindings"
 
 
-  let fields_equal f1 f2 = fields_compare f1 f2 = 0
+  let bindings_equal f1 f2 = bindings_compare f1 f2 = 0
 end
 
 (** {2 Derived functions} *)
@@ -222,20 +222,20 @@ let show_string_list x =
 let show_list f x =
   "[" ^ String.concat ", " (List.map f x) ^ "]"
 
-(** Shows a map of field values. *)
-let show_fields (x: fields) =
+(** Shows a map of binding values. *)
+let show_bindings (x: bindings) =
   let pairs = List.map (fun (k,v) -> k ^ "=" ^ show_list show_output v) @@ StringMap.bindings  x in
   "{ " ^ String.concat "; " pairs ^ " }"
 
-(** Shows a pair of output and fields, as produced by the parser. *)
+(** Shows a pair of output and bindings, as produced by the parser. *)
 let show_parse_output =
   function
-  | (x, fields) -> "tokens=" ^ show_output x ^ " fields=" ^ show_fields fields
+  | (x, bindings) -> "tokens=" ^ show_output x ^ " bindings=" ^ show_bindings bindings
 
 (** Shows the result of running a parseable through Angstrom. *)
 let show_parse_result =
   function
-  | Ok (x, fields) -> "ok: " ^ show_parse_output (x, fields)
+  | Ok (x, bindings) -> "ok: " ^ show_parse_output (x, bindings)
   | Error x -> "error: " ^ x
 
 (* let show_outputs (o: outputs): string = *)
