@@ -17,7 +17,7 @@ let%expect_test "unparse_errors" =
   catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_bindings (Or [Lit ""; Lit ""]) StringMap.empty);
   [%expect {| failure: unparse failure: ambiguous choices at Or: ok: tokens=[""] bindings={  } OR ok: tokens=[""] bindings={  } |}];
   catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_bindings (Or [bind "a" eof; bind "b" eof]) StringMap.empty);
-  [%expect {| failure: unparse failure: no possible choices at Or with available bindings |}]
+  [%expect {| not_found |}]
 
 let%expect_test "unparse_round_trip" =
   let go (s: string) =
@@ -48,6 +48,17 @@ let%expect_test "unparse_round_trip" =
   [%expect {|
     ok: tokens=["add", "x1", ",", "x2", ",", "x3", ",", "uxtx", "#", "0"] bindings={ Xd=[["x1"]]; Xm=[["x3"]]; Xn=[["x2"]]; extend=[["uxtx"]]; imm=[["0"]] }
     add x1 , x2 , x3 , uxtx #0
-    ok: tokens=["add", "x1", ",", "x2", ",", "x3", ",", "uxtx", "#", "0"] bindings={ Xd=[["x1"]]; Xm=[["x3"]]; Xn=[["x2"]]; extend=[["uxtx"]]; imm=[["0"]] } |}];
+    ok: tokens=["add", "x1", ",", "x2", ",", "x3", ",", "uxtx", "#", "0"] bindings={ Xd=[["x1"]]; Xm=[["x3"]]; Xn=[["x2"]]; extend=[["uxtx"]]; imm=[["0"]] } |}]
 
+
+let%expect_test "unparse disambiguation" =
+  let go p bindings =
+    catch @@ fun () -> print_endline @@ show_parse_output @@ (unparse_with_bindings p bindings) in
+
+  go (fail) StringMap.empty;
+  [%expect{| not_found |}];
+  go (Or [bind "a" empty; empty; fail]) StringMap.empty;
+  [%expect{| tokens=[] bindings={  } |}];
+  go (Or [bind "a" empty; empty; fail]) @@ StringMap.singleton "a" [output_str "a_output"];
+  [%expect{| tokens=["a_output"] bindings={ a=[] } |}]
 

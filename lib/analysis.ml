@@ -59,7 +59,7 @@ let rec vars = function
     of the parseable and the bindings.
 
     @raises Not_found when a required binding is missing from the given bindings map (that is, there is no valid parse without binding this name).
-    @raises Failure no feasible unparsing with given bindings, {i or} multiple ambiguous unparses.
+    @raises Failure multiple ambiguous unparses.
 *)
 let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bindings =
   let recurse x = unparse_with_bindings x bindings in
@@ -80,7 +80,7 @@ let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bind
     (* NOTE: select the alternative choice which consumes the most bindings. *)
     let poss = List.stable_sort (fun (_,x) (_,y) -> bindings_compare x y) poss in
     match poss with
-    | [] -> failwith "unparse failure: no possible choices at Or with available bindings"
+    | [] -> raise Not_found
     | [x] -> x
     | x::y::_ when bindings_compare (snd x) (snd y) = -1 -> x
     | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map (fun x -> show_parse_result (Ok x)) xs)
