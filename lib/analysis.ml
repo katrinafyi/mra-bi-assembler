@@ -75,17 +75,18 @@ let rec disjunctive_clauses (p: parseable): parseable list =
 (** {1 Unparsing} *)
 
 (** Implementation of the "unparsing" functionality.
-    The goal of feature is to enable the parsers to be used as printers by manually assigning values to the bindings
-    within the {!Common.parseable}.
+    The goal of this feature is to enable parsers to be used as printers by manually providing a {!Common.bindings}
+    object with a structure matching those returned by {!Parse.run_parse}.
 
-    Fundamentally, unparsing relies on the usage of {!Common.parseable.Bind} operators
+    Fundamentally, unparsing relies on the placement of {!Common.parseable.Bind} operators
     to disambiguate between {!Common.parseable.Or} alternatives.
 
     To make a parseable which is suitable for unparsing, you have two options when using [Or] operators:
     {ul
       {- (1) Place the [Or] directly within a [Bind], recording the result of the [Or] as a new binding.
          This is most suitable where the [Or] alternatives are simple literals.
-         Binding more complex expressions in this way undermines the goals of unparsing.
+         Binding complex expressions in this way makes it more difficult to construct the bindings
+         needed by {!Unparse.unparse}.
          }
       {- (2) Use distinct [Bind] names within each [Or] alternative.
         The unparsing will choose the alternative which is most applicable given the available bindings.
