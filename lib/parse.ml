@@ -10,11 +10,6 @@ let make_failure_message (ss: string list) =
   "Parse failure\n" ^
   String.concat "\n" @@ List.map (fun x -> "... while parsing " ^ x) ss
 
-(** Merges the two binding maps, preferring values from second map. *)
-let join_bindings f1 f2 =
-  let f k l r = Some r in
-  StringMap.union f f1 f2
-
 (** Operators and let-bindings imported from Angstrom. *)
 module AngstromSyntax = struct
   let (let+) = Angstrom.(let+)
@@ -47,7 +42,7 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * bind
   | Seq seqs ->
       let+ result = Angstrom.list (List.map recurse seqs) <?> failure_msg in
       let results, bindingss = List.split result in
-      let bindings = List.fold_left join_bindings StringMap.empty bindingss in
+      let bindings = List.fold_left bindings_merge StringMap.empty bindingss in
       (output_concat results, bindings)
   | Bind {name;syntax} ->
       let+ result, bindings = recurse syntax <?> failure_msg in

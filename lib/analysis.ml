@@ -1,6 +1,6 @@
 open Common
 
-(** Functions for analysing and transforming {!type:Common.parseable} objects. *)
+(** Functions for analysing and transforming {!type:Common.parseable} objects, notably including the {!module:Unparse} module. *)
 
 (** Determines if the given parseable accepts the empty string.
 
@@ -58,7 +58,7 @@ let rec vars = function
     none of the disjunctive clauses contain an [Or] within them.
 
     Warning: The number of disjunctive clauses is exponential in the number
-    of sequential {!constructor:Or} terms.
+    of sequential {!constructor:Common.parseable.Or} terms.
     *)
 let rec disjunctive_clauses (p: parseable): parseable list =
   let open CCList.Infix in

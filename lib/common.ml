@@ -27,7 +27,7 @@ include (Types : sig
 
   (** A parseable and a name.
 
-      When parsed, associates the parse result of {!binding:syntax} with {!binding: name}.
+      When parsed, associates the parse result of {!field:syntax} with {!field:name}.
       This is used to extract interesting information from the parseable, particularly
       in the case of {!constructor:Or} parsers.
   *)
@@ -86,15 +86,20 @@ type bindings = output list StringMap.t
 include struct
 
   (** Adds a new output to the given binding name. The new output is added to the front of the output list. *)
-  let bindings_add (k: string) (v: output) flds =
+  let bindings_add (k: string) (v: output) (flds: bindings): bindings =
     let prev = StringMap.get_or k ~default:[] flds in
     StringMap.add k (v::prev) flds
+
+  (** Merges two binding maps, with the interpretation that the left bindings were parsed before the right bindings - not commutative! *)
+  let bindings_merge (f1: bindings) (f2: bindings): bindings =
+    let f _ l r = Some (l@r) in
+    StringMap.union f f1 f2
 
   (** Pops one output associated to given name from the bindings. Returns the output and the modified bindings map.
 
       @raises Not_found if the name is not bound or has no outputs remaining.
   *)
-  let bindings_pop (k: string) flds =
+  let bindings_pop (k: string) (flds: bindings): output * bindings =
     match StringMap.find k flds with
     | x::xs -> (x, StringMap.add k xs flds)
     | [] -> raise Not_found

@@ -30,9 +30,4 @@ let%expect_test "or" =
   parse_and_print orr "x33";
   [%expect {| ok: tokens=["x33"] bindings={  } |}];
   parse_and_print orr "x3x3";
-  [%expect {| error: : end_of_input |}];
-
-
-
-
-
+  [%expect {| error: : end_of_input |}]

@@ -29,12 +29,14 @@ from some architecture-specific data files.
 In order to be functional for assembly and disassembly, a frontend should produce approximately:
 {ul
 {- an instruction decoder: parsing instruction bytes (e.g., as a string of binary characters) to an encoding name.}
-{- for each encoding name: {ul
+{- for each encoding name:
+  {ul
   {- an assembly parser: parsing assembly text and extracting its fields (e.g., [mov x1, x2] parses to [{Xd=x1; Xn=x2}]).}
   {- a bitfield extractor: parsing a binary string and extracting its fields (e.g., [0011] parses to [Xd=11]).}
   }
 }
-{- for each kind of field used in the syntax: {ul
+{- for each kind of field used in the syntax:
+  {ul
   {- a field formatter: converting a binary encoding to its textual string (e.g., [11] parses to [Xd]).}
 }
 }
