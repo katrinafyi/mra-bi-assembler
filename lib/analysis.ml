@@ -16,7 +16,7 @@ let rec matches_empty =
   | Lit _ -> false
   | Or xs -> List.exists matches_empty xs
   | Seq xs -> List.for_all matches_empty xs
-  | Spec {syntax; _} -> matches_empty syntax
+  | Bind {syntax; _} -> matches_empty syntax
 
 (** Attempts to create a parseable which performs [l] then [r], but pushes [r] as deep as possible
     to maximise backtracking.
@@ -35,18 +35,18 @@ let rec seq_inner l r =
     let xs = empty :: List.rev xs in
     let possibly_empty_tail, non_empty_head = CCList.take_drop_while matches_empty xs in
     Seq (List.rev non_empty_head @ List.map recurse (List.rev possibly_empty_tail))
-  | Spec {name; syntax} -> Spec {name; syntax=recurse syntax}
+  | Bind {name; syntax} -> Bind {name; syntax=recurse syntax}
 
     (** Attempts to modify the given parseable to require {!Common.parseable.Eof} immediately after it. *)
 let to_eof p = seq_inner p eof
 
 (** Obtains the set of names which are {i possibly} bound when parsing the given parseable.
 
-    Names are bound by {!constructor:Common.parseable.Spec} structures.
+    Names are bound by {!constructor:Common.parseable.Bind} structures.
 *)
 (* TODO: compute intervals of variable occurence counts. *)
 let rec vars = function
-  | Spec {name; syntax} -> StringSet.(union (singleton name) (vars syntax))
+  | Bind {name; syntax} -> StringSet.(union (singleton name) (vars syntax))
   | Space | Lit _ | Eof | Return _ -> StringSet.empty
   | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
 
@@ -66,9 +66,9 @@ let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bind
   match p with
   | Space -> output_str " ", bindings
   | Lit x -> output_str x, bindings
-    (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Specs. *)
+    (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Binds. *)
   | Return _ | Eof -> output [], bindings
-  | Spec {name; _} -> bindings_pop name bindings
+  | Bind {name; _} -> bindings_pop name bindings
   | Seq [] -> output [], bindings
   | Seq (x::xs) ->
     let out,flds = recurse x in
@@ -108,7 +108,7 @@ let rec disjunctive_clauses (p: parseable): parseable list =
   let open CCList.Infix in
   match p with
   | Space | Lit _ | Return _ | Eof as x -> [x]
-  | Spec {name; syntax} -> List.map (fun syntax -> Spec {name; syntax}) @@ disjunctive_clauses syntax
+  | Bind {name; syntax} -> List.map (fun syntax -> Bind {name; syntax}) @@ disjunctive_clauses syntax
   | Seq [] -> [Seq []]
   | Seq (x::xs) ->
       let* head = disjunctive_clauses x in

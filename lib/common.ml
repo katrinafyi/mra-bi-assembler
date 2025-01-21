@@ -17,7 +17,7 @@ include (Types : sig
 
   *)
   type parseable = Types.parseable =
-  | Spec of spec (** A subparser, binding its result into the associated name. See {!type:spec}. *)
+  | Bind of bind (** A subparser, binding its result into the associated name. See {!type:bind}. *)
   | Or of parseable list (** A choice between a given list of alternatives. Backtracking occurs within a single Or pattern. *)
   | Seq of parseable list (** A sequential composition of the given parseables. *)
   | Lit of string (** A literal string. *)
@@ -31,7 +31,7 @@ include (Types : sig
       This is used to extract interesting information from the parseable, particularly
       in the case of {!constructor:Or} parsers.
   *)
-  and spec = Types.spec = {
+  and bind = Types.bind = {
     name: string;
     syntax: parseable;
   }
@@ -69,10 +69,10 @@ end
 
 (** {3 Bindings type} *)
 
-(** Bindings are the results of subtrees named by {!type:spec} values.
+(** Bindings are the results of subtrees named by {!type:bind} values.
 
     These are returned as a map alongside the main result.
-    A binding name may be bound multiple times if its {!type:spec} name
+    A binding name may be bound multiple times if its {!type:bind} name
     appears and is matched more than once.
 *)
 type bindings = output list StringMap.t
@@ -134,7 +134,7 @@ end
 
 (** {2 Derived functions} *)
 
-(** Automatically-generated functions for {!type:parseable} and {!type:spec}.
+(** Automatically-generated functions for {!type:parseable} and {!type:bind}.
 
     @closed
 *)
@@ -164,8 +164,8 @@ let fail = Or []
 (** A parser that accepts the given parser or the empty string. *)
 let optional x = Or [x; empty]
 
-(** The constructor for {!constructor:Spec} in function form. *)
-let spec name syntax = Spec {name; syntax}
+(** The constructor for {!constructor:Bind} in function form. *)
+let bind name syntax = Bind {name; syntax}
 
 (** Parses the given parser in between the given [l] and [r] delimiters.
     Delimeters default to open- and close- square brackets.
@@ -204,7 +204,7 @@ let rec describe_parseable =
 
   | Or orrs -> "(" ^ (String.concat " | " (List.map describe_parseable orrs)) ^ ")"
   | Seq seqs -> String.concat "" (List.map describe_parseable seqs)
-  | Spec {name; _} -> name
+  | Bind {name; _} -> name
   | Lit s -> quote s
   | Space -> " "
 

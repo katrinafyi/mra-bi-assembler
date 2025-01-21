@@ -7,14 +7,14 @@
 
 
 type parseable =
-  | Spec of spec
+  | Bind of bind
   | Or of parseable list
   | Seq of parseable list
   | Lit of string
   | Space
   | Return of string
   | Eof
-and spec = {
+and bind = {
   name: string;
   syntax: parseable;
 }
@@ -23,16 +23,16 @@ and spec = {
 module type Derived = sig
   val pp_parseable : Format.formatter -> parseable -> unit
   val show_parseable : parseable -> string
-  val pp_spec : Format.formatter -> spec -> unit
-  val show_spec : spec -> string
+  val pp_bind : Format.formatter -> bind -> unit
+  val show_bind : bind -> string
   val equal_parseable : parseable -> parseable -> bool
-  val equal_spec : spec -> spec -> bool
+  val equal_bind : bind -> bind -> bool
   val compare_parseable : parseable -> parseable -> int
-  val compare_spec : spec -> spec -> int
+  val compare_bind : bind -> bind -> int
   val parseable_to_yojson : parseable -> Yojson.Safe.t
   val parseable_of_yojson :
     Yojson.Safe.t -> parseable Ppx_deriving_yojson_runtime.error_or
-  val spec_to_yojson : spec -> Yojson.Safe.t
-  val spec_of_yojson :
-    Yojson.Safe.t -> spec Ppx_deriving_yojson_runtime.error_or
+  val bind_to_yojson : bind -> Yojson.Safe.t
+  val bind_of_yojson :
+    Yojson.Safe.t -> bind Ppx_deriving_yojson_runtime.error_or
 end

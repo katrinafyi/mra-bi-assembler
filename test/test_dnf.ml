@@ -24,18 +24,18 @@ let%expect_test "dnf" =
     (Types.Seq [(Types.Lit "a"); (Types.Lit "d")])
     (Types.Seq [(Types.Lit "b"); (Types.Lit "c")])
     (Types.Seq [(Types.Lit "b"); (Types.Lit "d")]) |}];
-  print_parseables @@ disjunctive_clauses (spec "hi" sequential_ors);
+  print_parseables @@ disjunctive_clauses (bind "hi" sequential_ors);
   [%expect {|
-    (Types.Spec
+    (Types.Bind
        { Types.name = "hi";
          syntax = (Types.Seq [(Types.Lit "a"); (Types.Lit "c")]) })
-    (Types.Spec
+    (Types.Bind
        { Types.name = "hi";
          syntax = (Types.Seq [(Types.Lit "a"); (Types.Lit "d")]) })
-    (Types.Spec
+    (Types.Bind
        { Types.name = "hi";
          syntax = (Types.Seq [(Types.Lit "b"); (Types.Lit "c")]) })
-    (Types.Spec
+    (Types.Bind
        { Types.name = "hi";
          syntax = (Types.Seq [(Types.Lit "b"); (Types.Lit "d")]) }) |}];
 

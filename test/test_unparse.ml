@@ -16,7 +16,7 @@ let%expect_test "unparse_errors" =
   (* let syntax = Spec_files.Add.add_x1.syntax in *)
   catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_bindings (Or [Lit ""; Lit ""]) StringMap.empty);
   [%expect {| failure: unparse failure: ambiguous choices at Or: ok: tokens=[""] bindings={  } OR ok: tokens=[""] bindings={  } |}];
-  catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_bindings (Or [spec "a" eof; spec "b" eof]) StringMap.empty);
+  catch (fun () -> print_endline @@ show_parse_output @@ unparse_with_bindings (Or [bind "a" eof; bind "b" eof]) StringMap.empty);
   [%expect {| failure: unparse failure: no possible choices at Or with available bindings |}]
 
 let%expect_test "unparse_round_trip" =

@@ -49,7 +49,7 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * bind
       let results, bindingss = List.split result in
       let bindings = List.fold_left join_bindings StringMap.empty bindingss in
       (output_concat results, bindings)
-  | Spec {name;syntax} ->
+  | Bind {name;syntax} ->
       let+ result, bindings = recurse syntax <?> failure_msg in
       result, if name <> "" then bindings_add name result bindings else bindings
   | Lit s -> let+ s = Angstrom.string s in no_bindings (output [s])
@@ -66,7 +66,7 @@ let run_parse (p: parseable): (output * bindings) Angstrom.t =
 let run_parse_of_string (p: parseable) (s: string): (output * bindings, string) result =
   Angstrom.parse_string ~consume:Angstrom.Consume.All (run_parse p) s
 
-(* let rec run_parse_with_stack ({name; syntax}: spec) (stack: string list): bindings Angstrom.t = *)
+(* let rec run_parse_with_stack ({name; syntax}: bind) (stack: string list): bindings Angstrom.t = *)
 (*   let failure_msg = make_failure_message stack in *)
 (*   let stack' = name :: stack in *)
 (*   let recurse s = run_parse_with_stack s stack' in *)

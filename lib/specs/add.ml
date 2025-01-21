@@ -23,10 +23,10 @@ let integer = Lit "0"
 
 let extend = literals ["uxtx"]
 
-let add_x1 : spec = {
+let add_x1 : bind = {
   name = "add_shiftedreg";
-  syntax = Seq [Lit "add"; Space; spec "Xd" xreg_with_sp; Space; comma; Space; spec "Xn" xreg_with_sp; Space; comma; Space; spec "Xm" xreg;
-    optional @@ Seq [Space; comma; Space; spec "extend" extend;
-      optional @@ Seq [Space; hash; spec "imm" integer]]
+  syntax = Seq [Lit "add"; Space; bind "Xd" xreg_with_sp; Space; comma; Space; bind "Xn" xreg_with_sp; Space; comma; Space; bind "Xm" xreg;
+    optional @@ Seq [Space; comma; Space; bind "extend" extend;
+      optional @@ Seq [Space; hash; bind "imm" integer]]
   ];
 }
