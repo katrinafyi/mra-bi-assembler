@@ -51,50 +51,6 @@ let rec vars = function
   | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
 
 
-(** Attempts to compute a list of string tokens which could have
-    resulted in given parseable producing the given bindings.
-    Returns the unparsing and the remaining bindings.
-
-    Warning: Makes various unspecified assumptions about the structure
-    of the parseable and the bindings.
-
-    @raises Not_found when a required binding is missing from the given bindings map (that is, there is no valid parse without binding this name).
-    @raises Failure multiple ambiguous unparses.
-*)
-let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bindings =
-  let recurse x = unparse_with_bindings x bindings in
-  match p with
-  | Space -> output_str " ", bindings
-  | Lit x -> output_str x, bindings
-    (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Binds. *)
-  | Return _ | Eof -> output [], bindings
-  | Bind {name; _} -> bindings_pop name bindings
-  | Seq [] -> output [], bindings
-  | Seq (x::xs) ->
-    let out,flds = recurse x in
-    let out2,flds2 = unparse_with_bindings (Seq xs) flds in
-    output_append out.output out2.output, flds2
-  | Or xs ->
-    let go x = try Some (recurse x) with | Not_found -> None in
-    let poss = CCList.keep_some @@ List.map go xs in
-    (* NOTE: select the alternative choice which consumes the most bindings. *)
-    let poss = List.stable_sort (fun (_,x) (_,y) -> bindings_compare x y) poss in
-    match poss with
-    | [] -> raise Not_found
-    | [x] -> x
-    | x::y::_ when bindings_compare (snd x) (snd y) = -1 -> x
-    | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map (fun x -> show_parse_result (Ok x)) xs)
-
-(** Calls {!unparse_with_bindings} and ensures that the final bindings map is empty.
-    This is what you should use to unparse a top-level parser.
-
-    @raises Failure
-*)
-let unparse (p: parseable) (bindings: bindings): output =
-  match unparse_with_bindings p bindings with
-  | out, fs when bindings_equal fs StringMap.empty -> out
-  | x -> failwith @@ "unparse failure: leftover bindings in " ^ show_parse_output x
-
 (** Converts the given parseable into its {i disjunctive clauses}.
 
     The disjunctive clauses are such that [Or (disjunctive_clauses p)]
@@ -115,3 +71,93 @@ let rec disjunctive_clauses (p: parseable): parseable list =
       List.map (function Seq tl -> Seq (head::tl) | tl -> Seq [head;tl]) (disjunctive_clauses (Seq xs))
   | Or ors ->
       List.concat_map disjunctive_clauses ors
+
+(** {1 Unparsing} *)
+
+(** Implementation of the "unparsing" functionality.
+    The goal of feature is to enable the parsers to be used as printers by manually assigning values to the bindings
+    within the {!Common.parseable}.
+
+    Fundamentally, unparsing relies on the usage of {!Common.parseable.Bind} operators
+    to disambiguate between {!Common.parseable.Or} alternatives.
+
+    To make a parseable which is suitable for unparsing, you have two options when using [Or] operators:
+    {ul
+      {- (1) Place the [Or] directly within a [Bind], recording the result of the [Or] as a new binding.
+         This is most suitable where the [Or] alternatives are simple literals.
+         Binding more complex expressions in this way undermines the goals of unparsing.
+         }
+      {- (2) Use distinct [Bind] names within each [Or] alternative.
+        The unparsing will choose the alternative which is most applicable given the available bindings.
+        When using this, you should ensure that the binding names, together with the number of times they're bound,
+        is sufficient to disambiguate alternatives.
+        The unparse will fail if it cannot determine a unique best alternative.
+      }
+    }
+
+    Both approaches are demonstrated in this example:
+    {[
+    (* TODO *)
+    ]}
+*)
+module Unparse = struct
+
+  (** Attempts to compute a list of string tokens which could have
+      resulted in given parseable producing the given bindings.
+      Returns the unparsing and the remaining unused bindings.
+
+      When encountering a {!Common.Bind} operator, the bindings map
+      is searched for a matching name.
+      If found, the bound value is returned as the unparse and it is
+      popped from the bindings map.
+
+      When encountering an {!Common.Or}, the unparse explores each alternative and selects the unique alternative
+      which results in the {i least} leftover bindings.
+      Here, "least" is defined by the partial order of {!Common.bindings_compare}.
+
+      @raises Not_found when there is no feasible parse (for example, but not limited to, a required name is missing from the given bindings).
+      @raises Failure if there are multiple ambiguous unparses.
+  *)
+  let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bindings =
+    let recurse x = unparse_with_bindings x bindings in
+    match p with
+    | Space -> output_str " ", bindings
+    | Lit x -> output_str x, bindings
+      (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Binds. *)
+    | Return _ | Eof -> output [], bindings
+    | Bind {name; _} -> bindings_pop name bindings
+    | Seq [] -> output [], bindings
+    | Seq (x::xs) ->
+      let out,flds = recurse x in
+      let out2,flds2 = unparse_with_bindings (Seq xs) flds in
+      output_append out.output out2.output, flds2
+    | Or xs ->
+      let go x = try Some (recurse x) with | Not_found -> None in
+      let poss = CCList.keep_some @@ List.map go xs in
+      (* NOTE: select the alternative choice which consumes the most bindings. *)
+      let poss = List.stable_sort (fun (_,x) (_,y) -> bindings_compare x y) poss in
+      match poss with
+      | [] -> raise Not_found
+      | [x] -> x
+      | x::y::_ when bindings_compare (snd x) (snd y) = -1 -> x
+      | _ as xs -> failwith @@ "unparse failure: ambiguous choices at Or: " ^ String.concat " OR " (List.map (fun x -> show_parse_result (Ok x)) xs)
+
+  (** Calls {!unparse_with_bindings} and ensures that the final bindings map is empty.
+      This is what you should use to unparse a top-level parser.
+
+      @raises Failure if unparsing did not use all bindings.
+  *)
+  let unparse (p: parseable) (bindings: bindings): output =
+    match unparse_with_bindings p bindings with
+    | out, fs when bindings_equal fs StringMap.empty -> out
+    | x -> failwith @@ "unparse failure: leftover bindings in " ^ show_parse_output x
+
+end
+
+(** See {!Unparse.unparse_with_bindings}. *)
+let unparse_with_bindings = Unparse.unparse_with_bindings
+
+(** See {!Unparse.unparse}. *)
+let unparse = Unparse.unparse
+
+

@@ -1,0 +1,48 @@
+{0 mra_bi_assembler }
+
+Welcome to the MRA bi-assembler project.
+The {{:https://github.com/katrinafyi/mra-bi-assembler} code repository} is publicly available.
+
+The goal of this project is to provide a framework for automatically-generating
+instruction assemblers and disassemblers, given a machine-readable description
+of an architecture's assembly syntax.
+The generated assemblers are intended to be invertible, hence the name {i bi-assembler}.
+
+The produced bi-assembler will be able to convert to and from instruction bytes and
+an assembly mnemonic.
+For example, for aarch64, one such conversion is:
+{v
+add x1, x2, x3, lsl #4  <->  0x8b031041
+v}
+
+We note that this project {i does not} do object assembly
+(i.e., each instruction is (dis)assembled in isolation and it does not support symbolic addresses or labels).
+
+The {!module:Lang} library provides an architecture-agnostic domain-specific language, {!Lang.Common.parseable},
+for defining assembly parsers and instruction decoders.
+These are unified in this framework. For example, a decoder is just a parser with byte strings as input.
+Abiding by some minor constraints, these parses can be made to be reversible, enabling their use in a bi-directional
+conversion (see {!Lang.Analysis.unparse}).
+
+It is anticipated that {i frontends} will construct the abstractions in {!module:Lang}
+from some architecture-specific data files.
+In order to be functional for assembly and disassembly, a frontend should produce approximately:
+{ul
+{- an instruction decoder: parsing instruction bytes (e.g., as a string of binary characters) to an encoding name.}
+{- for each encoding name: {ul
+  {- an assembly parser: parsing assembly text and extracting its fields (e.g., [mov x1, x2] parses to [{Xd=x1; Xn=x2}]).}
+  {- a bitfield extractor: parsing a binary string and extracting its fields (e.g., [0011] parses to [Xd=11]).}
+  }
+}
+{- for each kind of field used in the syntax: {ul
+  {- a field formatter: converting a binary encoding to its textual string (e.g., [11] parses to [Xd]).}
+}
+}
+}
+Then, the assembly parser is constructed by joining all the encoding parsers with the {!module-Lang.Common.Or} operator.
+
+
+{1 Library mra_bi_assembler.lang}
+
+The entry point of this library is the module: {!module:Lang}.
+
