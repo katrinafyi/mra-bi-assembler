@@ -75,6 +75,8 @@ end
     These are returned as a map alongside the main result.
     A binding name may be bound multiple times if its {!type:bind} name
     appears and is matched more than once.
+    Within an [output list], outputs are ordered in the order they
+    appear in the {!type:parseable}.
 *)
 type bindings = output list StringMap.t
 
@@ -115,8 +117,6 @@ include struct
       @raises Failure if the two bindings are incomparable (neither is less than or equal to the other)
   *)
   let bindings_compare (f1: bindings) (f2: bindings) =
-    let f1 = StringMap.filter (fun _ x -> List.length x <> 0) f1 in
-    let f2 = StringMap.filter (fun _ x -> List.length x <> 0) f2 in
     let is_suffix_of suffix xs =
       let left_short_by = List.(length xs - length suffix) in
       if left_short_by >= 0 then
