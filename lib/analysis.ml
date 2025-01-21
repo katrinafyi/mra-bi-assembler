@@ -95,6 +95,9 @@ let rec disjunctive_clauses (p: parseable): parseable list =
         The unparse will fail if it cannot determine a unique best alternative.
       }
     }
+    Furthermore, a {!Common.parseable.Bind} should not appear within a {!Common.parseable.Bind} with the same binding name.
+    This will cause leftover bindings as the unparse will not visit the inner [Bind].
+    Repeating the same binding name in a manner which is not conceptually a repetition is discouraged.
 
     Both approaches are demonstrated in this example:
     {[

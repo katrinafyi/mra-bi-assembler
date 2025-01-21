@@ -39,17 +39,18 @@ include (Types : sig
 end)
 
 
-(** {2 Output and binding definitions} *)
-
 module StringSet = CCSet.Make(String)
 module StringMap = CCMap.Make(String)
 
 (** Places double quotes around the given string. *)
 let quote x = "\"" ^ x ^ "\""
 
-(** {3 Output type} *)
+(** {2 Output type} *)
 
-(** Currently, all parseables will produce [string list] when parsed. *)
+(** Currently, all parseables will produce [string list] when parsed.
+    This explicit type helps avoid confusion with other lists,
+    especially in the case of an [output list].
+*)
 type output = { output: string list }
 
 (** Functions on {!type:output} objects.
@@ -67,7 +68,7 @@ include struct
   let output_concat xs = output @@ List.concat_map (fun x -> x.output) xs
 end
 
-(** {3 Bindings type} *)
+(** {2 Bindings type} *)
 
 (** Bindings are the results of subtrees named by {!type:bind} values.
 
@@ -77,13 +78,15 @@ end
 *)
 type bindings = output list StringMap.t
 
-(** Functions on {!type:bindings} objects. These should be used in preference
-    to the normal map functions, as they implement the semantics of bindings
+(** Functions on {!type:bindings} objects. These must be used instead of
+    the normal map functions to maintain the semantics of bindings
     as a list of parse outputs.
 
     @closed
 *)
 include struct
+
+  let bindings_empty : bindings = StringMap.empty
 
   (** Adds a new output to the given binding name. The new output is added to the front of the output list. *)
   let bindings_add (k: string) (v: output) (flds: bindings): bindings =

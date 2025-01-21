@@ -18,6 +18,8 @@ let round_trip p (s: string) =
     let _,bindings = Result.get_ok result in
     let unparsed = unparse_with_bindings p bindings in
     print_endline @@ "unparsed: " ^ show_parse_output unparsed;
+    if not (bindings_equal (snd unparsed) bindings_empty) then
+      print_endline "... WARNING: unparse has unused bindings!";
     let reparse = String.concat "" (fst unparsed).output in
     let result2 = run_parse_of_string p reparse in
     print_result result2;
@@ -75,3 +77,15 @@ let%expect_test "multiple bindings" =
     ok: tokens=["1", "1", "2", "2", "3", "3"] bindings={ a=[["1", "1"], ["2", "2"], ["3", "3"]] }
     unparsed: tokens=["1", "1", "2", "2", "3", "3"] bindings={ a=[] }
     ok: tokens=["1", "1", "2", "2", "3", "3"] bindings={ a=[["1", "1"], ["2", "2"], ["3", "3"]] } |}]
+
+let%expect_test "nested bindings" =
+  let d = literals ["1"; "2"; "3"] in
+  let p = bind "a" (Seq [d; bind "a" d]) in
+  parse_and_print p "13";
+  [%expect {| ok: tokens=["1", "3"] bindings={ a=[["1", "3"], ["3"]] } |}];
+  round_trip p "13";
+  [%expect {|
+    ok: tokens=["1", "3"] bindings={ a=[["1", "3"], ["3"]] }
+    unparsed: tokens=["1", "3"] bindings={ a=[["3"]] }
+    ... WARNING: unparse has unused bindings!
+    ok: tokens=["1", "3"] bindings={ a=[["1", "3"], ["3"]] } |}]
