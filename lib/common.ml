@@ -190,12 +190,27 @@ let bracketed ?(l = Lit "[") ?(r = Lit "]") x = Seq [l; x; r]
     optimisation when one or both of its arguments is {!constructor:Seq},
     fusing them together if possible.
     *)
-let parseable_cons x y =
+let parseable_append x y =
   match x,y with
+  | Seq [], x | x, Seq[] -> x
   | Seq l, Seq r -> Seq (l @ r)
   | _, Seq tl -> Seq (x::tl)
   | Seq x, _ -> Seq (x @ [y])
   | _, tl -> Seq [x; tl]
+
+(** Repetition combinator, accepting repetitions of [p] at least [min] and at most [max] times (both inclusive).
+    Requires both bounds be non-negative. *)
+let rec repeat ~(min:int) ~(max:int) p =
+  match min,max with
+  | _ when min < 0 || max < 0 -> failwith "repeat: requires min >= 0 and max >= 0"
+  | _ when min > max -> fail
+  | _ when min = max -> Seq (List.init min (Fun.const p))
+  | _ when min > 0 -> parseable_append (repeat ~min:min ~max:min p) (repeat ~min:0 ~max:(max-min) p)
+
+  (* min == 0 past this point: *)
+  | _ when max = 0 -> empty
+  | _ when max > 0 -> optional (parseable_append p (repeat ~min:0 ~max:(max-1) p))
+  | _ -> failwith "trichotomy"
 
 (** {1 Printing functions} *)
 
@@ -217,7 +232,7 @@ let rec describe_parseable =
   | Or [x; Seq []] -> "(" ^ describe_parseable x ^ ")?"
 
   | Or orrs -> "(" ^ (String.concat " | " (List.map describe_parseable orrs)) ^ ")"
-  | Seq seqs -> String.concat "" (List.map describe_parseable seqs)
+  | Seq seqs -> String.concat " " (List.map describe_parseable seqs)
   | Bind {name; _} -> name
   | Lit s -> quote s
   | Space -> " "

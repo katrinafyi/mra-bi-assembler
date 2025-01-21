@@ -31,3 +31,25 @@ let%expect_test "or" =
   [%expect {| ok: tokens=["x33"] bindings={  } |}];
   parse_and_print orr "x3x3";
   [%expect {| error: : end_of_input |}]
+
+let%expect_test "repeat" =
+  let p = literals ["x"] in
+  print_endline @@ describe_parseable (repeat ~min:0 ~max:0 p);
+  [%expect {| empty |}];
+  print_endline @@ describe_parseable (repeat ~min:0 ~max:1 p);
+  [%expect {| ("x")? |}];
+  print_endline @@ describe_parseable (repeat ~min:0 ~max:2 p);
+  [%expect {| ("x" ("x")?)? |}];
+  print_endline @@ describe_parseable (repeat ~min:2 ~max:2 p);
+  [%expect {| "x" "x" |}];
+  print_endline @@ describe_parseable (repeat ~min:2 ~max:4 p);
+  [%expect {| "x" "x" ("x" ("x")?)? |}];
+  let rep = (repeat ~min:2 ~max:4 p) in
+  List.iter (parse_and_print rep) [""; "x"; "xx"; "xxx"; "xxxx"; "xxxxx"];
+  [%expect {|
+    error: "x" "x" ("x" ("x")?)?: not enough input
+    error: "x" "x" ("x" ("x")?)?: not enough input
+    ok: tokens=["x", "x"] bindings={  }
+    ok: tokens=["x", "x", "x"] bindings={  }
+    ok: tokens=["x", "x", "x", "x"] bindings={  }
+    error: : end_of_input |}]
