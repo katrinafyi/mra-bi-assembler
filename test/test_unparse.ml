@@ -18,7 +18,7 @@ let round_trip p (s: string) =
     let _,bindings = Result.get_ok result in
     let unparsed = unparse_with_bindings p bindings in
     print_endline @@ "unparsed: " ^ show_parse_output unparsed;
-    if not (bindings_equal (snd unparsed) bindings_empty) then
+    if not (bindings_is_empty (snd unparsed)) then
       print_endline "... WARNING: unparse has unused bindings!";
     let reparse = String.concat "" (fst unparsed).output in
     let result2 = run_parse_of_string p reparse in

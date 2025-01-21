@@ -86,8 +86,6 @@ type bindings = output list StringMap.t
 *)
 include struct
 
-  let bindings_empty : bindings = StringMap.empty
-
   (** Adds a new output to the given binding name. The new output is added to the front of the output list. *)
   let bindings_add (k: string) (v: output) (flds: bindings): bindings =
     let prev = StringMap.get_or k ~default:[] flds in
@@ -109,7 +107,7 @@ include struct
 
   (** Partial order on bindings, comparing two bindings by the number of outputs they contain.
 
-      A bindings map [b1] is {i less than or equal to} [b2] if for every entry [(k,v1)] in [b1],
+      A bindings map [b1] is {i less than or equal to} [b2] if: for every entry [(k,v1)] in [b1],
       [b2] has a mapping for [k] and [v1] is a suffix of [f2(k)].
       For the purpose of this comparison, a mapping to the empty list is treated as if no
       mapping was present.
@@ -138,6 +136,9 @@ include struct
 
 
   let bindings_equal f1 f2 = bindings_compare f1 f2 = 0
+
+  let bindings_empty : bindings = StringMap.empty
+  let bindings_is_empty = bindings_equal bindings_empty
 end
 
 (** {2 Derived functions} *)

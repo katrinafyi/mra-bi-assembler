@@ -95,7 +95,7 @@ let rec disjunctive_clauses (p: parseable): parseable list =
         The unparse will fail if it cannot determine a unique best alternative.
       }
     }
-    Furthermore, a {!Common.parseable.Bind} should not appear within a {!Common.parseable.Bind} with the same binding name.
+    Furthermore, a {!Common.parseable.Bind} should not be nested within a {!Common.parseable.Bind} with the same binding name.
     This will cause leftover bindings as the unparse will not visit the inner [Bind].
     Repeating the same binding name in a manner which is not conceptually a repetition is discouraged.
 
@@ -153,7 +153,7 @@ module Unparse = struct
   *)
   let unparse (p: parseable) (bindings: bindings): output =
     match unparse_with_bindings p bindings with
-    | out, fs when bindings_equal fs StringMap.empty -> out
+    | out, fs when bindings_is_empty fs -> out
     | x -> failwith @@ "unparse failure: leftover bindings in " ^ show_parse_output x
 
 end

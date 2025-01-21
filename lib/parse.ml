@@ -33,7 +33,7 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * bind
   let stack' = describe_parseable p :: stack in
   let recurse s = run_parse_with_stack s stack' in
 
-  let no_bindings x = (x, StringMap.empty) in
+  let no_bindings x = (x, bindings_empty) in
 
   match p with
   | Space -> let+ () = space in no_bindings (output [])
@@ -42,7 +42,7 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * bind
   | Seq seqs ->
       let+ result = Angstrom.list (List.map recurse seqs) <?> failure_msg in
       let results, bindingss = List.split result in
-      let bindings = List.fold_left bindings_merge StringMap.empty bindingss in
+      let bindings = List.fold_left bindings_merge bindings_empty bindingss in
       (output_concat results, bindings)
   | Bind {name;syntax} ->
       let+ result, bindings = recurse syntax <?> failure_msg in
