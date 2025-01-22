@@ -59,9 +59,6 @@ and parse_asmtemplate () =
 
 let adds = ["ADDS  "; "<Wd>"; ", "; "<Wn>"; ", "; "<Wm>"; "{, "; "<shift>"; " #"; "<amount>"; "}"]
 
-let run_parse_asmtemplate (x: string) =
-  Angstrom.parse_string ~consume:Angstrom.Consume.All (parse_asmtemplate ()) x
-
 let string_of_asmtemplate = String.concat "\000"
 
 let rec placeholders : parsed_template -> string list =
@@ -87,9 +84,9 @@ let suspicious_choice (enc: InstEnc.t)(x: parsed_template): bool =
   ) xs
   | _ -> false
 
-let go (enc: InstEnc.t) =
+let run_parse_asmtemplate (enc: InstEnc.t) =
   let s = string_of_asmtemplate enc.asm.text in
-  let result = run_parse_asmtemplate s in
+  let result = Angstrom.parse_string ~consume:Angstrom.Consume.All (parse_asmtemplate ()) s in
   let x = Result.map_error (fun x -> String.concat "\t" enc.asm.text) result in
   (* (match x with *)
   (* | Ok t -> ignore (suspicious_choice enc t) *)

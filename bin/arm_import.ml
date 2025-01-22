@@ -19,11 +19,19 @@ let () =
 
   let encs = List.concat_map (fun (x: InstClass.t) ->
     List.filter f @@
+    List.map (InstClass.overlay_onto x) @@
     CCList.of_iter
     (StringMap.values x.encodings)) iclasses in
 
-  List.iter (fun x ->
-    print_endline (Lang.Common.show_result Arm.Asmtemplate.show_parsed_template x))
-  (List.map Arm.Asmtemplate.go encs)
+  print_endline "converting asmtemplates to parseables...";
+
+  (* List.iter (fun x -> *)
+  (*   print_endline (Lang.Common.show_result Arm.Asmtemplate.show_parsed_template x)) *)
+  (* (List.map Arm.Asmtemplate.go encs) *)
+
+  print_endline "extracting field conversions...";
+
+  let _ = List.map Arm.Fields.build_field_converters encs in
+  ()
 
 

@@ -60,6 +60,19 @@ module EncField = struct
     pattern: bool option StringMap.t;
   }
   [@@deriving show, of_yojson]
+
+  let equal_sizes (x: t) (y: t) =
+    x.name = y.name && x.hi = y.hi && x.lo = y.lo && x.wd = y.wd
+
+  let overlay (base: t StringMap.t) (over: t StringMap.t): t StringMap.t =
+    assert (StringMap.for_all (fun k v -> equal_sizes v (StringMap.find k over)) over);
+    StringMap.map
+      (fun v ->
+        match StringMap.find_opt v.name over with
+        | Some ov -> ov
+        | None -> v)
+      base
+
 end
 
 module InstEnc = struct
@@ -83,6 +96,10 @@ module InstClass = struct
     encodings: InstEnc.t StringMap.t;
   }
   [@@deriving show, of_yojson]
+
+  let overlay_onto (self: t) (x: InstEnc.t): InstEnc.t =
+    {x with encfields = EncField.overlay self.classfields x.encfields}
+
 end
 
 type instclasses = InstClass.t list
