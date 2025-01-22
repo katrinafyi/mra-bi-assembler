@@ -1,14 +1,21 @@
 module StringMap = struct
+  (** @closed *)
   include Lang.Common.StringMap
 
+  (** Overrided to make the type signature compatible with deriving yojson. *)
   let of_yojson (f: Yojson.Safe.t -> 'a) =
     function
     | `Assoc entries -> Ok (of_list @@ List.map (fun (k,v) -> (k, Result.get_ok (f v))) entries)
     | _ -> Error "StringMap.of_yojson"
 
+  (** Overrided to make the type signature compatible with deriving yojson. *)
   let pp f fmt x =
     let p = Format.pp_print_string fmt in
-    p "{ "; pp CCString.pp f fmt x; p " }"
+    p "{ ";
+    Format.pp_open_box fmt 0;
+    pp CCString.pp f fmt x;
+    Format.pp_close_box fmt ();
+    p " }"
 
 end
 
