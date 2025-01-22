@@ -267,6 +267,11 @@ let show_parse_result =
   | Ok (x, bindings) -> "ok: " ^ show_parse_output (x, bindings)
   | Error x -> "error: " ^ x
 
+let show_result f =
+  function
+  | Ok x -> "ok: " ^ f x
+  | Error x -> "error: " ^ x
+
 (* let show_outputs (o: outputs): string = *)
 (*   "possible outputs: " ^ String.concat "; " (List.map (fun (o,f) -> show_parse_result (Ok (o, f))) o) *)
 

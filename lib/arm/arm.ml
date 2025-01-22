@@ -5,4 +5,7 @@
     Arm's {{:https://developer.arm.com/downloads/-/exploration-tools}Exploration Tools}.
 *)
 
-module Import = Import
+module Types = Types
+module Asmtemplate = Asmtemplate
+
+

@@ -18,6 +18,9 @@ module AngstromSyntax = struct
   let (<*) = Angstrom.(<*)
   let ( *> ) = Angstrom.( *> )
   let (<?>) = Angstrom.(<?>)
+  let (>>|) = Angstrom.(>>|)
+  let (<$>) = Angstrom.(<$>)
+  let (<|>) = Angstrom.(<|>)
 end
 
 (** Parses zero or more whitespace characters (space or tab). *)
