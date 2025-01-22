@@ -19,6 +19,8 @@ module StringMap = struct
 
 end
 
+module StringSet = Lang.Common.StringSet
+
 module Assoc = struct
   type t = {
     link: string;

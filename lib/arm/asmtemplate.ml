@@ -10,7 +10,12 @@ let isspace =
   | _ -> false
 let isword =
   function
-  | 'A'..'Z' | 'a'..'z' | '0'..'9' | '.' | ',' | '#' | '[' | ']' -> true
+  | 'A'..'Z' | 'a'..'z' | '0'..'9' | '.' | ',' | '#' | '[' | ']'
+  | '!' | '-' -> true
+  | _ -> false
+let isupper =
+  function
+  | 'A'..'Z' -> true
   | _ -> false
 
 type parsed_template =
@@ -18,8 +23,9 @@ type parsed_template =
   | Literal of string
   | Placeholder of string
   | Optional of parsed_template
+  | Choice of parsed_template list
   | Sequence of parsed_template list
-[@@deriving show]
+[@@deriving show, eq]
 
 open CCFun.Infix
 
@@ -41,8 +47,14 @@ let rec parse_optional () =
   let* _ = Angstrom.char '}' in
   Angstrom.return (Optional x)
 
+and parse_choice () =
+  let* _ = Angstrom.char '(' in
+  let* xs = Angstrom.sep_by1 (Angstrom.char '|') (parse_asmtemplate ()) in
+  let* _ = Angstrom.char ')' in
+  Angstrom.return (Choice xs)
+
 and parse_asmtemplate () =
-  Angstrom.many1 (parse_placeholder <|> parse_optional () <|> parse_literal <|> parse_spaces)
+  Angstrom.many1 (parse_placeholder <|> parse_optional () <|> parse_choice () <|> parse_literal <|> parse_spaces)
   >>| fun x -> Sequence x
 
 let adds = ["ADDS  "; "<Wd>"; ", "; "<Wn>"; ", "; "<Wm>"; "{, "; "<shift>"; " #"; "<amount>"; "}"]
@@ -52,11 +64,35 @@ let run_parse_asmtemplate (x: string) =
 
 let string_of_asmtemplate = String.concat "\000"
 
-let go (iclass: InstEnc.t StringMap.t) =
-  StringMap.map
-    (fun (enc: InstEnc.t) ->
-      let s = string_of_asmtemplate enc.asm.text in
-      let result = run_parse_asmtemplate s in
-      result)
-    iclass
+let rec placeholders : parsed_template -> string list =
+  function
+  | Spaces _ | Literal _ -> []
+  | Placeholder x -> [x]
+  | Optional x -> placeholders x
+  | Choice x | Sequence x -> List.concat_map placeholders x
+
+let suspicious_choice (enc: InstEnc.t)(x: parsed_template): bool =
+  match x with
+  | Sequence xs -> [] = List.filter
+      (function
+      | Optional (Sequence (Literal "," :: _)) -> false
+      | Optional _ as x ->
+        let sus = List.filter (fun x -> isupper (String.get x 0)) (placeholders x) in
+        if sus <> [] then begin
+          print_endline enc.encname;
+          print_endline @@ Lang.Common.show_list Fun.id sus;
+        end;
+      true
+        | _ -> false
+  ) xs
+  | _ -> false
+
+let go (enc: InstEnc.t) =
+  let s = string_of_asmtemplate enc.asm.text in
+  let result = run_parse_asmtemplate s in
+  let x = Result.map_error (fun x -> String.concat "\t" enc.asm.text) result in
+  (* (match x with *)
+  (* | Ok t -> ignore (suspicious_choice enc t) *)
+  (* | _ -> ()); *)
+  x
 
