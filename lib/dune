@@ -1,0 +1,3 @@
+(documentation
+ (package mra_bi_assembler)
+ (mld_files :standard))

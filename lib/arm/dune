@@ -1,0 +1,7 @@
+(library
+ (name arm)
+ (public_name mra_bi_assembler.arm)
+ (modules arm import)
+ (libraries ppx_deriving_yojson.runtime angstrom containers mra_bi_assembler.lang)
+ (preprocess (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_deriving_yojson)))
+

@@ -3,6 +3,8 @@
 Welcome to the MRA bi-assembler project.
 The {{:https://github.com/katrinafyi/mra-bi-assembler} code repository} is publicly available.
 
+For the main library documentation, see {!module:Lang}.
+
 The goal of this project is to provide a framework for automatically-generating
 instruction assemblers and disassemblers, given a machine-readable description
 of an architecture's assembly syntax.
@@ -47,4 +49,9 @@ Then, the assembly parser is constructed by joining all the encoding parsers wit
 {1 Library mra_bi_assembler.lang}
 
 The entry point of this library is the module: {!module:Lang}.
+
+
+{1 Library mra_bi_assembler.arm}
+
+The entry point of this library is the module: {!module:Arm}.
 
