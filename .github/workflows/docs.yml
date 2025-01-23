@@ -29,13 +29,28 @@ jobs:
       - run: |
           cp -rv $(opam exec -- odig cache path)/html ./www
 
+          set -x
           cd www
+
           cp -v ./*/404.html .
-          chmod -v +w 404.html
-          sed -i.bak 's|<head>|<head><base href="https://katrinafyi.github.io/mra-bi-assembler/mra_bi_assembler/" />|' 404.html
+          sed -i.bak 's|<head>|<head><base href="https://katrinafyi.github.io/mra-bi-assembler/mra_bi_assembler/404.html" />|' 404.html
+
+          echo "$CSS" >> ./_odoc-theme/odoc.css
 
         working-directory: _build
-      - run: ls -lR _opam
+        env:
+          CSS: |
+            h1 nav {
+              display: inline;
+              font-size: 18px;
+              font-weight: normal;
+            }
+            h1 .version {
+              font-size: 18px;
+            }
+            h1 nav > * {
+              margin-left: 10px;
+            }
 
       - id: deployment
         uses: actions/upload-pages-artifact@v3

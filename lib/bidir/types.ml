@@ -135,8 +135,8 @@ let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
     if a required variable is undefined. A setter might throw if its given value
     does not match the required tuple structure.
 
-    @raises Invalid_argument in case of programmer error (e.g., invalid types provided to functions)
-    @raises Failure in case of value mismatches while pattern matching (provided the types agree).
+    @raises Stdlib.Invalid_argument in case of programmer error (e.g., invalid types provided to functions)
+    @raises Stdlib.Failure in case of value mismatches while pattern matching (provided the types agree).
 *)
 let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> state) =
   match e with
@@ -184,8 +184,8 @@ let reorder_one_stmt ~(dir: dir) = function
 (** Executes the given bidirectional program with the given initial state and intrinsic implementation.
     The program will be executed in forwards or reverse order depending on the specified direction.
 
-    @raises Failure in case of local failure within the DSL (e.g., pattern match failure).
-    @raises Invalid_argument in case of programmer error (e.g., missing declared fields or multiple paths through a {!Parallel}).
+    @raises Stdlib.Failure in case of local failure within the DSL (e.g., pattern match failure).
+    @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing declared fields or multiple paths through a {!Parallel}).
 *)
 let rec run_bidir ~(dir: dir) ~(intr: 'a intrinsic_impl) (st: state) (stmt: 'a stmt) =
   let stmt = reorder_one_stmt ~dir stmt in

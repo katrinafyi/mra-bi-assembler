@@ -121,7 +121,7 @@ include struct
 
   (** Pops one output associated to given name from the bindings. Returns the output and the modified bindings map.
 
-      @raises Not_found if the name is not bound or has no outputs remaining.
+      @raises Stdlib.Not_found if the name is not bound or has no outputs remaining.
   *)
   let bindings_pop (k: string) (flds: bindings): output * bindings =
     match StringMap.find k flds with
@@ -135,7 +135,7 @@ include struct
       For the purpose of this comparison, a mapping to the empty list is treated as if no
       mapping was present.
 
-      @raises Failure if the two bindings are incomparable (neither is less than or equal to the other)
+      @raises Stdlib.Failure if the two bindings are incomparable (neither is less than or equal to the other)
   *)
   let bindings_compare (f1: bindings) (f2: bindings) =
     let is_suffix_of suffix xs =

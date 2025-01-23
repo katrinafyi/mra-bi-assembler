@@ -139,8 +139,8 @@ module Unparse = struct
       which results in the {i least} leftover bindings.
       Here, "least" is defined by the partial order of {!Common.bindings_compare}.
 
-      @raises Not_found when there is no feasible parse (for example, but not limited to, a required name is missing from the given bindings).
-      @raises Failure if there are multiple ambiguous unparses.
+      @raises Stdlib.Not_found when there is no feasible parse (for example, but not limited to, a required name is missing from the given bindings).
+      @raises Stdlib.Failure if there are multiple ambiguous unparses.
   *)
   let rec unparse_with_bindings (p: parseable) (bindings: bindings): output * bindings =
     let recurse x = unparse_with_bindings x bindings in
@@ -169,7 +169,7 @@ module Unparse = struct
   (** Calls {!unparse_with_bindings} and ensures that the final bindings map is empty.
       This is what you should use to unparse a top-level parser.
 
-      @raises Failure if unparsing did not use all bindings.
+      @raises Stdlib.Failure if unparsing did not use all bindings.
   *)
   let unparse (p: parseable) (bindings: bindings): output =
     match unparse_with_bindings p bindings with
