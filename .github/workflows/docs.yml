@@ -17,18 +17,30 @@ jobs:
           ocaml-compiler: 4.14
           dune-cache: true
 
+      - run: opam install odig
       - run: opam install . --deps-only --with-doc
-      - run: opam exec -- dune build @doc
+
+      - run: opam exec -- dune build @install
+      - run: opam exec -- dune install
+
+      - run: opam exec -- odig odoc mra_bi_assembler -v --odoc-theme=odoc.default
+        env:
+          OPAMCOLOR: never
       - run: |
+          cp -rv $(opam exec -- odig cache path)/html ./www
+
+          cd www
           cp -v ./*/404.html .
           chmod -v +w 404.html
           sed -i.bak 's|<head>|<head><base href="https://katrinafyi.github.io/mra-bi-assembler/mra_bi_assembler/" />|' 404.html
-        working-directory: _build/default/_doc/_html
+
+        working-directory: _build
+      - run: ls -lR _opam
 
       - id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _build/default/_doc/_html
+          path: _build/www
 
   docs-publish:
     environment:
