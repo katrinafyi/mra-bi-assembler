@@ -27,7 +27,7 @@ let () =
 
   (* List.iter (fun x -> *)
   (*   print_endline (Lang.Common.show_result Arm.Asmtemplate.show_parsed_template x)) *)
-  (* (List.map Arm.Asmtemplate.go encs) *)
+  (*   (List.map Arm.Asmtemplate.run_parse_asmtemplate encs); *)
 
   print_endline "extracting field conversions...";
 

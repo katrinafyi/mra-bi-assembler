@@ -8,20 +8,20 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github katrinafyi/mra-bi-assembler))
 
-(authors "Author Name")
+(authors "Kait Lam <k@rina.fyi>")
 
-(maintainers "Maintainer Name")
+(maintainers "Kait Lam <k@rina.fyi>")
 
-(license LICENSE)
+(license Apache-2.0)
 
-(documentation https://url/to/documentation)
+(documentation https://katrinafyi.github.io/mra-bi-assembler/mra_bi_assembler/)
 
 (package
  (name mra_bi_assembler)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (synopsis "Deriving an assembler/disassembler from the ARM MRA")
+ (description "Libraries for programatically generating an assembler and disassembler from a machine-readable architecture specification. Created for the ARM Aarch64 architecture, but designed to be mostly architecture-agnostic. Includes a generic domain-specific language for defining invertible parsers and a simple bidirectional imperative language.")
  (depends
   ocaml
   dune
@@ -36,6 +36,6 @@
   (mdx (and :with-test (>= "2.3.0")))
  )
  (tags
-  (topics "to describe" your project)))
+  (topics "assembly" "parser" "disassembly")))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

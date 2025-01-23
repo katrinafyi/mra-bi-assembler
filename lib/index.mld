@@ -50,6 +50,10 @@ Then, the assembly parser is constructed by joining all the encoding parsers wit
 
 The entry point of this library is the module: {!module:Lang}.
 
+{1 Library mra_bi_assembler.bidir}
+
+The entry point of this library is the module: {!module:Bidir}.
+
 
 {1 Library mra_bi_assembler.arm}
 
