@@ -40,7 +40,26 @@ end)
 
 
 module StringSet = CCSet.Make(String)
-module StringMap = CCMap.Make(String)
+module StringMap = struct
+  (** @closed *)
+  include CCMap.Make(String)
+
+  (** Overrided to make the type signature compatible with deriving yojson. *)
+  let of_yojson (f: Yojson.Safe.t -> 'a) =
+    function
+    | `Assoc entries -> Ok (of_list @@ List.map (fun (k,v) -> (k, Result.get_ok (f v))) entries)
+    | _ -> Error "StringMap.of_yojson"
+
+  (** Overrided to make the type signature compatible with deriving yojson. *)
+  let pp f fmt x =
+    let p = Format.pp_print_string fmt in
+    p "{ ";
+    Format.pp_open_box fmt 0;
+    pp CCString.pp f fmt x;
+    Format.pp_close_box fmt ();
+    p " }"
+
+end
 
 (** Places double quotes around the given string. *)
 let quote x = "\"" ^ x ^ "\""

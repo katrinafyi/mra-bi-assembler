@@ -1,7 +1,7 @@
 (library
  (name expect_tests)
- (modules test_unparse test_parse test_dnf)
- (libraries mra_bi_assembler.lang spec_files)
+ (modules test_unparse test_parse test_dnf test_bidir)
+ (libraries mra_bi_assembler.lang mra_bi_assembler.bidir spec_files)
  (inline_tests (flags -verbose))
  (preprocess (pps ppx_expect)))
 

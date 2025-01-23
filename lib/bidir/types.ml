@@ -71,6 +71,14 @@ type value =
   | Tuple of value list
 [@@deriving eq, show]
 
+let rec equal_value_types x y =
+  match x, y with
+  | Int _, Int _ -> true
+  | Str _, Str _ -> true
+  | BV _, BV _ -> true
+  | Tuple xs, Tuple ys -> List.for_all2 equal_value_types xs ys
+  | _ -> false
+
 (** Useful intrinsics, though keep in mind that the {!stmt} type is generic in the allowed intrinsics. *)
 type intrinsic =
   | BitsToUint of int (** {!BV} -> {!Int}. Interprets its argument as an unsigned integer. Intrinsic parameter is BV size. *)
@@ -100,12 +108,15 @@ type 'a stmt =
   | Sequential of 'a stmt list
 [@@deriving eq, show]
 
+let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
+
 type dir = [ `Forwards | `Backwards ]
 [@@deriving eq, show]
 
 type 'a intrinsic_impl = 'a -> dir:dir -> value -> value
 
 type state = value StringMap.t
+[@@deriving eq, show]
 
 (** Flipped function application, taking a value followed by a function to apply it to.
     Very useful when folding a list of functions. *)
@@ -123,12 +134,22 @@ let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
     Returned getters and setters may throw. For example, a getter might throw
     if a required variable is undefined. A setter might throw if its given value
     does not match the required tuple structure.
+
+    @raises Invalid_argument in case of programmer error (e.g., invalid types provided to functions)
+    @raises Failure in case of value mismatches while pattern matching (provided the types agree).
 *)
 let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> state) =
-  let open CCFun.Infix in
   match e with
   | Wildcard -> None, Fun.const Fun.id
-  | Lit x -> Some (Fun.const x), failwith "not implemented pattern match"
+  | Lit x ->
+      let do_match x' st =
+        if not (equal_value_types x x') then
+          invalid_arg @@ "type mismatch when assigning into literalof " ^ show_value x;
+        if not (equal_value x x') then
+          failwith @@ "value mismatch when assigning into literal of " ^ show_value x;
+        st
+      in
+      Some (Fun.const x), do_match
   | Tup es ->
       let getters,setters = CCList.split @@ List.map lens_of_expr es in
 
@@ -142,12 +163,13 @@ let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> sta
             let sets = List.map (fun (f,x) -> f x) @@ CCList.combine setters vs in
             (* XXX: applies left to right?? probably *)
             List.fold_left CCFun.compose Fun.id sets
-        | _ -> failwith "invalid value assignment into tuple" in
+        | _ -> invalid_arg "invalid value assignment into tuple" in
       (get, set)
 
   | Var (VarName v) -> Some (StringMap.find v), StringMap.add v
 
-(** Reorders the top level of the given statement. *)
+(** Reorders the topmost level of the given statement.
+    Does not recurse into sub-statements. *)
 let reorder_one_stmt ~(dir: dir) = function
   | Decl _ | Parallel _ as x -> x
   | Sequential xs ->
@@ -159,27 +181,34 @@ let reorder_one_stmt ~(dir: dir) = function
         | _ -> (l,fs,r))
       in Assign (l,fs,r)
 
+(** Executes the given bidirectional program with the given initial state and intrinsic implementation.
+    The program will be executed in forwards or reverse order depending on the specified direction.
 
+    @raises Failure in case of local failure within the DSL (e.g., pattern match failure).
+    @raises Invalid_argument in case of programmer error (e.g., missing declared fields or multiple paths through a {!Parallel}).
+*)
 let rec run_bidir ~(dir: dir) ~(intr: 'a intrinsic_impl) (st: state) (stmt: 'a stmt) =
   let stmt = reorder_one_stmt ~dir stmt in
   match stmt with
   | Decl vars ->
-      let vars = List.map str_of_varname vars in
-      StringMap.filter (fun k _ -> List.mem k vars) st
+      let st' = StringMap.filter (fun k _ -> List.mem (VarName k) vars) st in
+      if StringMap.cardinal st' <> List.length vars then
+        invalid_arg @@ "missing required values at " ^ show_stmt pp_dummy_intrinsic stmt ^ ". provided: " ^ show_state st;
+      st'
   | Sequential stmts ->
       List.fold_left (fun st stmt -> run_bidir ~dir ~intr st stmt) st stmts
   | Parallel alts ->
-      let go x = try Either.Left (run_bidir ~dir ~intr st x) with | e -> Either.Right e in
-      let oks,errs = CCList.partition_map_either go alts in
+      let go x = try Either.Left (run_bidir ~dir ~intr st x) with | Failure _ as e -> Either.Right e in
+      let oks,_ = CCList.partition_map_either go alts in
       (match oks with
       | [] -> failwith "no feasible path at Parallel"
       | [x] -> x
-      | _::_::_ -> failwith @@ "ambiguous paths at Parallel: " ^ CCList.to_string ~sep:"\n" Printexc.to_string errs)
+      | _::_::_ -> invalid_arg @@ "ambiguous paths at Parallel: " ^ CCList.to_string ~sep:"\n" show_state oks)
   | Assign (src,fs,dst) ->
       let get,_ = lens_of_expr src in
       let _,set = lens_of_expr dst in
       let fs = List.map (intr ~dir) fs in
-      match get with
+      (match get with
       | None -> st
-      | Some f -> let x = f st in set (List.fold_left apply x fs) st
+      | Some f -> let x = f st in set (List.fold_left apply x fs) st)
 
