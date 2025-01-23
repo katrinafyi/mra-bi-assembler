@@ -35,7 +35,6 @@
   (ppx_inline_test :with-test)
   (mdx (and :with-test (>= "2.3.0")))
  )
- (tags
-  (topics "assembly" "parser" "disassembly")))
+ (tags ("assembly" "parser" "disassembly")))
 
 ; See the complete stanza docs at https://dune.readthedocs.io/en/stable/dune-files.html#dune-project

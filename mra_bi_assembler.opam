@@ -6,7 +6,7 @@ description:
 maintainer: ["Kait Lam <k@rina.fyi>"]
 authors: ["Kait Lam <k@rina.fyi>"]
 license: "Apache-2.0"
-tags: ["topics" "assembly" "parser" "disassembly"]
+tags: ["assembly" "parser" "disassembly"]
 homepage: "https://github.com/katrinafyi/mra-bi-assembler"
 doc: "https://katrinafyi.github.io/mra-bi-assembler/mra_bi_assembler/"
 bug-reports: "https://github.com/katrinafyi/mra-bi-assembler/issues"

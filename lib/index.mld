@@ -45,6 +45,52 @@ In order to be functional for assembly and disassembly, a frontend should produc
 }
 Then, the assembly parser is constructed by joining all the encoding parsers with the {!module-Lang.Common.Or} operator.
 
+{1 Related work}
+
+This project as a whole is essentially the same as {{:https://alastairreid.github.io/bidirectional-assemblers/} Alastair Reid's work}
+on {i Bidirectional ARM Assembly Syntax Specifications}. We have similar motivations and even use the same source for
+the instruction information (the ARM machine-readable architecture).
+We differ slightly in the implementation; we have a goal of being more generic and independent of the ARM specification language.
+This is most obvious in how we implement conversion of assembly symbols (such as [x1], [#100]) to/from their bit encodings.
+To implement these translations, Alastair Reid writes snippets of ASL code for one direction (byte to string)
+and some manually-specified regular expressions for the inverse (string to byte).
+In our project, this is handled by the {!Bidir} module.
+By defining a bidirectional imperative language 
+and using this to extract parse patterns,
+we are able to implement a more general and automatic translation.
+
+The project can also be compared to {{:https://fossies.org/linux/ghidra/GhidraDocs/languages/html/sleigh.html} Ghidra's Sleigh}
+(itself a continuation of {{:https://dl.acm.org/doi/10.1145/256167.256225}SLED}).
+This is a comprehensive and powerful language for defining instruction sets and assembly code.
+We approach the problem more abstractly, designing the {!Lang} and {!Bidir} modules to solve abstract problems
+instead of specialising to assembly code.
+This is approach is mostly beneficial, but requires ISA frontends to do more work when generating the DSLs
+for their language.
+
+The languages definable in the {!Lang.Common.parseable} DSL are a restriction of the {{: https://en.wikipedia.org/wiki/Star-free_language} star-free languages}.
+The star-free languages are regular expressions without the Kleene star for unbounded repetition.
+We restrict this even further by omitting the complement operation.
+One consequence of this is that all our definable languages have a finite maximum size
+(both that the maximum length of an accepted word is finite, and that the number of distinct accepted words is finite).
+
+This work is very much within the field of 
+{{:https://en.wikipedia.org/wiki/Bidirectional_transformation} bidirectional transformations},
+programs which can be run "forwards" and "backwards".
+Bidirectional transformations are implemented by, for example, the {{:https://www.seas.upenn.edu/~harmony/} Boomerang language} ({{:https://en.wikipedia.org/wiki/Boomerang_(programming_language)} Wikipedia})
+using functional lenses to define the transformation.
+Our parsing/unparsing approach is a more ad-hoc implementation of a transformation.
+Our bidirectional DSL is very similar to Boomerang but more minimal and likely less flexible.
+We develop this project separately because Boomerang is somewhat dormant with outdated dependencies,
+and we do not need its full power since our language is relatively simple.
+
+The {{: https://github.com/toodom02/ocamlregextkit} [ocamlregexkit]} package defines analyses and transformations for regular expressions.
+In particular, their [Tree.re] type is very similar to our {!Lang.Common.parseable}.
+They also define conversions to and from NFA/DFA.
+We exploit our more restricted language to implement features such as {!Lang.Analysis.unparse}, which are
+crucial to our application.
+
+
+
 
 {1 Library mra_bi_assembler.lang}
 
