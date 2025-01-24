@@ -12,6 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+        # before setup-ocaml so they overwrite these files if needed
+      - uses: actions/cache@v4
+        with:
+          path: _opam
+          key: ${{ runner.os }}-opam-cache-${{ hashFiles('**/*.opam') }}
+
       - uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: 4.14
@@ -27,7 +34,7 @@ jobs:
         env:
           OPAMCOLOR: never
       - run: |
-          cp -rv $(opam exec -- odig cache path)/html ./www
+          cp -LRv $(opam exec -- odig cache path)/html ./www
 
           set -x
           cd www
@@ -56,6 +63,13 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: _build/www
+
+      - run: |
+          opam clean --all-switches --download-cache --logs --repo-cache --untracked --unused-repositories
+          ls -lR _opam
+          rm -rf _opam/repo _opam/var/cache
+        if: 'always()'
+
 
   docs-publish:
     environment:
