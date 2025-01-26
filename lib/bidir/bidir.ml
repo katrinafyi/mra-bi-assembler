@@ -1,10 +1,20 @@
-(** Defines a bidirectional (bijective) imperative language in {!Types.stmt}.
-    Intended for the conversion of encoded bits to and from assembly text fragments (e.g., a size specifier [00 <-> "B"]).
-    The language is designed to be fully reversible, as such, all constructs must be invertible.
+(**
+
+This library implements a simple bidirectional imperative language,
+{!Types.stmt}.
+Programs in this language can be interpreted forwards or backwards,
+with each direction being the inverse of the other.
+This is designed to be used with fully-invertible programs and provides
+facilities for invertible expressions and statements.
+
 *)
 
 
 (** {1 Motivation} *)
+
+(** The main use of this library is the conversion of
+    of encoded bits to and from assembly text fragments (e.g., a size specifier [00 <-> "B"]).
+*)
 
 (** For example, a very common encoding of registers is:
 {v

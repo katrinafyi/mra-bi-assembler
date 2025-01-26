@@ -1,3 +1,5 @@
+(** Defines the forwards and backwards interpretation of {!Types.stmt}. *)
+
 open Lang.Common
 open Types
 

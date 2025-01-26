@@ -44,25 +44,14 @@ This frontend is implemented by the {!Arm} library.
 {1:libs Libraries}
 The libraries within this project, in suggested reading order.
 
-{2 {!module:Lang}: invertible parsers}
+{2 Invertible parsers ({!Lang})}
+{!modules: Lang}
 
-The {!module:Lang} library provides an architecture-agnostic domain-specific language, {!Lang.Common.parseable},
-for defining assembly parsers and instruction decoders.
-These are unified in this framework. For example, a decoder is just a parser with byte strings as input.
-Abiding by some minor constraints, these parses can be made to be reversible, enabling their use in a bi-directional
-conversion (see {!Lang.Analysis.unparse}).
+{2 Bidirectional imperative programming ({!Bidir})}
+{!modules: Bidir}
 
-{2 {!module:Bidir}: bidirectional imperative programming}
-
-The {!Bidir} library implements a simple bidirectional imperative language.
-Programs in this language can be interpreted forwards or backwards,
-with each direction being the inverse of the other. 
-This is designed to be used with fully-invertible programs.
-
-{2 {!module:Arm}: frontend for ARM MRA}
-
-A frontend to construct {!module:Lang} and {!Bidir} structures from ARM's machine-readable architecture files.
-See below for details about the frontend.
+{2 Frontend for ARM MRA ({!Arm})}
+{!modules: Arm}
 
 {1 Frontends}
 
