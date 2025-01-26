@@ -3,7 +3,7 @@
 Welcome to the MRA bi-assembler project.
 The {{:https://github.com/katrinafyi/mra-bi-assembler} code repository} is publicly available.
 
-For the main library documentation, see {!module:Lang}.
+To jump to the {b API documentation}, see {!libs}.
 
 The goal of this project is to provide a framework for automatically-generating
 instruction assemblers and disassemblers, given a machine-readable description
@@ -20,13 +20,53 @@ v}
 We note that this project {i does not} do object assembly
 (i.e., each instruction is (dis)assembled in isolation and it does not support symbolic addresses or labels).
 
+
+{1 Overview}
+This section describes the high-level process which might be followed to produce a bi-assembler for an ARM architecture.
+We note this project is designed to provide generic building blocks for the implementation of a bi-assembler,
+this overview is just one possible option.
+
+\[{b See {{:https://raw.githubusercontent.com/katrinafyi/mra-bi-assembler/refs/heads/main/lib/assets/diagram.png}{b overview diagram image}}}\]
+
+In this diagram, there are 3 distinct stages. Looking in the top-to-bottom direction,
+the first and last stages are implemented using the parsing and unparsing functions provided by {!Lang}.
+The middle stage uses the bidirectional language in {!Bidir}.
+This is more structured than the parsing/unparsing, but requires more precise specification
+in the bidirecitonal DSL.
+
+The right hand side of the diagram is the "frontend" for the ARM MRA, extracting information
+from the MRA files to produce the {!Lang} and {!Bidir} abstractions used in each stage.
+The mentioned MRA elements are found in the XML
+files of the MRA and can also be {{:https://developer.arm.com/documentation/ddi0596/2020-12/Base-Instructions/ADD--shifted-register---Add--shifted-register--} viewed online}.
+This frontend is implemented by the {!Arm} library.
+
+
+{1:libs Libraries}
+The libraries within this project, in suggested reading order.
+
+{2 {!module:Lang}: invertible parsers}
+
 The {!module:Lang} library provides an architecture-agnostic domain-specific language, {!Lang.Common.parseable},
 for defining assembly parsers and instruction decoders.
 These are unified in this framework. For example, a decoder is just a parser with byte strings as input.
 Abiding by some minor constraints, these parses can be made to be reversible, enabling their use in a bi-directional
 conversion (see {!Lang.Analysis.unparse}).
 
-It is anticipated that {i frontends} will construct the abstractions in {!module:Lang}
+{2 {!module:Bidir}: bidirectional imperative programming}
+
+The {!Bidir} library implements a simple bidirectional imperative language.
+Programs in this language can be interpreted forwards or backwards,
+with each direction being the inverse of the other. 
+This is designed to be used with fully-invertible programs.
+
+{2 {!module:Arm}: frontend for ARM MRA}
+
+A frontend to construct {!module:Lang} and {!Bidir} structures from ARM's machine-readable architecture files.
+See below for details about the frontend.
+
+{1 Frontends}
+
+It is anticipated that {i frontends} will construct the abstractions in {!module:Lang} and {!module:Bidir}
 from some architecture-specific data files.
 In order to be functional for assembly and disassembly, a frontend should produce approximately:
 {ul
@@ -44,6 +84,9 @@ In order to be functional for assembly and disassembly, a frontend should produc
 }
 }
 Then, the assembly parser is constructed by joining all the encoding parsers with the {!module-Lang.Common.Or} operator.
+
+
+
 
 {1 Related work}
 
@@ -88,20 +131,4 @@ In particular, their [Tree.re] type is very similar to our {!Lang.Common.parseab
 They also define conversions to and from NFA/DFA.
 We exploit our more restricted language to implement features such as {!Lang.Analysis.unparse}, which are
 crucial to our application.
-
-
-
-
-{1 Library mra_bi_assembler.lang}
-
-The entry point of this library is the module: {!module:Lang}.
-
-{1 Library mra_bi_assembler.bidir}
-
-The entry point of this library is the module: {!module:Bidir}.
-
-
-{1 Library mra_bi_assembler.arm}
-
-The entry point of this library is the module: {!module:Arm}.
 

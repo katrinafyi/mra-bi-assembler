@@ -3,6 +3,7 @@
 
 open Lang.Common
 open Bidir.Types
+open Bidir.Interpret
 
 let catch (f: unit -> unit): unit =
   try (f (); assert false)
