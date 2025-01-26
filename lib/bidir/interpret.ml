@@ -49,7 +49,9 @@ let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> sta
         | _ -> invalid_arg "invalid value assignment into tuple" in
       (get, set)
 
-  | Var (VarName v) -> Some (StringMap.find v), StringMap.add v
+  | Var (VarName v) ->
+      let get st = try StringMap.find v st with Not_found -> failwith @@ "undeclared variable: " ^ v in
+      Some get, StringMap.add v
 
 (** Reorders the topmost level of the given statement.
     Does not recurse into sub-statements. *)
