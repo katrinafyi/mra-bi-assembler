@@ -78,8 +78,9 @@ decl Wd;
 
 module Types = Types
 module Interpret = Interpret
+module Intrinsics = Intrinsics
 
-let example_bidir : Types.intrinsic Types.bidir = Sequential [
+let example_wd_register : Intrinsics.intrinsic Types.bidir = Sequential [
   Decl [VarName "Rd"];
   Assign (EVar (VarName "Rd"), [BitsToUint 5], EVar (VarName "N"));
   Choice [

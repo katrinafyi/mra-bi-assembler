@@ -2,14 +2,7 @@
 
 open Lang.Common
 open Types
-
-(** Flipped function application, taking a value followed by a function to apply it to.
-    Very useful when folding a list of functions. *)
-let apply (x: 'a) (f: 'a -> 'b): 'b = f x
-
-(** Given a list of functions, sends the given input value to every function and collects the results. *)
-let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
-  fun x -> List.map (apply x) fs
+open Intrinsics
 
 (** Constructs an accessor and setter pair for the given expression (i.e., an explicit lens).
 
@@ -29,7 +22,7 @@ let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> sta
   | ELit x ->
       let do_match x' st =
         if not (equal_value_types x x') then
-          invalid_arg @@ "type mismatch when assigning into literalof " ^ show_value x;
+          invalid_arg @@ "type mismatch when assigning into literal of " ^ show_value x;
         if not (equal_value x x') then
           failwith @@ "value mismatch when assigning into literal of " ^ show_value x;
         st

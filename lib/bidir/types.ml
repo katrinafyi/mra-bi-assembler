@@ -25,24 +25,6 @@ let rec equal_value_types x y =
   | _ -> false
 
 
-(** {2 Intrinsic type} *)
-
-(** Useful intrinsics, though keep in mind that the {!bidir} type is generic in the allowed intrinsics. *)
-type intrinsic =
-  | BitsToUint of int (** {!VBits} -> {!VInt}. Interprets its argument as an unsigned integer. Intrinsic parameter is BV size. *)
-  | BitsToSint of int (** {!VBits} -> {!VInt}. Interprets its argument as a signed integer. Intrinsic parameter is BV size. *)
-  | IntToDecimal (** {!VInt} -> {!VStr}. Converts the given (signed) integer to a string. *)
-  | Concat of int option list
-    (** {!VTup} of {!VStr} -> {!VStr}. Concatenates the given tuple of strings into a single string.
-        Intrinsic parameters are the length of each component of the tuple.
-        At most one length can be None, indicating that component expands to the rest of the string. *)
-  | NotIn of value list
-    (** Any -> Any.
-        Asserts that the given value is {i not} contained in the intrinsic's list of literals.
-        If successful, this acts as the identity function. Otherwise, throws. *)
-[@@deriving eq, show]
-
-
 (** {2 Varname type} *)
 
 type varname = VarName of string
@@ -74,21 +56,19 @@ type 'a bidir =
   | Sequential of 'a bidir list (** A sequential composition of statements. In the backwards direction, the list is reversed. *)
 [@@deriving eq, show]
 
-let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
-
-
-(** {2 Dir type} *)
-
-type dir = [ `Forwards | `Backwards ]
-[@@deriving eq, show]
-
-(** {2 Intrinsic impl type} *)
-
-type 'a intrinsic_impl = 'a -> dir:dir -> value -> value
-
-
 (** {2 State type} *)
 
 type state = value StringMap.t
 [@@deriving eq, show]
+
+
+(** {1 Helper methods} *)
+
+(** Flipped function application, taking a value followed by a function to apply it to.
+    Very useful when folding a list of functions. *)
+let apply (x: 'a) (f: 'a -> 'b): 'b = f x
+
+(** Given a list of functions, sends the given input value to every function and collects the results. *)
+let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
+  fun x -> List.map (apply x) fs
 

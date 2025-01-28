@@ -4,9 +4,11 @@
 open Lang.Common
 open Bidir.Types
 open Bidir.Interpret
+open Bidir.Intrinsics
+open CCFun.Infix
 
-let catch (f: unit -> unit): unit =
-  try (f (); assert false)
+let catch (f: unit -> 'a): unit =
+  try (ignore (f ()); assert false)
   with
   | Failure x -> output_string stderr @@ "failure: " ^ x ^ "\n"
   | Invalid_argument x -> output_string stderr @@ "invalid_arg: " ^ x ^ "\n"
@@ -15,6 +17,9 @@ let catch (f: unit -> unit): unit =
 
 let st n x = StringMap.singleton n x
 let intr _ ~dir:_ _ = failwith "dummy intrinsics"
+
+let print_value = show_value %> print_endline
+let print_state = show_state %> print_endline
 
 let%expect_test "lens" =
   let m : value StringMap.t = StringMap.of_list ["a", VInt 10] in
@@ -63,7 +68,7 @@ let%expect_test "lens" =
   [%expect {| failure: value mismatch when assigning into literal of (Types.VInt 555) |}];
 
   catch (fun () -> ignore (set (VStr "s") m));
-  [%expect {| invalid_arg: type mismatch when assigning into literalof (Types.VInt 555) |}]
+  [%expect {| invalid_arg: type mismatch when assigning into literal of (Types.VInt 555) |}]
 
 
 let%expect_test "bidir basic" =
@@ -126,3 +131,75 @@ let%expect_test "bidir choice" =
     invalid_arg: ambiguous paths at Choice: { "in" -> (Types.VInt 22) }
     { "in" -> (Types.VInt 22) } |}]
 
+
+let%expect_test "concat intrinsic" =
+  print_value @@ run_intrinsics (Concat [None]) ~dir:`Forwards (VTup [VStr "a"]);
+  [%expect {| (Types.VStr "a") |}];
+
+  print_value @@ run_intrinsics (Concat [Some 1; None]) ~dir:`Forwards (VTup [VStr "a"; VStr "rest"]);
+  [%expect {| (Types.VStr "arest") |}];
+
+  catch (fun () -> run_intrinsics (Concat [Some 1; None]) ~dir:`Forwards (VTup [VStr "ab"; VStr "rest"]));
+  [%expect {| failure: concat element has unexpected length |}];
+
+  print_value @@ run_intrinsics (Concat [Some 1; None; Some 2]) ~dir:`Forwards (VTup [VStr "H"; VStr "an expanding middle"; VStr "TL"]);
+  [%expect {| (Types.VStr "Han expanding middleTL") |}];
+
+  print_value @@ run_intrinsics (Concat [Some 2; Some 1; None; Some 2]) ~dir:`Forwards (VTup [VStr "12"; VStr "H"; VStr "an expanding middle"; VStr "TL"]);
+  [%expect {| (Types.VStr "12Han expanding middleTL") |}];
+
+  catch (fun () -> run_intrinsics (Concat [Some 2; Some 1; None; None; Some 2]) ~dir:`Forwards (VTup [VStr "12"; VStr "H"; VStr "boop"; VStr "an expanding middle"; VStr "TL"]));
+  [%expect {| invalid_arg: multiple None elements in width specifier list |}];
+
+  print_value @@ run_intrinsics (Concat [Some 2; Some 1; None; Some 2]) ~dir:`Backwards (VStr "12Han expanding middleTL");
+  [%expect {|
+    (Types.VTup
+       [(Types.VStr "12"); (Types.VStr "H"); (Types.VStr "an expanding middle");
+         (Types.VStr "TL")]) |}]
+
+
+let%expect_test "bit intrinsics" =
+  print_value @@ run_intrinsics (BitsToUint 8) ~dir:`Forwards (VBits "11111111");
+  [%expect {| (Types.VInt 255) |}];
+  print_value @@ run_intrinsics (BitsToUint 8) ~dir:`Forwards (VBits "00000000");
+  [%expect {| (Types.VInt 0) |}];
+  print_value @@ run_intrinsics (BitsToUint 8) ~dir:`Forwards (VBits "00000000");
+  [%expect {| (Types.VInt 0) |}];
+  print_value @@ run_intrinsics (BitsToUint 8) ~dir:`Forwards (VBits "10000000");
+  [%expect {| (Types.VInt 128) |}];
+
+  print_value @@ run_intrinsics (BitsToSint 8) ~dir:`Forwards (VBits "00000000");
+  print_value @@ run_intrinsics (BitsToSint 8) ~dir:`Forwards (VBits "00000001");
+  print_value @@ run_intrinsics (BitsToSint 8) ~dir:`Forwards (VBits "01111111");
+  [%expect {|
+    (Types.VInt 0)
+    (Types.VInt 1)
+    (Types.VInt 127) |}];
+
+  print_value @@ run_intrinsics (BitsToSint 8) ~dir:`Forwards (VBits "10000000");
+  print_value @@ run_intrinsics (BitsToSint 8) ~dir:`Forwards (VBits "11111111");
+  [%expect {|
+    (Types.VInt -128)
+    (Types.VInt -1) |}];
+
+  print_value @@ run_intrinsics IntToDecimal ~dir:`Forwards (VInt 100);
+  print_value @@ run_intrinsics IntToDecimal ~dir:`Forwards (VInt (-100));
+  [%expect {|
+    (Types.VStr "100")
+    (Types.VStr "-100") |}]
+
+let%expect_test "wd example" =
+  print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "11111")) Bidir.example_wd_register;
+  [%expect {| { "Wd" -> (Types.VStr "wzr") } |}];
+
+  print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "01111")) Bidir.example_wd_register;
+  [%expect {| { "Wd" -> (Types.VStr "w15") } |}];
+
+  print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "Wd" (VStr "wzr")) Bidir.example_wd_register;
+  [%expect {| { "Rd" -> (Types.VBits "11111") } |}];
+
+  print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "Wd" (VStr "w1")) Bidir.example_wd_register;
+  [%expect {| { "Rd" -> (Types.VBits "00001") } |}];
+
+  print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "Wd" (VStr "w0")) Bidir.example_wd_register;
+  [%expect {| { "Rd" -> (Types.VBits "00000") } |}]
