@@ -86,8 +86,8 @@ let%expect_test "bidir basic" =
   catch (fun () -> ignore @@ run_bidir ~dir:`Forwards ~intr (st "in" (VInt 22)) one_pattern);
   [%expect {| failure: value mismatch when assigning into literal of (Types.VInt 123) |}];
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "in" (VInt 22)) one_pattern);
-  [%expect {| invalid_arg: missing required values at (Types.Decl [(Types.VarName "out")]). provided: { "in" -> (Types.VInt 22) } |}];
+  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "not the waanted value" (VInt 22)) one_pattern);
+  [%expect {| invalid_arg: missing declared values at (Types.Decl [(Types.VarName "out")]). provided: ["not the waanted value"] |}];
 
   let m = run_bidir ~dir:`Backwards ~intr (st "out" (VInt 200)) one_pattern in
   print_endline @@ show_state m;
@@ -124,12 +124,11 @@ let%expect_test "bidir choice" =
 
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "in" (VInt 22)) (Choice []));
-  [%expect {| failure: no feasible path at Choice |}];
+  [%expect {| failure: no feasible path at Choice: (Types.Choice []) |}];
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
   [%expect {|
-    invalid_arg: ambiguous paths at Choice: { "in" -> (Types.VInt 22) }
-    { "in" -> (Types.VInt 22) } |}]
+    invalid_arg: ambiguous paths at Choice: (Types.Choice [(Types.Sequential []); (Types.Sequential [])]) |}]
 
 
 let%expect_test "concat intrinsic" =
@@ -195,6 +194,7 @@ let%expect_test "multiple intrinsics in assign" =
   [%expect {| { "Rd" -> (Types.VBits "11111"), "str" -> (Types.VStr "-1") } |}];
   print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "str" (VStr "7")) p;
   [%expect {| { "Rd" -> (Types.VBits "00111"), "str" -> (Types.VStr "7") } |}]
+
 
 let%expect_test "wd example" =
   print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "11111")) Bidir.example_wd_register;

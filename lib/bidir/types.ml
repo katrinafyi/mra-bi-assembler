@@ -33,7 +33,8 @@ let str_of_varname (VarName x) = x
 
 (** {2 Expr type} *)
 
-(** An expression in the bidirectional language. *)
+(** An expression in the bidirectional language.
+    Every expression can be interpreted bidirectionally, i.e., as a left- or right- expression. *)
 type expr =
   | ELit of value
   | EVar of varname

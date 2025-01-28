@@ -45,10 +45,10 @@ let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
 
 (** {1 Implementation of intrinsics} *)
 
-(** An implementation of an intrinsic, parametrised by the intrinsic type.
+(** An implementation of an intrinsic, parametrised by the intrinsic type and the value type.
     Accepts an argument of which direction to operate in.
 *)
-type 'a intrinsic_impl = 'a -> dir:dir -> value -> value
+type ('i, 'a) intrinsic_impl = 'i -> dir:dir -> 'a -> 'a
 
 (** Constructs an {!intrinsic_impl} function from the given forwards and backwards functions.
     When executing the intrinsic, this helper function ensures that the given functions are inverses.
