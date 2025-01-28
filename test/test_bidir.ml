@@ -188,6 +188,14 @@ let%expect_test "bit intrinsics" =
     (Types.VStr "100")
     (Types.VStr "-100") |}]
 
+let%expect_test "multiple intrinsics in assign" =
+  let p = Assign (EVar (VarName "Rd"), [BitsToSint 5; IntToDecimal], EVar (VarName "str")) in
+
+  print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "11111")) p;
+  [%expect {| { "Rd" -> (Types.VBits "11111"), "str" -> (Types.VStr "-1") } |}];
+  print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "str" (VStr "7")) p;
+  [%expect {| { "Rd" -> (Types.VBits "00111"), "str" -> (Types.VStr "7") } |}]
+
 let%expect_test "wd example" =
   print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "11111")) Bidir.example_wd_register;
   [%expect {| { "Wd" -> (Types.VStr "wzr") } |}];
