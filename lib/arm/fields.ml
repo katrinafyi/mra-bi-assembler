@@ -1,3 +1,6 @@
+[@@@ocaml.warning "-8"]
+[@@@ocaml.warning "-27"]
+
 open Types
 
 type bitstring = Bitstring of string
