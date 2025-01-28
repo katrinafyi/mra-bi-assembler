@@ -4,6 +4,26 @@ open Types
 
 (** {1 Definitions} *)
 
+
+(** {2 Direction type} *)
+
+type dir = [ `Forwards | `Backwards ]
+[@@deriving eq, show]
+
+(** Reorders the topmost level of the given statement.
+    Does not recurse into sub-statements. *)
+let reorder_one_stmt ~(dir: dir) = function
+  | Decl _ | Choice _ as x -> x
+  | Sequential xs ->
+      Sequential (match dir with `Backwards -> List.rev xs | _ -> xs)
+  | Assign (l,fs,r) ->
+      let (l,fs,r) =
+        (match dir with
+        | `Backwards -> (r,List.rev fs,l)
+        | _ -> (l,fs,r))
+      in Assign (l,fs,r)
+
+
 (** {2 Intrinsic type} *)
 
 (** Useful intrinsics, though keep in mind that the {!bidir} type is generic in the allowed intrinsics. *)
@@ -23,12 +43,6 @@ type intrinsic =
 
 let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
 
-
-(** {2 Dir type} *)
-
-type dir = [ `Forwards | `Backwards ]
-[@@deriving eq, show]
-
 (** {1 Implementation of intrinsics} *)
 
 (** An implementation of an intrinsic, parametrised by the intrinsic type.
@@ -47,7 +61,7 @@ let make_intrinsic (forw: value -> value) (back: value -> value) ~(dir: dir) (x:
   let result = f x in
   let x' = inverse result in
   if x <> x' then
-    failwith @@ "intrinsic function failed invertibility check with input: " ^ show_value x ^ ", result: " ^ show_value x';
+    invalid_arg @@ "intrinsic function failed invertibility check with input: " ^ show_value x ^ ", result: " ^ show_value x';
   result
 
 let require ?(f = failwith) x m = if not x then f m

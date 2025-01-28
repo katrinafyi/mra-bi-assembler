@@ -7,7 +7,6 @@ open Lang.Common
 
 (** {2 Value type} *)
 
-
 (** A value in the bidirectional language. *)
 type value =
   | VInt of int (** An arbitrary-size integer. *)

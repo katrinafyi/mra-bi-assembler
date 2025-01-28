@@ -16,50 +16,20 @@ open Intrinsics
     @raises Stdlib.Invalid_argument in case of programmer error (e.g., invalid types provided to functions)
     @raises Stdlib.Failure in case of value mismatches while pattern matching (provided the types agree).
 *)
-let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> state) =
-  match e with
-  | EWildcard -> None, Fun.const Fun.id
-  | ELit x ->
+let rec lens_of_expr: expr -> (state -> value) option * (value -> state -> state) =
+  Absint.abstract_lens_of_expr {
+    into_tuple = (fun xs -> VTup xs);
+    outof_tuple = (function | VTup xs -> Some xs | _ -> None);
+    wildcard_case = (fun () -> None, Fun.const Fun.id);
+    lit_case = fun x ->
       let do_match x' st =
         if not (equal_value_types x x') then
-          invalid_arg @@ "type mismatch when assigning into literal of " ^ show_value x;
+        invalid_arg @@ "type mismatch when assigning into literal of " ^ show_value x;
         if not (equal_value x x') then
-          failwith @@ "value mismatch when assigning into literal of " ^ show_value x;
+        failwith @@ "value mismatch when assigning into literal of " ^ show_value x;
         st
-      in
-      Some (Fun.const x), do_match
-  | ETup es ->
-      let getters,setters = CCList.split @@ List.map lens_of_expr es in
-
-      let gets_opt = CCOption.sequence_l getters in
-      let getlist = Option.map fanout gets_opt in
-      let get = Option.map (fun f st -> VTup (f st)) getlist in
-
-      let set : value -> state -> state =
-        function
-        | VTup vs when List.length vs = List.length es ->
-            let sets = List.map (fun (f,x) -> f x) @@ CCList.combine setters vs in
-            (* XXX: applies left to right?? probably *)
-            List.fold_left CCFun.compose Fun.id sets
-        | _ -> invalid_arg "invalid value assignment into tuple" in
-      (get, set)
-
-  | EVar (VarName v) ->
-      let get st = try StringMap.find v st with Not_found -> failwith @@ "undeclared variable: " ^ v in
-      Some get, StringMap.add v
-
-(** Reorders the topmost level of the given statement.
-    Does not recurse into sub-statements. *)
-let reorder_one_stmt ~(dir: dir) = function
-  | Decl _ | Choice _ as x -> x
-  | Sequential xs ->
-      Sequential (match dir with `Backwards -> List.rev xs | _ -> xs)
-  | Assign (l,fs,r) ->
-      let (l,fs,r) =
-        (match dir with
-        | `Backwards -> (r,List.rev fs,l)
-        | _ -> (l,fs,r))
-      in Assign (l,fs,r)
+      in Some (Fun.const x), do_match;
+  }
 
 (** Executes the given bidirectional program with the given initial state and intrinsic implementation.
     The program will be executed in forwards or reverse order depending on the specified direction.

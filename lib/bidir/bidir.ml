@@ -77,6 +77,7 @@ decl Wd;
 (** {1 Modules} *)
 
 module Types = Types
+module Absint = Absint
 module Interpret = Interpret
 module Intrinsics = Intrinsics
 
