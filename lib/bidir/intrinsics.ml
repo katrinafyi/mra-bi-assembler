@@ -1,3 +1,5 @@
+(** An implementation of a selection of intrinsics useful for the assembly conversion. *)
+
 open Types
 
 (** {1 Definitions} *)
@@ -27,11 +29,16 @@ let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
 type dir = [ `Forwards | `Backwards ]
 [@@deriving eq, show]
 
-(** {2 Intrinsic impl type} *)
+(** {1 Implementation of intrinsics} *)
 
+(** An implementation of an intrinsic, parametrised by the intrinsic type.
+    Accepts an argument of which direction to operate in.
+*)
 type 'a intrinsic_impl = 'a -> dir:dir -> value -> value
 
-
+(** Constructs an {!intrinsic_impl} function from the given forwards and backwards functions.
+    When executing the intrinsic, this helper function ensures that the given functions are inverses.
+*)
 let make_intrinsic (forw: value -> value) (back: value -> value) ~(dir: dir) (x: value) =
   let f, inverse = match dir with
   | `Forwards -> forw, back
@@ -45,15 +52,25 @@ let make_intrinsic (forw: value -> value) (back: value -> value) ~(dir: dir) (x:
 
 let require ?(f = failwith) x m = if not x then f m
 
+(** {2 {!Types.value} conversion functions} *)
+
+(** {3 Destructing values} *)
+
 let vbits_of_val = function | VBits x -> x | _ -> failwith "required vbits"
 let vint_of_val = function | VInt x -> x | _ -> failwith "required vint"
 let vstr_of_val = function | VStr x -> x | _ -> failwith "required vstr"
 let vtup_of_val fs = function | VTup vs -> List.map2 apply vs fs | _ -> failwith "required vtup"
 
+(** {3 Constructing values} *)
+
 let val_of_vbits x = VBits x
 let val_of_vint x = VInt x
 let val_of_vstr x = VStr x
 let val_of_vtup fs xs = VTup (List.map2 apply xs fs)
+
+(** {2 Helpers for implementation} *)
+
+(** These implement both directions of a number of intrinsics, operating on built-in Ocaml types. *)
 
 let uint_of_bits _wd s = int_of_string @@ "0b" ^ s
 let bits_of_uint wd x =
@@ -96,6 +113,9 @@ let concat_backwards wds str =
   let middle = CCString.sub str frontwd (String.length str - backwd - frontwd) in
   front @ [middle] @ back
 
+(** {2 Final implementation } *)
+
+(** An {!intrinsic_impl} executing the intrinsics specified in {!intrinsic}. *)
 let run_intrinsics (int: intrinsic) ~(dir:dir) (x: value): value =
   let open CCFun.Infix in
   match int with
