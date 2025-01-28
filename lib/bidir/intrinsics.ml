@@ -6,11 +6,11 @@ open Types
 
 (** Useful intrinsics, though keep in mind that the {!bidir} type is generic in the allowed intrinsics. *)
 type intrinsic =
-  | BitsToUint of int (** {!VBits} -> {!VInt}. Interprets its argument as an unsigned integer. Intrinsic parameter is BV size. *)
-  | BitsToSint of int (** {!VBits} -> {!VInt}. Interprets its argument as a signed integer. Intrinsic parameter is BV size. *)
-  | IntToDecimal (** {!VInt} -> {!VStr}. Converts the given (signed) integer to a string. *)
+  | BitsToUint of int (** {!Types.VBits} -> {!Types.VInt}. Interprets its argument as an unsigned integer. Intrinsic parameter is BV size. *)
+  | BitsToSint of int (** {!Types.VBits} -> {!Types.VInt}. Interprets its argument as a signed integer. Intrinsic parameter is BV size. *)
+  | IntToDecimal (** {!Types.VInt} -> {!Types.VStr}. Converts the given (signed) integer to a string. *)
   | Concat of int option list
-    (** {!VTup} of {!VStr} -> {!VStr}. Concatenates the given tuple of strings into a single string.
+    (** {!Types.VTup} of {!Types.VStr} -> {!Types.VStr}. Concatenates the given tuple of strings into a single string.
         Intrinsic parameters are the length of each component of the tuple.
         At most one length can be None, indicating that component expands to the rest of the string. *)
   | NotIn of value list
