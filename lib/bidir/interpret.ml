@@ -1,4 +1,4 @@
-(** Defines the forwards and backwards interpretation of {!Types.stmt}. *)
+(** Defines the forwards and backwards interpretation of {!Types.bidir}. *)
 
 open Lang.Common
 open Types
@@ -13,7 +13,7 @@ let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
 
 (** Constructs an accessor and setter pair for the given expression (i.e., an explicit lens).
 
-    The getter may be [None] if the expression contains a {!Wildcard};
+    The getter may be [None] if the expression contains a {!Types.EWildcard};
     wildcard expressions cannot be loaded.
 
     Returned getters and setters may throw. For example, a getter might throw
@@ -25,8 +25,8 @@ let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
 *)
 let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> state) =
   match e with
-  | Wildcard -> None, Fun.const Fun.id
-  | Lit x ->
+  | EWildcard -> None, Fun.const Fun.id
+  | ELit x ->
       let do_match x' st =
         if not (equal_value_types x x') then
           invalid_arg @@ "type mismatch when assigning into literalof " ^ show_value x;
@@ -35,23 +35,23 @@ let rec lens_of_expr (e: expr): (state -> value) option * (value -> state -> sta
         st
       in
       Some (Fun.const x), do_match
-  | Tup es ->
+  | ETup es ->
       let getters,setters = CCList.split @@ List.map lens_of_expr es in
 
       let gets_opt = CCOption.sequence_l getters in
       let getlist = Option.map fanout gets_opt in
-      let get = Option.map (fun f st -> Tuple (f st)) getlist in
+      let get = Option.map (fun f st -> VTup (f st)) getlist in
 
       let set : value -> state -> state =
         function
-        | Tuple vs when List.length vs = List.length es ->
+        | VTup vs when List.length vs = List.length es ->
             let sets = List.map (fun (f,x) -> f x) @@ CCList.combine setters vs in
             (* XXX: applies left to right?? probably *)
             List.fold_left CCFun.compose Fun.id sets
         | _ -> invalid_arg "invalid value assignment into tuple" in
       (get, set)
 
-  | Var (VarName v) ->
+  | EVar (VarName v) ->
       let get st = try StringMap.find v st with Not_found -> failwith @@ "undeclared variable: " ^ v in
       Some get, StringMap.add v
 
@@ -72,15 +72,15 @@ let reorder_one_stmt ~(dir: dir) = function
     The program will be executed in forwards or reverse order depending on the specified direction.
 
     @raises Stdlib.Failure in case of local failure within the DSL (e.g., pattern match failure).
-    @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing declared fields or multiple paths through a {!Choice}).
+    @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing declared fields or multiple paths through a {!Types.Choice}).
 *)
-let rec run_bidir ~(dir: dir) ~(intr: 'a intrinsic_impl) (st: state) (stmt: 'a stmt) =
+let rec run_bidir ~(dir: dir) ~(intr: 'a intrinsic_impl) (st: state) (stmt: 'a bidir) =
   let stmt = reorder_one_stmt ~dir stmt in
   match stmt with
   | Decl vars ->
       let st' = StringMap.filter (fun k _ -> List.mem (VarName k) vars) st in
       if StringMap.cardinal st' <> List.length vars then
-        invalid_arg @@ "missing required values at " ^ show_stmt pp_dummy_intrinsic stmt ^ ". provided: " ^ show_state st;
+        invalid_arg @@ "missing required values at " ^ show_bidir pp_dummy_intrinsic stmt ^ ". provided: " ^ show_state st;
       st'
   | Sequential stmts ->
       List.fold_left (fun st stmt -> run_bidir ~dir ~intr st stmt) st stmts

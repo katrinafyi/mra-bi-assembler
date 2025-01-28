@@ -11,3 +11,10 @@
  (modules arm_import)
  (libraries mra_bi_assembler.lang mra_bi_assembler.arm)
  (modes (best exe)))
+
+(executable
+ (public_name mra_bi_assembler.bidir_demo)
+ (name bidir_demo)
+ (modules bidir_demo)
+ (libraries mra_bi_assembler.lang mra_bi_assembler.bidir)
+ (modes (best exe)))

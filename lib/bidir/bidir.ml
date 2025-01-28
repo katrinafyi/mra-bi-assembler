@@ -1,7 +1,7 @@
 (**
 
 This library implements a simple bidirectional imperative language,
-{!Types.stmt}.
+{!Bidir.Types.bidir}.
 Programs in this language can be interpreted forwards or backwards,
 with each direction being the inverse of the other.
 This is designed to be used with fully-invertible programs and provides
@@ -18,7 +18,8 @@ facilities for invertible expressions and statements.
 
 (** For example, a very common encoding of registers is:
 {v
-<Wd>: Is the 32-bit name of the general-purpose destination register, encoded in the "Rd" field.
+<Wd>: Is the 32-bit name of the general-purpose destination register,
+      encoded in the "Rd" field.
 v}
 Since the description doesn't mention the stack pinter, one infers that the all ones encoding maps
 to the zero register (since there is no [X31] register).
@@ -69,7 +70,7 @@ decl Wd;
 
 *)
 
-(** The implementation of the bidirectional DSL in {!Types.stmt} closely
+(** The implementation of the bidirectional DSL in {!Bidir.Types.bidir} closely
     follows this example. *)
 
 
@@ -77,3 +78,27 @@ decl Wd;
 
 module Types = Types
 module Interpret = Interpret
+
+let example_bidir : Types.intrinsic Types.bidir = Sequential [
+  Decl [VarName "Rd"];
+  Assign (EVar (VarName "Rd"), [BitsToUint 5], EVar (VarName "N"));
+  Choice [
+
+    Sequential [
+      Assign (EVar (VarName "N"), [], ELit (VInt 31));
+      Assign (ELit (VStr "wzr"), [], EVar (VarName "Wd"));
+    ];
+
+    Sequential [
+      Assign (EVar (VarName "N"), [NotIn [VInt 31]], EWildcard);
+      Assign (EVar (VarName "N"), [IntToDecimal], EVar (VarName "n"));
+
+      Assign (
+        ETup [ELit (VStr "w"); EVar (VarName "n")],
+        [Concat [Some 1; None]],
+        EVar (VarName "Wd"));
+    ];
+
+  ];
+  Decl [VarName "Wd"];
+]

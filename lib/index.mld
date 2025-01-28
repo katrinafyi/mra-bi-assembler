@@ -42,7 +42,8 @@ This frontend is implemented by the {!Arm} library.
 
 
 {1:libs Libraries}
-The libraries within this project, in suggested reading order.
+The libraries that make up this project, in suggested reading order.
+Each library's main page also has more information about that library. 
 
 {2 Invertible parsers ({!Lang})}
 {!modules: Lang}
