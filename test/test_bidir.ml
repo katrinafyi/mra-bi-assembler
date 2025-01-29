@@ -226,6 +226,5 @@ let%expect_test "parse of bidir" =
     { "Wd"
       -> (Parse.P
             (Types.Or
-               [(Types.Lit "wzr");
-                 (Types.Or [(Types.Lit "w"); (Types.Lit "digits")])])) } |}]
+               [(Types.Lit "wzr"); (Types.Seq [(Types.Lit "w"); Types.Digits])])) } |}]
 

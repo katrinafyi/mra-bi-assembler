@@ -13,6 +13,7 @@ type parseable =
   | Lit of string
   | Space
   | Return of string
+  | Digits
   | Eof
 and bind = {
   name: string;

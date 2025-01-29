@@ -23,6 +23,7 @@ include (Types : sig
   | Lit of string (** A literal string. *)
   | Space (** Zero or more within-line space characters (space or tab). *)
   | Return of string (** A parser that always succeeds, returning the given string. Consumes no input. *)
+  | Digits (** One or more decimal digits (without sign characters). *)
   | Eof (** A parser that succeeds only at the end of the text. *)
 
   (** A parseable and a name.
@@ -254,6 +255,7 @@ let rec describe_parseable =
   | Seq seqs -> String.concat " " (List.map describe_parseable seqs)
   | Bind {name; _} -> name
   | Lit s -> quote s
+  | Digits -> "[0-9]+"
   | Space -> " "
 
 (** Given a [Format]-style [pp] function, converts it to a simple function returning a string. *)

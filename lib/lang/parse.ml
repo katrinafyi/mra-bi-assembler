@@ -51,6 +51,9 @@ let rec run_parse_with_stack (p: parseable) (stack: string list): (output * bind
       let+ result, bindings = recurse syntax <?> failure_msg in
       result, if name <> "" then bindings_add name result bindings else bindings
   | Lit s -> let+ s = Angstrom.string s in no_bindings (output [s])
+  | Digits ->
+      let+ digs = Angstrom.take_while1 (function |'0'..'9' -> true | _ -> false) in
+      no_bindings (output [digs])
   | Eof -> let+ () = Angstrom.end_of_input in no_bindings (output [])
 
 (** Converts the given parseable to an Angstrom parser. *)

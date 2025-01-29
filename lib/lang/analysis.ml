@@ -11,9 +11,8 @@ open Common
 let rec matches_empty =
   function
   | Space -> true
-  | Eof -> false
+  | Eof | Lit _ | Digits -> false
   | Return _ | Lit "" -> true
-  | Lit _ -> false
   | Or xs -> List.exists matches_empty xs
   | Seq xs -> List.for_all matches_empty xs
   | Bind {syntax; _} -> matches_empty syntax
@@ -28,7 +27,7 @@ let rec seq_inner l r =
   match l with
   | Space -> Seq [Space; r]
   | Eof -> Eof
-  | Return _ | Lit _ -> Seq [l; r]
+  | Return _ | Lit _ | Digits -> Seq [l; r]
   | Or xs -> Or (List.map recurse xs)
   | Seq [] -> r
   | Seq xs ->
@@ -47,7 +46,7 @@ let to_eof p = seq_inner p eof
 (* TODO: compute intervals of variable occurence counts. *)
 let rec vars = function
   | Bind {name; syntax} -> StringSet.(union (singleton name) (vars syntax))
-  | Space | Lit _ | Eof | Return _ -> StringSet.empty
+  | Space | Lit _ | Eof | Return _ | Digits -> StringSet.empty
   | Or xs | Seq xs -> List.fold_left StringSet.union StringSet.empty @@ List.map vars xs
 
 
@@ -63,7 +62,7 @@ let rec vars = function
 let rec disjunctive_clauses (p: parseable): parseable list =
   let open CCList.Infix in
   match p with
-  | Space | Lit _ | Return _ | Eof as x -> [x]
+  | Space | Lit _ | Return _ | Eof | Digits as x -> [x]
   | Bind {name; syntax} -> List.map (fun syntax -> Bind {name; syntax}) @@ disjunctive_clauses syntax
   | Seq [] -> [Seq []]
   | Seq (x::xs) ->
@@ -149,6 +148,7 @@ module Unparse = struct
     | Lit x -> output_str x, bindings
       (* XXX: Return-ed strings will be incorrectly unparsed if they are captured in Binds. *)
     | Return _ | Eof -> output [], bindings
+    | Digits -> failwith @@ "unparse failure: ambiguous unparse of digits"
     | Bind {name; _} -> bindings_pop name bindings
     | Seq [] -> output [], bindings
     | Seq (x::xs) ->

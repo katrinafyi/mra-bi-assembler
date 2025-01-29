@@ -44,13 +44,13 @@ let parsers_of_intrinsics (int: intrinsic) ~(dir:dir) (x: pvalue): pvalue =
   if dir <> `Forwards then
     invalid_arg "parser extraction is forwards only...";
   match int with
-  | BitsToUint _ -> P (Lit "digits")
-  | BitsToSint _ -> P (Lit "digits")
-  | IntToDecimal -> P (Lit "digits")
+  | BitsToUint _ -> P Digits
+  | BitsToSint _ -> P Digits
+  | IntToDecimal -> P Digits
   | NotIn _ -> x
   | Concat _ ->
       (match x with
-      | PTup xs -> P (Or (List.map parser_of_pvalue xs))
+      | PTup xs -> P (Seq (List.map parser_of_pvalue xs))
       | _ -> invalid_arg "bad arg to concat")
 
 (** Executes the given bidirectional program in the forwards direction to obtain parsers for each output variable.

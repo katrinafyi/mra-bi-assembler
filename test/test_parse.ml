@@ -53,3 +53,17 @@ let%expect_test "repeat" =
     ok: tokens=["x", "x", "x"] bindings={  }
     ok: tokens=["x", "x", "x", "x"] bindings={  }
     error: : end_of_input |}]
+
+let%expect_test "digits" =
+  let p = Seq [literals ["x"]; Digits] in
+  print_endline @@ describe_parseable p;
+  [%expect {| "x" [0-9]+ |}];
+
+  List.iter (parse_and_print p) [""; "x"; "x0"; "x2"; "x3"; "x123 0"];
+  [%expect {|
+    error: "x" [0-9]+: not enough input
+    error: "x" [0-9]+: count_while1
+    ok: tokens=["x", "0"] bindings={  }
+    ok: tokens=["x", "2"] bindings={  }
+    ok: tokens=["x", "3"] bindings={  }
+    error: : end_of_input |}]
