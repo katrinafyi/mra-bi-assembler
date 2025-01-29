@@ -122,3 +122,8 @@ They also define conversions to and from NFA/DFA.
 We exploit our more restricted language to implement features such as {!Lang.Analysis.unparse}, which are
 crucial to our application.
 
+In Haskell, there are the {{:https://hackage.haskell.org/package/cassette} [casette]} and {{:https://hackage.haskell.org/package/syntax}[syntax]} packages
+which elegantly implement bidirectional parsing using better abstractions.
+[casette] uses continuation-passing style to support unbounded backtracking, and [syntax] uses a kind of {{:https://hackage.haskell.org/package/semi-iso-1.0.0.0/docs/Control-Lens-SemiIso.html} weakened isomorphism}
+to represent the invertible computation.
+

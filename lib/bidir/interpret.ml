@@ -20,7 +20,7 @@ let rec lens_of_expr: expr -> (state -> value) option * (value -> state -> state
   Absint.abstract_lens_of_expr {
     into_tuple = (fun xs -> VTup xs);
     outof_tuple = (function | VTup xs -> Some xs | _ -> None);
-    wildcard_case = (fun () -> None, Fun.const Fun.id);
+    wildcard_case = Fun.const (None, Fun.const Fun.id);
     lit_case = fun x ->
       let do_match x' st =
         if not (equal_value_types x x') then
@@ -41,5 +41,9 @@ let run_bidir ~(intr: ('a, value) intrinsic_impl) =
   Absint.abstract_run_bidir {
     lens = lens_of_expr;
     intrinsic_impl = intr;
-    join = fun ~stmt _ _ -> invalid_arg @@ "ambiguous paths at Choice: " ^ show_bidir pp_dummy_intrinsic stmt;
+
+    (* XXX: this will /not/ throw if choice paths return disjoint variables... *)
+    join = (fun ~stmt _ _ -> invalid_arg @@ "ambiguous paths at Choice: " ^ show_bidir pp_dummy_intrinsic stmt);
+
+    bot = (fun ~stmt -> failwith @@ "no feasible path at Choice: " ^ show_bidir pp_dummy_intrinsic stmt);
   }

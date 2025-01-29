@@ -30,19 +30,30 @@ open Intrinsics
 module StringMap = Lang.Common.StringMap
 
 (** A lens is a pair of a getter and a setter, parametrised by the value type.
+    This is not a very general lens; it is specific to our use case.
+
     In all cases, the lens extracts from/inserts into a {!StringMap.t}.
     The getter may be [None], indicating that the expression is a {!Types.EWildcard} and cannot be loaded.
 *)
 type 'a lens = ('a StringMap.t -> 'a) option * ('a -> 'a StringMap.t -> 'a StringMap.t)
+(* TODO: generalise over 'a StringMap.t??? *)
 
-
+(** Parameters for defining abstract interpretation of an expression to construct a lens. The type parameter is the lattice element type. *)
 type 'a lens_spec = {
-  into_tuple: 'a list -> 'a;
-  outof_tuple: 'a -> 'a list option;
-  wildcard_case: unit -> 'a lens;
-  lit_case: value -> 'a lens;
+  into_tuple: 'a list -> 'a; (** Given a list of abstract values, combines them into a single tupled abstract value. *)
+  outof_tuple: 'a -> 'a list option; (** Given an abstract value, attempt to extract a list of values of it. This should return [None] if the given abstract value was not constructed from a tuple. *)
+  wildcard_case: unit -> 'a lens; (** Defines the lens for the {!Types.EWildcard} case. *)
+  lit_case: value -> 'a lens; (** Defines the lens for the {!Types.ELit} case, given a particular literal. *)
 }
 
+(** Abstract interpretation of an expression to obtain a lens.
+    This function internally handles the interpretation of tuples, using the given {!lens_spec} functions.
+
+    The returned lenses may throw in some cases, described below:
+
+    @raises Stdlib.Invalid_argument in case of programmer error (e.g., attempt to assign non-tuple or tuple of mismatching length into tuple)
+    @raises Stdlib.Failure in case of missing variables when getting from an {!Types.EVar}.
+*)
 let rec abstract_lens_of_expr (spec: 'a lens_spec) (e: expr): 'a lens =
   match e with
   | EWildcard -> spec.wildcard_case ()
@@ -67,13 +78,20 @@ let rec abstract_lens_of_expr (spec: 'a lens_spec) (e: expr): 'a lens =
       let get st = try StringMap.find v st with Not_found -> failwith @@ "undeclared variable: " ^ v in
       Some get, StringMap.add v
 
+(** {1 Abstract interpretation of {!bidir} statements} *)
 
+(** Parameters for the abstract interpretation of {!bidir} statements. Type parameters are the intrinsic type and the lattice element type. *)
 type ('i, 'a) absint_spec = {
-  lens: expr -> 'a lens;
-  intrinsic_impl: ('i, 'a) intrinsic_impl;
-  join: stmt:'i bidir -> 'a -> 'a -> 'a;
+  lens: expr -> 'a lens; (** A function for constructing the lens of an expression. This can be constructed by {!abstract_lens_of_expr}. *)
+  intrinsic_impl: ('i, 'a) intrinsic_impl; (** Function implementing the abstract interpretation of intrinsics. *)
+  join: stmt:'i bidir -> 'a -> 'a -> 'a; (** Join (least upper bound) of two lattice elements. A statement is given for debugging purposes only. *)
+  bot : stmt:'i bidir -> 'a StringMap.t (** Bottom (least) element of the lattice. This must be an element of the map lattice, in contrast to {!join} which is an element of the sublattice of map values. *)
 }
 
+(** Performs the abstract interpretation of the bidirectional language, given the {!absint_spec} configuration.
+
+    @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing variables at a {!Types.Decl} statement).
+*)
 let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a StringMap.t) (stmt: 'i bidir) =
   let stmt = reorder_one_stmt ~dir stmt in
   match stmt with
@@ -83,12 +101,12 @@ let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a Stri
         invalid_arg @@ "missing declared values at " ^ show_bidir pp_dummy_intrinsic stmt ^ ". provided: " ^ show_string_list (List.map fst @@ StringMap.bindings st);
       st'
   | Sequential stmts ->
-      List.fold_left (fun st stmt -> abstract_run_bidir spec ~dir st stmt) st stmts
+      List.fold_left (abstract_run_bidir spec ~dir) st stmts
   | Choice alts ->
       let go x = try Either.Left (abstract_run_bidir spec ~dir st x) with | Failure _ as e -> Either.Right e in
       let oks,_ = CCList.partition_map_either go alts in
       (match oks with
-      | [] -> failwith @@ "no feasible path at Choice: " ^ show_bidir pp_dummy_intrinsic stmt
+      | [] -> spec.bot ~stmt
       | [x] -> x
       | x::xs -> List.fold_left (StringMap.union (fun _ x y -> Some (spec.join ~stmt x y))) x xs)
   | Assign (src,fs,dst) ->
@@ -98,4 +116,3 @@ let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a Stri
       (match get with
       | None -> st
       | Some f -> let x = f st in set (List.fold_left apply x fs) st)
-

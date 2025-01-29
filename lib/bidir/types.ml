@@ -72,3 +72,14 @@ let apply (x: 'a) (f: 'a -> 'b): 'b = f x
 let fanout (fs: ('a -> 'b) list): 'a -> 'b list =
   fun x -> List.map (apply x) fs
 
+let rec vars_of_expr =
+  function
+  | EVar v -> [v]
+  | ETup xs -> List.concat_map vars_of_expr xs
+  | _ -> []
+
+let rec vars_of_stmt =
+  function
+  | Assign (x,_,y) -> List.append (vars_of_expr x) (vars_of_expr y)
+  | Decl vs -> vs
+  | Choice xs | Sequential xs -> List.concat_map vars_of_stmt xs
