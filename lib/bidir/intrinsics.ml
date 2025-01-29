@@ -9,6 +9,7 @@ open Types
 
 type dir = [ `Forwards | `Backwards ]
 [@@deriving eq, show]
+let dir_reverse = function |`Forwards -> `Backwards | `Backwards -> `Forwards
 
 (** Reorders the topmost level of the given statement.
     Does not recurse into sub-statements. *)
@@ -41,6 +42,7 @@ type intrinsic =
     (** Any -> Any.
         Asserts that the given value is {i not} contained in the intrinsic's list of literals.
         If successful, this acts as the identity function. Otherwise, throws. *)
+  | Inv of intrinsic (** Performs the inverse of the given intrinsic, i.e., swaps its forwards and backwards directions. *)
 [@@deriving eq, show]
 
 let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
@@ -151,14 +153,19 @@ let bits_iso_sint w = (sint_of_bits w, bits_of_sint w)
 let int_iso_string = (CCInt.to_string, CCInt.of_string_exn)
 let concat_strings_iso wds = (concat_forwards wds, concat_backwards wds)
 
+let either_iso (f,f') (g,g'): ('a, ('b, 'c) Either.t) iso =
+  (fun x -> try Either.Left (f x) with |_ -> Either.Right (g x)),
+  (function|Left x -> f' x | Right x -> g' x)
+let both_iso (f,f') = (Either.map ~left:f ~right:f), (Either.map ~left:f' ~right:f')
 
 (** {2 Final implementation } *)
 
 
 (** An {!intrinsic_impl} executing the intrinsics specified in {!intrinsic}. *)
-let run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
+let rec run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
   let open CCFun.Infix in
   match int with
+  | Inv x -> run_intrinsics x ~dir:(dir_reverse dir)
   | BitsToUint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_uint w %%> isorev val_iso_int)
   | BitsToSint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_sint w %%> isorev val_iso_int)
   | IntToDecimal -> make_intrinsic ~dir (val_iso_int %%> int_iso_string %%> isorev val_iso_str)
@@ -166,4 +173,8 @@ let run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
   | Concat wds ->
       let n = List.length wds in
       let rep x = CCList.replicate n x in
-      make_intrinsic ~dir (val_iso_tup (rep val_iso_str) %%> concat_strings_iso wds %%> isorev val_iso_str)
+
+      let inp = either_iso (val_iso_tup (rep val_iso_str)) (val_iso_tup (rep (val_iso_bits))) in
+      let out = either_iso val_iso_str val_iso_bits in
+
+      make_intrinsic ~dir (inp %%> both_iso (concat_strings_iso wds) %%> isorev out)

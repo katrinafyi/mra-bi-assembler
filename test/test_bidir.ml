@@ -175,9 +175,15 @@ let%expect_test "concat intrinsic" =
 
   print_value @@ run_intrinsics (Concat [Some 2; Some 1; None; Some 2]) ~dir:`Backwards (VStr "12Han expanding middleTL");
   [%expect {|
+  (Types.VTup
+     [(Types.VStr "12"); (Types.VStr "H"); (Types.VStr "an expanding middle");
+       (Types.VStr "TL")]) |}];
+
+  print_value @@ run_intrinsics (Concat [Some 2; Some 1; None; Some 2]) ~dir:`Backwards (VBits "00100000011");
+  [%expect {|
     (Types.VTup
-       [(Types.VStr "12"); (Types.VStr "H"); (Types.VStr "an expanding middle");
-         (Types.VStr "TL")]) |}]
+       [(Types.VBits "00"); (Types.VBits "1"); (Types.VBits "000000");
+         (Types.VBits "11")]) |}]
 
 
 let%expect_test "bit intrinsics" =

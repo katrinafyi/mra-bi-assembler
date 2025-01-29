@@ -26,7 +26,7 @@ type fieldconv = {
   field_bidir: field_bidir;
 }
 
-(** {2 Extractors} *)
+(** {1 Extractors} *)
 
 open CCResult.Infix
 open Bidir.Types
@@ -41,7 +41,7 @@ let encoded_in_the (fld: AsmField.t): (string, string) result =
   let matches = List.map (Fun.flip Re.Group.get 1) @@ Re.all re fld.hover in
   sole "encoding destination" @@ matches
 
-let allones_case (fld: AsmField.t): (string, string) result =
+let allones_interpretation (fld: AsmField.t): (string, string) result =
   match () with
   | _ when CCString.mem ~sub:"ZR" fld.link -> Ok "zr"
   | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok "sp"
@@ -77,7 +77,7 @@ let defaulting_to (fld: AsmField.t): (int option, string) result =
 
 let register_char = function | 32 -> "w" | 64 -> "x"
 
-(** {2 Bidir constructors} *)
+(** {1 Bidir constructors} *)
 
 let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:string): field_bidir =
   assert (wd <= 31);
@@ -121,6 +121,27 @@ let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~(asmfld:string) ~(bitfl
     Decl [VarName asmfld];
   ]
 
+let make_assocs ~(assocs: Assoc.t list) ~(asmfld:string): field_bidir =
+  let make_bitfield_check (bitfld: string) (pattern: string) =
+    failwith ""
+  in
+  let make_assoc_case (x: Assoc.t): field_bidir =
+    let regflds = CCList.of_iter (StringMap.keys x.bitfields) in
+    Sequential [
+      Decl (List.map (fun x -> VarName x) regflds);
+
+      Sequential (List.map (fun (bitfld,vals) -> make_bitfield_check bitfld vals) @@ StringMap.bindings x.bitfields);
+
+      Assign (ELit (VStr x.symboltext), [], EVar (VarName asmfld));
+      (* TODO: handle symboltext RESERVED and UInt() expressions and choices. *)
+      Decl [VarName asmfld];
+    ]
+  in
+  Choice (List.map make_assoc_case assocs)
+
+
+(** {1 Supported field cases} *)
+
 let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
 
   let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"] in
@@ -130,7 +151,7 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
   let* bitfld = encoded_in_the fld in
   let wd = (StringMap.find bitfld enc.encfields).wd in
 
-  let* allones = allones_case fld in
+  let* allones = allones_interpretation fld in
 
   let asmfld = fld.placeholder in
   let bidir = make_regnum_bidir ~wd ~allones ~bitfld ~asmfld in
@@ -141,7 +162,6 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
     | Ok regwd -> let prefix = register_char regwd in prefix_regnum_bidir ~prefix ~asmfld bidir
     | Error _ -> bidir) in
   Ok bidir
-
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"] in
@@ -155,6 +175,10 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* signed = signed_or_unsigned fld in
 
   Ok (make_immediate_bidir ~wd ~signed ~asmfld ~bitfld)
+
+let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
+  let* () = guard (fld.assocs <> []) "has no assocs" in
+  failwith ""
 
 let build_field_converters (enc: InstEnc.t): unit =
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in

@@ -40,18 +40,23 @@ let parser_of_pvalue =
   | P x -> x
   | _ -> invalid_arg "not a P"
 
-let parsers_of_intrinsics (int: intrinsic) ~(dir:dir) (x: pvalue): pvalue =
-  if dir <> `Forwards then
-    invalid_arg "parser extraction is forwards only...";
-  match int with
-  | BitsToUint _ -> P Digits
-  | BitsToSint _ -> P Digits
-  | IntToDecimal -> P Digits
-  | NotIn _ -> x
-  | Concat _ ->
+let rec parsers_of_intrinsics (int: intrinsic) ~(dir:dir) (x: pvalue): pvalue =
+  match int, dir with
+  | BitsToUint _, `Forwards -> P Digits
+  | BitsToSint _, `Forwards -> P Digits
+  | IntToDecimal, `Forwards -> P Digits
+  | NotIn _, _ -> x
+  | Inv intr, _ -> parsers_of_intrinsics intr ~dir:(dir_reverse dir) x
+  | Concat wds, `Forwards ->
       (match x with
-      | PTup xs -> P (Seq (List.map parser_of_pvalue xs))
+      | PTup xs when List.length wds = List.length xs -> P (Seq (List.map parser_of_pvalue xs))
       | _ -> invalid_arg "bad arg to concat")
+  | Concat wds, `Backwards ->
+      (match x with
+      | P (Seq xs) when List.length wds = List.length xs -> PTup (List.map (fun x -> P x) xs)
+      | _ -> invalid_arg "bad arg to concat backwards")
+
+  | _ -> invalid_arg "parsers_of_intrinsics unsupport intrinsic + direction"
 
 (** Executes the given bidirectional program in the forwards direction to obtain parsers for each output variable.
 *)
