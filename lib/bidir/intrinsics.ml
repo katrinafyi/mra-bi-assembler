@@ -53,7 +53,7 @@ type ('i, 'a) intrinsic_impl = 'i -> dir:dir -> 'a -> 'a
 (** Constructs an {!intrinsic_impl} function from the given forwards and backwards functions.
     When executing the intrinsic, this helper function ensures that the given functions are inverses.
 *)
-let make_intrinsic (forw: value -> value) (back: value -> value) ~(dir: dir) (x: value) =
+let make_intrinsic ((forw, back):(value -> value) * (value -> value)) ~(dir: dir) (x: value) =
   let f, inverse = match dir with
   | `Forwards -> forw, back
   | `Backwards -> back, forw
@@ -127,20 +127,41 @@ let concat_backwards wds str =
   let middle = CCString.sub str frontwd (String.length str - backwd - frontwd) in
   front @ [middle] @ back
 
+(** {2 Isomorphisms} *)
+
+(** Really weak isomorphisms which are just a pair of forwards and back functions.
+    These are weak because they are really only isomorphic on the image of the forwards function.
+    Even then, they can throw and do other terrible things.
+*)
+
+open CCFun.Infix
+
+type ('a, 'b) iso = ('a -> 'b) * ('b -> 'a)
+let (%%>) (f,f') (g,g') = (f %> g, g' %> f')
+let isorev (x,y) = (y,x)
+
+let val_iso_bits = (vbits_of_val, val_of_vbits)
+let val_iso_int = (vint_of_val, val_of_vint)
+let val_iso_str = (vstr_of_val, val_of_vstr)
+let val_iso_tup fs = (vtup_of_val (List.map fst fs), val_of_vtup (List.map snd fs))
+let bits_iso_uint w = (uint_of_bits w, bits_of_uint w)
+let bits_iso_sint w = (sint_of_bits w, bits_of_sint w)
+let int_iso_string = (CCInt.to_string, CCInt.of_string_exn)
+let concat_strings_iso wds = (concat_forwards wds, concat_backwards wds)
+
+
 (** {2 Final implementation } *)
 
+
 (** An {!intrinsic_impl} executing the intrinsics specified in {!intrinsic}. *)
-let run_intrinsics (int: intrinsic) ~(dir:dir) (x: value): value =
+let run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
   let open CCFun.Infix in
   match int with
-  | BitsToUint w -> make_intrinsic ~dir (vbits_of_val %> uint_of_bits w %> val_of_vint) (vint_of_val %> bits_of_uint w %> val_of_vbits) x
-  | BitsToSint w -> make_intrinsic ~dir (vbits_of_val %> sint_of_bits w %> val_of_vint) (vint_of_val %> bits_of_sint w %> val_of_vbits) x
-  | IntToDecimal -> make_intrinsic ~dir (vint_of_val %> CCInt.to_string %> val_of_vstr) (vstr_of_val %> CCInt.of_string_exn %> val_of_vint) x
-  | NotIn vals -> make_intrinsic ~dir (notin vals) (notin vals) x
+  | BitsToUint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_uint w %%> isorev val_iso_int)
+  | BitsToSint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_sint w %%> isorev val_iso_int)
+  | IntToDecimal -> make_intrinsic ~dir (val_iso_int %%> int_iso_string %%> isorev val_iso_str)
+  | NotIn vals -> make_intrinsic ~dir (notin vals,notin vals)
   | Concat wds ->
       let n = List.length wds in
       let rep x = CCList.replicate n x in
-      make_intrinsic ~dir
-        (vtup_of_val (rep vstr_of_val) %> concat_forwards wds %> val_of_vstr)
-        (vstr_of_val %> concat_backwards wds %> val_of_vtup (rep val_of_vstr))
-        x
+      make_intrinsic ~dir (val_iso_tup (rep val_iso_str) %%> concat_strings_iso wds %%> isorev val_iso_str)

@@ -5,6 +5,7 @@ open Lang.Common
 open Bidir.Types
 open Bidir.Interpret
 open Bidir.Intrinsics
+open Bidir.Parse
 open CCFun.Infix
 
 let catch (f: unit -> 'a): unit =
@@ -16,10 +17,27 @@ let catch (f: unit -> 'a): unit =
 
 
 let st n x = StringMap.singleton n x
-let intr _ ~dir:_ _ = failwith "dummy intrinsics"
+let dummy_intr _ ~dir:_ _ = failwith "dummy intrinsics"
 
 let print_value = show_value %> print_endline
 let print_state = show_state %> print_endline
+let print_pars_state = show_pstate %> print_endline
+
+
+let one_or_two = Sequential [
+  Decl [VarName "in"];
+  Choice [
+    Sequential [
+      Assign (EVar (VarName "in"), [], ELit (VInt 1));
+      Assign (ELit (VStr "one"), [], EVar (VarName "out"));
+    ];
+    Sequential [
+      Assign (EVar (VarName "in"), [], ELit (VInt 2));
+      Assign (ELit (VStr "two"), [], EVar (VarName "out"));
+    ];
+  ];
+  Decl [VarName "out"];
+]
 
 let%expect_test "lens" =
   let m : value StringMap.t = StringMap.of_list ["a", VInt 10] in
@@ -79,54 +97,40 @@ let%expect_test "bidir basic" =
     Decl [VarName "out"];
   ] in
 
-  let m = run_bidir ~dir:`Forwards ~intr (st "in" (VInt 123)) one_pattern in
+  let m = run_bidir ~dir:`Forwards ~intr:dummy_intr (st "in" (VInt 123)) one_pattern in
   print_endline @@ show_state m;
   [%expect {| { "out" -> (Types.VInt 200) } |}];
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Forwards ~intr (st "in" (VInt 22)) one_pattern);
+  catch (fun () -> ignore @@ run_bidir ~dir:`Forwards ~intr:dummy_intr (st "in" (VInt 22)) one_pattern);
   [%expect {| failure: value mismatch when assigning into literal of (Types.VInt 123) |}];
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "not the waanted value" (VInt 22)) one_pattern);
+  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "not the waanted value" (VInt 22)) one_pattern);
   [%expect {| invalid_arg: missing declared values at (Types.Decl [(Types.VarName "out")]). provided: ["not the waanted value"] |}];
 
-  let m = run_bidir ~dir:`Backwards ~intr (st "out" (VInt 200)) one_pattern in
+  let m = run_bidir ~dir:`Backwards ~intr:dummy_intr (st "out" (VInt 200)) one_pattern in
   print_endline @@ show_state m;
   [%expect {| { "in" -> (Types.VInt 123) } |}]
 
 
 let%expect_test "bidir choice" =
-  let one_or_two = Sequential [
-    Decl [VarName "in"];
-    Choice [
-      Sequential [
-        Assign (EVar (VarName "in"), [], ELit (VInt 1));
-        Assign (ELit (VStr "one"), [], EVar (VarName "out"));
-      ];
-      Sequential [
-        Assign (EVar (VarName "in"), [], ELit (VInt 2));
-        Assign (ELit (VStr "two"), [], EVar (VarName "out"));
-      ];
-    ];
-    Decl [VarName "out"];
-  ] in
 
-  let m = run_bidir ~dir:`Forwards ~intr (st "in" (VInt 1)) one_or_two in
+  let m = run_bidir ~dir:`Forwards ~intr:dummy_intr (st "in" (VInt 1)) one_or_two in
   print_endline @@ show_state m;
   [%expect {| { "out" -> (Types.VStr "one") } |}];
 
-  let m = run_bidir ~dir:`Forwards ~intr (st "in" (VInt 2)) one_or_two in
+  let m = run_bidir ~dir:`Forwards ~intr:dummy_intr (st "in" (VInt 2)) one_or_two in
   print_endline @@ show_state m;
   [%expect {| { "out" -> (Types.VStr "two") } |}];
 
-  let m = run_bidir ~dir:`Backwards ~intr (st "out" (VStr "two")) one_or_two in
+  let m = run_bidir ~dir:`Backwards ~intr:dummy_intr (st "out" (VStr "two")) one_or_two in
   print_endline @@ show_state m;
   [%expect {| { "in" -> (Types.VInt 2) } |}];
 
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "in" (VInt 22)) (Choice []));
+  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice []));
   [%expect {| failure: no feasible path at Choice: (Types.Choice []) |}];
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
+  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
   [%expect {|
     invalid_arg: ambiguous paths at Choice: (Types.Choice [(Types.Sequential []); (Types.Sequential [])]) |}]
 
@@ -211,3 +215,17 @@ let%expect_test "wd example" =
 
   print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "Wd" (VStr "w0")) Bidir.example_wd_register;
   [%expect {| { "Rd" -> (Types.VBits "00000") } |}]
+
+
+let%expect_test "parse of bidir" =
+  print_pars_state @@ parsers_of_bidir (StringMap.singleton "in" (P fail)) one_or_two;
+  [%expect {| { "out" -> (Parse.P (Types.Or [(Types.Lit "one"); (Types.Lit "two")])) } |}];
+
+  print_pars_state @@ parsers_of_bidir (StringMap.singleton "Rd" (P fail)) Bidir.example_wd_register;
+  [%expect {|
+    { "Wd"
+      -> (Parse.P
+            (Types.Or
+               [(Types.Lit "wzr");
+                 (Types.Or [(Types.Lit "w"); (Types.Lit "digits")])])) } |}]
+

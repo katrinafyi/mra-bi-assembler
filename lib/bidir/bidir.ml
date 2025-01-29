@@ -80,6 +80,7 @@ module Types = Types
 module Absint = Absint
 module Interpret = Interpret
 module Intrinsics = Intrinsics
+module Parse = Parse
 
 let example_wd_register : Intrinsics.intrinsic Types.bidir = Sequential [
   Decl [VarName "Rd"];

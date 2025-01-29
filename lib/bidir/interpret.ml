@@ -16,7 +16,7 @@ open Intrinsics
     @raises Stdlib.Invalid_argument in case of programmer error (e.g., invalid types provided to functions)
     @raises Stdlib.Failure in case of value mismatches while pattern matching (provided the types agree).
 *)
-let rec lens_of_expr: expr -> (state -> value) option * (value -> state -> state) =
+let lens_of_expr: expr -> (state -> value) option * (value -> state -> state) =
   Absint.abstract_lens_of_expr {
     into_tuple = (fun xs -> VTup xs);
     outof_tuple = (function | VTup xs -> Some xs | _ -> None);
