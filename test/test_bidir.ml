@@ -171,7 +171,7 @@ let%expect_test "concat intrinsic" =
   [%expect {| (Types.VStr "12Han expanding middleTL") |}];
 
   catch (fun () -> run_intrinsics (Concat [Some 2; Some 1; None; None; Some 2]) ~dir:`Forwards (VTup [VStr "12"; VStr "H"; VStr "boop"; VStr "an expanding middle"; VStr "TL"]));
-  [%expect {| invalid_arg: multiple None elements in width specifier list |}];
+  [%expect {| invalid_arg: more than one None field in width specifier list |}];
 
   print_value @@ run_intrinsics (Concat [Some 2; Some 1; None; Some 2]) ~dir:`Backwards (VStr "12Han expanding middleTL");
   [%expect {|
@@ -249,10 +249,10 @@ let%expect_test "wd example" =
 
 
 let%expect_test "parse of bidir" =
-  print_pars_state @@ parsers_of_bidir (StringMap.singleton "in" (P fail)) one_or_two;
+  print_pars_state @@ parsers_of_bidir ~state:(StringMap.singleton "in" (P fail)) one_or_two;
   [%expect {| { "out" -> (Parse.P (Types.Or [(Types.Lit "one"); (Types.Lit "two")])) } |}];
 
-  print_pars_state @@ parsers_of_bidir (StringMap.singleton "Rd" (P fail)) Bidir.example_wd_register;
+  print_pars_state @@ parsers_of_bidir ~state:(StringMap.singleton "Rd" (P fail)) Bidir.example_wd_register;
   [%expect {|
     { "Wd"
       -> (Parse.P

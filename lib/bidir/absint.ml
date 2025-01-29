@@ -93,6 +93,7 @@ type ('i, 'a) absint_spec = {
     @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing variables at a {!Types.Decl} statement).
 *)
 let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a StringMap.t) (stmt: 'i bidir) =
+  (* print_endline @@ show_bidir pp_intrinsic stmt; *)
   let stmt = reorder_one_stmt ~dir stmt in
   match stmt with
   | Decl vars ->

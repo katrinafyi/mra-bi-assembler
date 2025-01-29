@@ -116,7 +116,7 @@ let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~(asmfld:string) ~(bitfl
     Decl [VarName bitfld];
 
     (* XXX: need to check in range *)
-    Assign (EVar (VarName bitfld), [bitstoint wd], EVar (VarName asmfld));
+    Assign (EVar (VarName bitfld), [bitstoint wd; IntToDecimal], EVar (VarName asmfld));
 
     Decl [VarName asmfld];
   ]
@@ -193,14 +193,18 @@ let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in
   Ok (make_assocs ~assocs:fld.assocs ~asmfld:fld.placeholder)
 
-let build_field_converters (enc: InstEnc.t): unit =
+let build_field_converters (enc: InstEnc.t): field_bidir =
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in
   let show_field_result = show (CCResult.pp' (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) (CCList.pp CCString.pp)) in
-  StringMap.iter (fun k (v: AsmField.t) ->
+
+  let bidirs = List.map (fun (k, v: string * AsmField.t) ->
     let res = CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v] in
     match res with
-    | Ok x -> print_endline @@ "OK: " ^ show_field_bidir x
+    | Ok x -> x
     (* | Ok _ -> () *)
-    | Error _ -> print_endline @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
-  ) enc.asm.asmfields
+    | Error _ -> failwith @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
+  ) @@ StringMap.bindings enc.asm.asmfields in
+
+  Parallel bidirs
+
 

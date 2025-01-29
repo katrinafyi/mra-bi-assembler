@@ -127,9 +127,10 @@ let concat_backwards wds str =
   let front,frontwd,rest = concat_helper wds str in
   let back,backwd,rest = concat_helper (List.rev rest) (CCString.rev str) in
   let back = List.rev @@ List.map CCString.rev back in
-  require ~f:invalid_arg (List.length rest = 1) "multiple None elements in width specifier list";
+  require ~f:invalid_arg (List.length rest <= 1) "more than one None field in width specifier list";
   let middle = CCString.sub str frontwd (String.length str - backwd - frontwd) in
-  front @ [middle] @ back
+  let middle = if middle <> "" then [middle] else [] in
+  front @ middle @ back
 
 (** {2 Isomorphisms} *)
 

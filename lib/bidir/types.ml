@@ -84,3 +84,4 @@ let rec vars_of_stmt =
   | Assign (x,_,y) -> List.append (vars_of_expr x) (vars_of_expr y)
   | Decl vs -> vs
   | Choice xs | Sequential xs | Parallel xs -> List.concat_map vars_of_stmt xs
+

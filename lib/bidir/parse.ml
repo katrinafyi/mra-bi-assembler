@@ -60,7 +60,10 @@ let rec parsers_of_intrinsics (int: intrinsic) ~(dir:dir) (x: pvalue): pvalue =
 
 (** Executes the given bidirectional program in the forwards direction to obtain parsers for each output variable.
 *)
-let parsers_of_bidir =
+let parsers_of_bidir ?state bidir =
+  let vars = vars_of_stmt bidir in
+  let default = StringMap.of_list @@ List.map (fun (VarName x) -> (x, P P.fail)) vars in
+
   Absint.abstract_run_bidir {
     lens = parser_lens_of_expr;
     intrinsic_impl = parsers_of_intrinsics;
@@ -68,6 +71,7 @@ let parsers_of_bidir =
     join = (fun ~stmt:_ -> join_pvalue);
 
     bot = (fun ~stmt -> failwith @@ "no feasible path at pars Choice: " ^ show_bidir pp_dummy_intrinsic stmt);
-  } ~dir:`Forwards
+  } ~dir:`Forwards (Option.value state ~default) bidir
 
-
+(* XXX: we are actually unable to parse fields all at once; we will need to parse one or more fields in isolation to handle repeated fields. DOES THIS EVEN HAPPEN??? *)
+let values_of_strings = StringMap.map (fun (xs : Lang.Common.output list) -> VStr (String.concat "" (List.hd xs).output))
