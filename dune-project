@@ -28,6 +28,7 @@
   angstrom
   faraday
   containers
+  re
   (ppx_deriving :build)
   (ppx_deriving_yojson :build)
   (js_of_ocaml :build)

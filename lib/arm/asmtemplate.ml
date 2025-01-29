@@ -36,7 +36,7 @@ let parse_placeholder =
   let* _ = Angstrom.char '<' in
   let* placeholder = Angstrom.take_while1 (function |'>'|' '|'<'|'{'|'}'->false|_->true) in
   let* _ = Angstrom.char '>' in
-  Angstrom.return (Placeholder placeholder)
+  Angstrom.return @@ Placeholder ("<" ^ placeholder ^ ">")
 
 
 let rec foo () = let open Angstrom in (char 'x' *> (return () >>= foo) <|> return ())
@@ -88,6 +88,8 @@ let run_parse_asmtemplate (enc: InstEnc.t) =
   let s = string_of_asmtemplate enc.asm.text in
   let result = Angstrom.parse_string ~consume:Angstrom.Consume.All (parse_asmtemplate ()) s in
   let x = Result.map_error (fun x -> String.concat "\t" enc.asm.text) result in
+  (* XXX: handle suspicious choices. that is, asmtemplates with literal braces *)
+
   (* (match x with *)
   (* | Ok t -> ignore (suspicious_choice enc t) *)
   (* | _ -> ()); *)

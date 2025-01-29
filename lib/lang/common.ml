@@ -272,10 +272,13 @@ let show_string_list x =
 let show_list f x =
   "[" ^ String.concat ", " (List.map f x) ^ "]"
 
-(** Shows a map of binding values. *)
-let show_bindings (x: bindings) =
-  let pairs = List.map (fun (k,v) -> k ^ "=" ^ show_list show_output v) @@ StringMap.bindings  x in
+(** Shows a string map. *)
+let show_stringmap f x =
+  let pairs = List.map (fun (k,v) -> k ^ "=" ^ f v) @@ StringMap.bindings x in
   "{ " ^ String.concat "; " pairs ^ " }"
+
+(** Shows a map of binding values. *)
+let show_bindings = show_stringmap (show_list show_output)
 
 (** Shows a pair of output and bindings, as produced by the parser. *)
 let show_parse_output =
