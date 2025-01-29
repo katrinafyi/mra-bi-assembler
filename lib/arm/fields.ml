@@ -121,22 +121,35 @@ let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~(asmfld:string) ~(bitfl
     Decl [VarName asmfld];
   ]
 
-let make_assocs ~(assocs: Assoc.t list) ~(asmfld:string): field_bidir =
-  let make_bitfield_check (bitfld: string) (pattern: string) =
-    failwith ""
+let make_one_bitfield_check (bitfld: string) (pattern: char list) =
+  let open Bidir.Intrinsics in
+  let wds = List.map (Fun.const (Some 1)) pattern in
+  let make_target = function
+    | '0'..'1' as c -> ELit (VBits (CCString.of_char c))
+    | 'x' -> EWildcard
+    | _ -> failwith "invalid pattern char"
   in
+  Assign (EVar (VarName bitfld), [Inv (Concat wds)], ETup (List.map make_target pattern))
+
+let make_bitfield_checks x =
+  StringMap.bindings x
+  |> List.map (fun (bitfld,vals) -> make_one_bitfield_check bitfld (CCString.to_list vals))
+
+let make_assocs ~(assocs: Assoc.t list) ~(asmfld:string): field_bidir =
   let make_assoc_case (x: Assoc.t): field_bidir =
     let regflds = CCList.of_iter (StringMap.keys x.bitfields) in
     Sequential [
       Decl (List.map (fun x -> VarName x) regflds);
 
-      Sequential (List.map (fun (bitfld,vals) -> make_bitfield_check bitfld vals) @@ StringMap.bindings x.bitfields);
+      Sequential (make_bitfield_checks x.bitfields);
 
       Assign (ELit (VStr x.symboltext), [], EVar (VarName asmfld));
+
       (* TODO: handle symboltext RESERVED and UInt() expressions and choices. *)
       Decl [VarName asmfld];
     ]
   in
+
   Choice (List.map make_assoc_case assocs)
 
 
@@ -178,16 +191,16 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in
-  failwith ""
+  Ok (make_assocs ~assocs:fld.assocs ~asmfld:fld.placeholder)
 
 let build_field_converters (enc: InstEnc.t): unit =
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in
   let show_field_result = show (CCResult.pp' (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) (CCList.pp CCString.pp)) in
   StringMap.iter (fun k (v: AsmField.t) ->
-    let res = CCResult.choose [handle_general_registers enc v; handle_immediate enc v] in
+    let res = CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v] in
     match res with
-    (* | Ok x -> print_endline @@ "OK: " ^ show_field_bidir x *)
-    | Ok _ -> ()
+    | Ok x -> print_endline @@ "OK: " ^ show_field_bidir x
+    (* | Ok _ -> () *)
     | Error _ -> print_endline @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
   ) enc.asm.asmfields
 
