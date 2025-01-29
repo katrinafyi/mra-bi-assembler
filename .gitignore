@@ -1,5 +1,7 @@
 /a
 /out.json
+/regs.txt
+/regsfull.txt
 
 *.annot
 *.cmo

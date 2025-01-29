@@ -10,7 +10,7 @@ let () =
   (* print_endline @@ Lang.Common.show_result Arm.Types.show_instclasses result; *)
   let iclasses = Result.get_ok result in
 
-  let _iclass = List.hd @@ List.filter
+  let iclasses = List.filter
     (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDS_addsub_shift")
     iclasses in
 
