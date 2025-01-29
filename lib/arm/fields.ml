@@ -41,7 +41,8 @@ let allones_case (fld: AsmField.t): (string, string) result =
   match () with
   | _ when CCString.mem ~sub:"ZR" fld.link -> Ok "zr"
   | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok "sp"
-  | _ -> failwith "unknown allones case for register"
+  | _ when CCString.mem ~sub:"or the name ZR" fld.hover -> Ok "zr"
+  | _ -> failwith @@ "unknown allones case for register " ^ fld.hover
 
 let register_char = function | 32 -> "w" | 64 -> "x"
 
@@ -78,11 +79,10 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
   let open CCResult.Infix in
   let open Bidir.Types in
 
-  match fld.hover with
-  | _ when CCString.mem ~sub:"general-purpose register" fld.hover ->
+  let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"] in
 
-    let* regwd = extract_reg_bits fld in
-    let prefix = register_char regwd in
+  match fld.hover with
+  | _ when isgpreg fld.hover ->
 
     let* bitfld = encoded_in_the fld in
     let wd = (StringMap.find bitfld enc.encfields).wd in
@@ -91,13 +91,22 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
 
     let asmfld = fld.placeholder in
     let bidir = make_regnum_bidir ~wd ~allones ~bitfld ~asmfld in
-    let bidir = prefix_regnum_bidir ~prefix ~asmfld bidir in
 
+    let regwd = extract_reg_bits fld in
+
+    let bidir = (match regwd with
+      | Ok regwd -> let prefix = register_char regwd in prefix_regnum_bidir ~prefix ~asmfld bidir
+      | Error _ -> bidir) in
     Ok bidir
   | _ -> Error "not a gpreg"
 
 let build_field_converters (enc: InstEnc.t): unit =
+  let show_field_result = show (CCResult.pp (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic)) in
   StringMap.iter (fun k (v: AsmField.t) ->
-    print_endline @@ show (CCResult.pp (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic)) (handle_general_registers enc v)
+    let res = (handle_general_registers enc v) in
+    match res with
+    (* | Ok _ -> print_endline @@ "OK: " ^ v.hover *)
+    | Ok _ -> ()
+    | Error _ -> print_endline @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
   ) enc.asm.asmfields
 
