@@ -17,6 +17,7 @@ let catch (f: unit -> 'a): unit =
 
 
 let st n x = StringMap.singleton n x
+let st2 n x n2 x2 = StringMap.add n2 x2 (StringMap.singleton n x)
 let dummy_intr _ ~dir:_ _ = failwith "dummy intrinsics"
 
 let print_value = show_value %> print_endline
@@ -37,6 +38,24 @@ let one_or_two = Sequential [
     ];
   ];
   Decl [VarName "out"];
+]
+
+
+let one_and_two = Sequential [
+  Parallel [
+    Sequential [
+      Decl [VarName "in1"];
+      Assign (EVar (VarName "in1"), [], ELit (VInt 1));
+      Assign (ELit (VStr "one"), [], EVar (VarName "out1"));
+      Decl [VarName "out1"];
+    ];
+    Sequential [
+      Decl [VarName "in2"];
+      Assign (EVar (VarName "in2"), [], ELit (VInt 2));
+      Assign (ELit (VStr "two"), [], EVar (VarName "out2"));
+      Decl [VarName "out2"];
+    ];
+  ];
 ]
 
 let%expect_test "lens" =
@@ -132,7 +151,7 @@ let%expect_test "bidir choice" =
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
   [%expect {|
-    invalid_arg: ambiguous paths at Choice: (Types.Choice [(Types.Sequential []); (Types.Sequential [])]) |}]
+    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel: (Types.Choice [(Types.Sequential []); (Types.Sequential [])]) |}]
 
 
 let%expect_test "concat intrinsic" =
@@ -228,3 +247,43 @@ let%expect_test "parse of bidir" =
             (Types.Or
                [(Types.Lit "wzr"); (Types.Seq [(Types.Lit "w"); Types.Digits])])) } |}]
 
+let%expect_test "parallel bidir" =
+  print_state @@ run_bidir ~dir:`Forwards ~intr:dummy_intr (st2 "in1" (VInt 1) "in2" (VInt 2)) one_and_two;
+  [%expect {| { "out1" -> (Types.VStr "one"), "out2" -> (Types.VStr "two") } |}];
+
+  catch (fun () -> run_bidir ~dir:`Forwards ~intr:dummy_intr (st2 "in1" (VInt 1) "fdajio" (VInt 2)) one_and_two);
+  [%expect {| invalid_arg: missing declared values at (Types.Decl [(Types.VarName "in2")]). provided: ["fdajio", "in1"] |}];
+
+  let overlapping = Sequential [
+    Parallel [
+      Sequential [
+        Decl [VarName "in1"];
+        Assign (EVar (VarName "in1"), [], ELit (VInt 1));
+        Assign (ELit (VStr "one"), [], EVar (VarName "out"));
+      ];
+      Sequential [
+        Decl [VarName "in2"];
+        Assign (EVar (VarName "in2"), [], ELit (VInt 2));
+        Assign (ELit (VStr "two"), [], EVar (VarName "out"));
+      ];
+    ];
+  ] in
+
+  catch (fun () -> run_bidir ~dir:`Forwards ~intr:dummy_intr (st2 "in1" (VInt 1) "in2" (VInt 2)) overlapping);
+  [%expect {|
+    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel: (Types.Parallel
+       [(Types.Sequential
+           [(Types.Decl [(Types.VarName "in1")]);
+             (Types.Assign ((Types.EVar (Types.VarName "in1")), [],
+                (Types.ELit (Types.VInt 1))));
+             (Types.Assign ((Types.ELit (Types.VStr "one")), [],
+                (Types.EVar (Types.VarName "out"))))
+             ]);
+         (Types.Sequential
+            [(Types.Decl [(Types.VarName "in2")]);
+              (Types.Assign ((Types.EVar (Types.VarName "in2")), [],
+                 (Types.ELit (Types.VInt 2))));
+              (Types.Assign ((Types.ELit (Types.VStr "two")), [],
+                 (Types.EVar (Types.VarName "out"))))
+              ])
+         ]) |}]

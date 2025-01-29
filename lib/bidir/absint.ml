@@ -109,6 +109,13 @@ let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a Stri
       | [] -> spec.bot ~stmt
       | [x] -> x
       | x::xs -> List.fold_left (StringMap.union (fun _ x y -> Some (spec.join ~stmt x y))) x xs)
+  | Parallel pars ->
+      let go x = abstract_run_bidir spec ~dir st x in
+      let oks = List.map go pars in
+      (match oks with
+      | [] -> spec.bot ~stmt
+      | [x] -> x
+      | x::xs -> List.fold_left (StringMap.union (fun _ x y -> Some (spec.join ~stmt x y))) x xs)
   | Assign (src,fs,dst) ->
       let get,_ = spec.lens src in
       let _,set = spec.lens dst in

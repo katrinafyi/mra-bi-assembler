@@ -16,6 +16,8 @@ let reorder_one_stmt ~(dir: dir) = function
   | Decl _ | Choice _ as x -> x
   | Sequential xs ->
       Sequential (match dir with `Backwards -> List.rev xs | _ -> xs)
+  | Parallel xs ->
+      Parallel (match dir with `Backwards -> List.rev xs | _ -> xs)
   | Assign (l,fs,r) ->
       let (l,fs,r) =
         (match dir with

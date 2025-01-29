@@ -53,6 +53,7 @@ type 'a bidir =
   | Assign of expr * 'a list * expr (** An assignment reading from the first expression, piping left-to-right through the intrinsics, then storing into the second expression. *)
   | Decl of varname list (** Requires the given variables are in scope and narrows the current state to only the specified variables. This behaves identical forwards or backwards. *)
   | Choice of 'a bidir list (** A mutually-exclusive choice between the given alternatives. Exactly one alternative must succeed. *)
+  | Parallel of 'a bidir list (** Parallel execution of the given bidirectional programs. All parallels must succeed. Each parallel should be independent (i.e., input and output disjoint variables) from the others. *)
   | Sequential of 'a bidir list (** A sequential composition of statements. In the backwards direction, the list is reversed. *)
 [@@deriving eq, show]
 
@@ -82,4 +83,4 @@ let rec vars_of_stmt =
   function
   | Assign (x,_,y) -> List.append (vars_of_expr x) (vars_of_expr y)
   | Decl vs -> vs
-  | Choice xs | Sequential xs -> List.concat_map vars_of_stmt xs
+  | Choice xs | Sequential xs | Parallel xs -> List.concat_map vars_of_stmt xs
