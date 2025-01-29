@@ -11,8 +11,8 @@ open Common
 let rec matches_empty =
   function
   | Space -> true
-  | Eof | Lit _ | Digits -> false
   | Return _ | Lit "" -> true
+  | Eof | Lit _ | Digits -> false
   | Or xs -> List.exists matches_empty xs
   | Seq xs -> List.for_all matches_empty xs
   | Bind {syntax; _} -> matches_empty syntax
