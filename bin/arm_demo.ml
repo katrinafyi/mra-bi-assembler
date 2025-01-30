@@ -14,7 +14,7 @@ let () =
   let iclasses = Result.get_ok result in
 
   let iclasses = List.filter
-    (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDS_addsub_shift")
+    (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDS_addsub_imm")
     iclasses in
 
   let f (x: InstEnc.t) = x.instrclass = "general" && CCString.prefix ~pre:"ADD" x.encname in
@@ -68,6 +68,9 @@ let () =
   let combined_bit_parser = Or bitparsers in
   print_endline @@ show_parseable combined_asm_parser;
 
+  print_endline "\nsupported asm formats:";
+  List.iter (describe_parseable %> print_endline) asmparsers;
+
   let go s =
     print_endline @@ "\nparsing: " ^ s;
     let parseresult = Lang.Parse.run_parse_of_string combined_asm_parser s in
@@ -99,13 +102,12 @@ let () =
     print_endline @@ show_parse_output unparseresult;
 
     let opnum = Arm.Convert.opnum_of_unparse_output (fst unparseresult) in
-    print_endline "\nopnum (big-endian):";
-    print_endline @@ Printf.sprintf "%#08x" opnum;
+    print_endline @@ "\nopnum (big-endian): " ^ Printf.sprintf "%#08x" opnum;
   in
 
   Printexc.record_backtrace true;
   while true do
-    print_string "\nenter an ADDS (shifted register) assembly instruction: ";
+    print_string "\nenter an assembly instruction: ";
     flush stdout;
     let s = try input_line stdin with End_of_file -> exit 0 in
     try go s with e -> (print_endline (Printexc.to_string e); Printexc.print_backtrace stderr)

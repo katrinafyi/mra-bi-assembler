@@ -185,6 +185,23 @@ let make_with_default ~(asmfld:string) ~(asmdefault:string option) (x: field_bid
       ]
 
 
+let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_bidir): field_bidir =
+  let open Bidir.Intrinsics in
+  let var = VarName asmfld in
+  Sequential [
+    x;
+
+    Choice [
+      Assign (EVar var, [NotIn [old; repl]], EVar var);
+      Sequential [
+        Assign (EVar var, [], ELit old);
+        Assign (ELit repl, [], EVar var);
+      ];
+    ];
+
+    Decl [var];
+  ]
+
 (** {1 Supported field cases} *)
 
 module FieldData = struct
@@ -214,11 +231,20 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
   let regwd = extract_reg_bits fld in
   let prefix = Result.map register_char regwd in
 
-  let bidir = (match prefix with
-    | Ok prefix -> prefix_regnum_bidir ~prefix ~asmfld bidir
-    | Error _ -> bidir) in
 
-  Ok (bidir, FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix})
+  let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix} in
+
+  match prefix with
+  | Error _ -> Ok (bidir, data)
+  | Ok prefix ->
+      let fixup_xsp =
+        (match prefix, allones with
+        | "x", "sp" -> make_post_replacement ~asmfld ~old:(VStr "xsp") ~repl:(VStr "sp")
+        | _ -> Fun.id) in
+      let bidir = bidir
+        |> prefix_regnum_bidir ~prefix ~asmfld
+        |> fixup_xsp in
+      Ok (bidir, data)
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"; "shift amount,"] in
