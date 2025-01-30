@@ -60,6 +60,9 @@ module StringMap = struct
     Format.pp_close_box fmt ();
     p " }"
 
+  let keys_l x = bindings x |> List.map fst
+  let values_l x = bindings x |> List.map snd
+
 end
 
 (** Places double quotes around the given string. *)

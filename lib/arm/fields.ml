@@ -65,15 +65,14 @@ let in_the_range (fld: AsmField.t): (int * int, string) result =
   let lo,hi = int_of_string lo, int_of_string hi in
   Ok (lo, hi)
 
-let defaulting_to (fld: AsmField.t): (int option, string) result =
-  let re = Re.Perl.compile_pat {|defaulting to (-?\d+)|} in
+let defaulting_to (fld: AsmField.t): (string option, string) result =
+  let re = Re.Perl.compile_pat {|defaulting to ([^ ,]+)|} in
   let matches = Re.all re fld.hover in
   match matches with
   | [] -> Ok None
   | _ ->
     let* mat = sole "defaulting to" matches in
-    let dft = Re.Group.(get mat 1) |> int_of_string in
-    Ok (Some dft)
+    Ok (Some Re.Group.(get mat 1))
 
 let register_char = function | 32 -> "w" | 64 -> "x"
 
@@ -93,7 +92,7 @@ let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:stri
       ];
 
       Sequential [
-        Assign (EVar (VarName "N"), [NotIn [VInt max]], EWildcard);
+        Assign (EVar (VarName "N"), [NotIn [VInt max]], EVar (VarName "N"));
         Assign (EVar (VarName "N"), [IntToDecimal], EVar (VarName "n"));
         Assign (EVar (VarName "n"), [], EVar (VarName asmfld));
       ];
@@ -152,6 +151,27 @@ let make_assocs ~(assocs: Assoc.t list) ~(asmfld:string): field_bidir =
 
   Choice (List.map make_assoc_case assocs)
 
+let make_with_default ~(asmfld:string) ~(asmdefault:string option) (x: field_bidir): field_bidir =
+  let open Bidir.Intrinsics in
+  let var = VarName asmfld in
+  match asmdefault with
+  | None -> x
+  | Some asmdefault ->
+      Sequential [
+        x;
+
+        Choice [
+          Assign (EVar var, [NotIn [VStr ""]], EVar var);
+          Sequential [
+            Assign (EVar var, [], ELit (VStr asmdefault));
+            Assign (EWildcard, [], EVar var);
+            Assign (ELit (VStr ""), [], EVar var);
+          ];
+        ];
+
+        Decl [var];
+      ]
+
 
 (** {1 Supported field cases} *)
 
@@ -187,11 +207,22 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* lo,hi = in_the_range fld in
   let* signed = signed_or_unsigned fld in
 
-  Ok (make_immediate_bidir ~wd ~signed ~asmfld ~bitfld)
+
+  let bidir = make_immediate_bidir ~wd ~signed ~asmfld ~bitfld in
+
+  let* asmdefault = defaulting_to fld in
+  let bidir = make_with_default ~asmfld ~asmdefault bidir in
+  Ok (bidir)
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in
-  Ok (make_assocs ~assocs:fld.assocs ~asmfld:fld.placeholder)
+
+  let bidir = make_assocs ~assocs:fld.assocs ~asmfld:fld.placeholder in
+
+  let asmfld = fld.placeholder in
+  let* asmdefault = defaulting_to fld in
+  let bidir = make_with_default ~asmfld ~asmdefault bidir in
+  Ok bidir
 
 let build_field_converters (enc: InstEnc.t): field_bidir =
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in

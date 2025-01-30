@@ -53,13 +53,17 @@ let () =
 
     let bind_with_encname p = Lang.Common.(Seq [bind x.encname empty; p]) in
 
-    (bind_with_encname asm_parser, bind_with_encname bit_parser), (x.encname, bidir)
+    (bind_with_encname asm_parser, bind_with_encname bit_parser), ((x.encname, x), (x.encname, bidir))
   ) encs in
 
   print_endline "\ncombining asm parsers for all encodings...\n";
-  let parsers,bidirs = List.split processed_encs in
+  let parsers,encs = List.split processed_encs in
   let asmparsers,bitparsers = List.split parsers in
+  let encs,bidirs = List.split encs in
+
+  let encodings = StringMap.of_list encs in
   let bidirs = StringMap.of_list bidirs in
+
   let combined_asm_parser = Or asmparsers in
   let combined_bit_parser = Or bitparsers in
   print_endline @@ show_parseable combined_asm_parser;
@@ -70,18 +74,21 @@ let () =
     print_endline "asm parse result:";
     print_endline @@ show_parse_result parseresult;
 
-    let _,asmfields = Result.get_ok parseresult in
-    let bidirstate = Bidir.Parse.values_of_strings asmfields in
+    let _,asmbindings = Result.get_ok parseresult in
     (* XXX: how to better identify which binding is the encname? *)
-    let encname = StringMap.filter (fun k _ -> StringMap.mem k asmfields) bidirs in
+    let encname = StringMap.filter (fun k _ -> StringMap.mem k asmbindings) bidirs in
     assert (StringMap.cardinal encname = 1);
     let encname,_ = StringMap.min_binding encname in
     print_endline "\nidentified encoding name:";
     print_endline encname;
 
     let bidir = StringMap.find encname bidirs in
+    let asmfields = List.map (fun (x: AsmField.t) -> x.placeholder) @@ StringMap.values_l @@ (StringMap.find encname encodings).asm.asmfields in
+    let bidirstate = Bidir.Parse.values_of_strings ~fields:asmfields asmbindings in
+
     let bidirresult = Bidir.Interpret.run_bidir ~intr:Bidir.Intrinsics.run_intrinsics ~dir:`Backwards bidirstate bidir in
     print_endline "\nconverting field to asm text:";
+    print_endline @@ show_stringmap Bidir.Types.show_value bidirstate;
     print_endline @@ show_stringmap Bidir.Types.show_value bidirresult;
 
     let bindings = Arm.Convert.bindings_of_bidir_map bidirresult in

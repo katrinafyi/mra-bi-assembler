@@ -74,4 +74,23 @@ let parsers_of_bidir ?state bidir =
   } ~dir:`Forwards (Option.value state ~default) bidir
 
 (* XXX: we are actually unable to parse fields all at once; we will need to parse one or more fields in isolation to handle repeated fields. DOES THIS EVEN HAPPEN??? *)
-let values_of_strings = StringMap.map (fun (xs : Lang.Common.output list) -> VStr (String.concat "" (List.hd xs).output))
+let values_of_strings ~fields ?(value=fun x -> VStr x) bindings =
+  let open CCFun.Infix in
+
+  let apply_default = Option.fold ~none:(value "") ~some:(String.concat "" %> value) in
+
+  let conv fld =
+    let v = StringMap.find_opt fld bindings
+      |> Option.map List.hd
+      |> Option.map (fun (x: Lang.Common.output) -> x.output)
+      |> apply_default in
+    (fld, v)
+  in List.map conv fields |> StringMap.of_list
+
+
+
+
+
+
+
+
