@@ -38,7 +38,9 @@
     allones = "sp"; regwd = (Ok 64); prefix = (Ok "x")})
   
   Is the left shift amount, in the range 0 to 7, defaulting to 0, encoded in the "imm3" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 7;
+    signed = `Unsigned; asmdefault = (Some "0")})
   
   
   ADDS_32S_addsub_ext

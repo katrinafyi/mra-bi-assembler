@@ -213,7 +213,7 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
   Ok (bidir, FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix})
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
-  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"] in
+  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"; "shift amount,"] in
 
   let* () = guard (isimm fld.hover) "not an imm" in
   let asmfld = fld.placeholder in
