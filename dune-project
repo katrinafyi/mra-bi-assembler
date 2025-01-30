@@ -3,6 +3,8 @@
 (using menhir 2.0)
 (using mdx 0.4)
 
+(cram enable)
+
 (name mra_bi_assembler)
 
 (generate_opam_files true)

@@ -1,0 +1,7 @@
+(executable
+ (name test_mra_processing)
+ (modules test_mra_processing)
+ (libraries mra_bi_assembler.arm)
+ (modes (best exe)))
+
+

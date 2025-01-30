@@ -1,0 +1,6 @@
+(cram
+ (applies_to *)
+ (deps ./test_mra_processing))
+
+
+(rule (copy ../bin/test_mra_processing.exe ./test_mra_processing))
