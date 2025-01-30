@@ -1,2 +1,2 @@
-  $ ./test_mra_processing
+  $ ./test_mra_processing defaulting-to
   a

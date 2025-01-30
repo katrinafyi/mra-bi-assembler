@@ -69,7 +69,7 @@ let defaulting_to (fld: AsmField.t): (string option, string) result =
   let re = Re.Perl.compile_pat {|defaulting to ([^ ,]+)|} in
   let matches = Re.all re fld.hover in
   match matches with
-  | [] -> Ok None
+  | [] -> assert (not (CCString.mem ~sub:"default" fld.hover)); Ok None
   | _ ->
     let* mat = sole "defaulting to" matches in
     Ok (Some Re.Group.(get mat 1))
@@ -200,7 +200,7 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
   Ok bidir
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
-  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"] in
+  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"] in
 
   let* () = guard (isimm fld.hover) "not an imm" in
   let asmfld = fld.placeholder in
