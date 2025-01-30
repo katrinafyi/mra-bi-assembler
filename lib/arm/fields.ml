@@ -94,6 +94,18 @@ let a_multiple_of (fld: AsmField.t): ('a, string) result =
 
 (** {1 Bidir constructors} *)
 
+let make_conditional ~(var:string) ~(value:value) (x: field_bidir): field_bidir =
+  let var = VarName var in
+  Sequential [
+    Choice [
+      Assign (EVar var, [NotIn [value]], EVar var);
+      Sequential [
+        x;
+        Assign (ELit value, [], EVar var)
+      ]
+    ]
+  ]
+
 let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:string): field_bidir =
   assert (wd <= 31);
   let max = (CCInt.pow 2 wd) - 1 in
