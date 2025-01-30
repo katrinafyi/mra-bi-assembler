@@ -31,6 +31,8 @@ type fieldconv = {
 open CCResult.Infix
 open Bidir.Types
 
+let register_char = function | 32 -> "w" | 64 -> "x"
+
 let extract_reg_bits (fld: AsmField.t): (int, string) result =
   let re = Re.Perl.compile_pat {|([0-9]+)-bit|} in
   let matches = List.map (Fun.flip Re.Group.get 1) @@ Re.all re fld.hover in
@@ -75,7 +77,13 @@ let defaulting_to (fld: AsmField.t): (string option, string) result =
     let* mat = sole "defaulting to" matches in
     Ok (Some Re.Group.(get mat 1))
 
-let register_char = function | 32 -> "w" | 64 -> "x"
+let be_absent_when (fld: AsmField.t): ('a, string) result =
+  let re = Re.Perl.compile_pat {|be absent when|} in
+  let matches = Re.all re fld.hover in
+  match matches with
+  | [] -> Ok ()
+  | _ ->
+    Error "be-absent-when detected"
 
 (** {1 Bidir constructors} *)
 
@@ -227,6 +235,8 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
 
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
+
+  let* _ = be_absent_when fld in
   Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; signed; asmdefault})
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
