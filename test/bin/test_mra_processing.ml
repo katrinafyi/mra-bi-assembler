@@ -35,9 +35,26 @@ let test_defaulting_to (encs: InstEnc.t list) argv =
 
   ) encs
 
+let test_handled_fields (encs: InstEnc.t list) argv =
+  List.iter (fun (x: InstEnc.t) ->
+    print_endline @@ x.encname;
+
+    StringMap.iter (fun k v ->
+      let res = Arm.Fields.handle_all_supported_cases x v |> Result.map snd in
+      print_endline @@ v.hover;
+      print_endline @@ show (CCResult.pp' Arm.Fields.FieldData.pp (CCList.pp CCString.pp)) res;
+      print_newline ();
+    ) x.asm.asmfields;
+
+    print_newline ()
+
+  ) encs
+
+
 let () =
   let argv = CCArray.to_list Sys.argv in
   let encs = load_json "./mra.json" in
   match CCList.tl argv with
   | "defaulting-to"::rest -> test_defaulting_to encs rest
+  | "all-fields"::rest -> test_handled_fields encs rest
   | _ -> failwith "unsupported arguments"
