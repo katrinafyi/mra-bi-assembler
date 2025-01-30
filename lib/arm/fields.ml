@@ -137,16 +137,18 @@ let make_bitfield_checks x =
 let make_assocs ~(assocs: Assoc.t list) ~(asmfld:string): field_bidir =
   let make_assoc_case (x: Assoc.t): field_bidir =
     let regflds = CCList.of_iter (StringMap.keys x.bitfields) in
-    Sequential [
+    let check = if x.symboltext = "RESERVED" then Choice [] else Sequential [] in
+
+    Sequential ([
       Decl (List.map (fun x -> VarName x) regflds);
 
       Sequential (make_bitfield_checks x.bitfields);
 
       Assign (ELit (VStr x.symboltext), [], EVar (VarName asmfld));
+      check;
 
-      (* TODO: handle symboltext RESERVED and UInt() expressions and choices. *)
       Decl [VarName asmfld];
-    ]
+    ])
   in
 
   Choice (List.map make_assoc_case assocs)
