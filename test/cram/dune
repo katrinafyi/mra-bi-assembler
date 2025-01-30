@@ -1,6 +1,11 @@
 (cram
  (applies_to *)
- (deps ./test_mra_processing))
+ (deps ./test_mra_processing mra.json))
 
+(rule
+ (mode fallback)
+ (action
+  (with-stdout-to mra.json
+   (run curl "https://files.catbox.moe/fs01s3.json"))))
 
 (rule (copy ../bin/test_mra_processing.exe ./test_mra_processing))
