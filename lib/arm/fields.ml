@@ -49,6 +49,7 @@ let allones_interpretation (fld: AsmField.t): (string, string) result =
   | _ -> failwith @@ "unknown allones case for register " ^ fld.hover
 
 type signedness = [ | `Unsigned | `Signed ]
+[@@deriving show]
 
 let signed_or_unsigned (fld: AsmField.t) =
   match () with
@@ -178,7 +179,17 @@ let make_with_default ~(asmfld:string) ~(asmdefault:string option) (x: field_bid
 
 (** {1 Supported field cases} *)
 
-let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
+module FieldData = struct
+  type t =
+    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string; regwd: (int, string) result; prefix: (string, string) result}
+    | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; signed: signedness; asmdefault: string option}
+    | Assocs of {asmfld: string; asmdefault: string option}
+    [@@deriving show]
+end
+
+
+
+let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData.t, string) result =
 
   let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"] in
 
@@ -193,11 +204,13 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a, string) re
   let bidir = make_regnum_bidir ~wd ~allones ~bitfld ~asmfld in
 
   let regwd = extract_reg_bits fld in
+  let prefix = Result.map register_char regwd in
 
-  let bidir = (match regwd with
-    | Ok regwd -> let prefix = register_char regwd in prefix_regnum_bidir ~prefix ~asmfld bidir
+  let bidir = (match prefix with
+    | Ok prefix -> prefix_regnum_bidir ~prefix ~asmfld bidir
     | Error _ -> bidir) in
-  Ok bidir
+
+  Ok (bidir, FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix})
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"] in
@@ -214,24 +227,27 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
 
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
-  Ok (bidir)
+  Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; signed; asmdefault})
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in
 
-  let bidir = make_assocs ~assocs:fld.assocs ~asmfld:fld.placeholder in
-
   let asmfld = fld.placeholder in
+  let bidir = make_assocs ~assocs:fld.assocs ~asmfld in
+
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
-  Ok bidir
+  Ok (bidir, FieldData.Assocs {asmfld; asmdefault})
+
+let handle_all_supported_cases enc v =
+    CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
 
 let build_field_converters (enc: InstEnc.t): field_bidir =
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in
   let show_field_result = show (CCResult.pp' (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) (CCList.pp CCString.pp)) in
 
   let bidirs = List.map (fun (k, v: string * AsmField.t) ->
-    let res = CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v] in
+    let res = handle_all_supported_cases enc v |> Result.map fst in
     match res with
     | Ok x -> x
     (* | Ok _ -> () *)
