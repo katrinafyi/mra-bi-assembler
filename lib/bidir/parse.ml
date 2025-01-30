@@ -48,6 +48,7 @@ let rec parsers_of_intrinsics (int: intrinsic) ~(dir:dir) (x: pvalue): pvalue =
   | NotIn _, _ -> x
   | Inv intr, _ -> parsers_of_intrinsics intr ~dir:(dir_reverse dir) x
   | InInterval _, _ -> P Digits
+  | Multiply _, _ -> P Digits
   | Concat wds, `Forwards ->
       (match x with
       | PTup xs when List.length wds = List.length xs -> P (Seq (List.map parser_of_pvalue xs))

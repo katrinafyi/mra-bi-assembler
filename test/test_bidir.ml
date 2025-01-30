@@ -236,6 +236,17 @@ let%expect_test "multiple intrinsics in assign" =
   print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "str" (VStr "7")) p;
   [%expect {| { "Rd" -> (Types.VBits "00111"), "str" -> (Types.VStr "7") } |}]
 
+let%expect_test "multiply intrinsic" =
+  let p = Assign (EVar (VarName "in"), [Multiply 2], EVar (VarName "out")) in
+
+  print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "in" (VInt 2)) p;
+  [%expect {| { "in" -> (Types.VInt 2), "out" -> (Types.VInt 4) } |}];
+
+  print_state @@ run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "out" (VInt 2)) p;
+  [%expect {| { "in" -> (Types.VInt 1), "out" -> (Types.VInt 2) } |}];
+
+  catch (fun () -> run_bidir ~dir:`Backwards ~intr:run_intrinsics (StringMap.singleton "out" (VInt 1)) p);
+  [%expect {| invalid_arg: intrinsic function failed invertibility check with input: (Types.VInt 1), result: (Types.VInt 0) |}]
 
 let%expect_test "wd example" =
   print_state @@ run_bidir ~dir:`Forwards ~intr:run_intrinsics (StringMap.singleton "Rd" (VBits "11111")) Bidir.example_wd_register;

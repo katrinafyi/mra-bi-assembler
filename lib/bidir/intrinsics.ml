@@ -43,6 +43,7 @@ type intrinsic =
         Asserts that the given value is {i not} contained in the intrinsic's list of literals.
         If successful, this acts as the identity function. Otherwise, throws. *)
   | InInterval of int * int (** {!Types.VInt} -> {!Types.VInt}. Asserts that the given integer is within the interval (inclusive of bounds). *)
+  | Multiply of int (** {!Types.VInt} -> {!Types.VInt}. Multiplies by the given factor. Inverting this succeeds only when the input is a multiple of the factor. *)
   | Inv of intrinsic (** Performs the inverse of the given intrinsic, i.e., swaps its forwards and backwards directions. *)
 [@@deriving eq, show]
 
@@ -164,6 +165,8 @@ let both_iso (f,f') = (Either.map ~left:f ~right:f), (Either.map ~left:f' ~right
 
 let invol_iso f = (f,f)
 
+let multiply_iso x = (Int.mul x, Fun.flip Int.div x)
+
 
 (** {2 Final implementation } *)
 
@@ -178,6 +181,7 @@ let rec run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
   | IntToDecimal -> make_intrinsic ~dir (val_iso_int %%> int_iso_string %%> isorev val_iso_str)
   | NotIn vals -> make_intrinsic ~dir (invol_iso (notin vals))
   | InInterval (lo,hi) -> make_intrinsic ~dir (val_iso_int %%> invol_iso (ininterval ~lo ~hi) %%> isorev val_iso_int)
+  | Multiply x -> make_intrinsic ~dir (val_iso_int %%> multiply_iso x %%> isorev val_iso_int)
   | Concat wds ->
       let n = List.length wds in
       let rep x = CCList.replicate n x in
