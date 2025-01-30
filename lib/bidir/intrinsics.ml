@@ -129,7 +129,7 @@ let concat_backwards wds str =
   let back = List.rev @@ List.map CCString.rev back in
   require ~f:invalid_arg (List.length rest <= 1) "more than one None field in width specifier list";
   let middle = CCString.sub str frontwd (String.length str - backwd - frontwd) in
-  let middle = if middle <> "" then [middle] else [] in
+  let middle = List.map (Fun.const middle) rest in
   front @ middle @ back
 
 (** {2 Isomorphisms} *)

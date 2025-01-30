@@ -189,7 +189,13 @@ let%expect_test "concat intrinsic" =
   [%expect {|
     (Types.VTup
        [(Types.VBits "00"); (Types.VBits "1"); (Types.VBits "000000");
-         (Types.VBits "11")]) |}]
+         (Types.VBits "11")]) |}];
+
+  print_value @@ run_intrinsics (Inv (Concat [Some 2; None; Some 2])) ~dir:`Forwards (VBits "1111");
+  [%expect {| (Types.VTup [(Types.VBits "11"); (Types.VBits ""); (Types.VBits "11")]) |}];
+
+  print_value @@ run_intrinsics (Inv (Concat [Some 2; Some 2])) ~dir:`Forwards (VBits "1111");
+  [%expect {| (Types.VTup [(Types.VBits "11"); (Types.VBits "11")]) |}]
 
 
 let%expect_test "bit intrinsics" =
