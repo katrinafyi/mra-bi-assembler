@@ -91,6 +91,7 @@ type ('i, 'a) absint_spec = {
 (** Performs the abstract interpretation of the bidirectional language, given the {!absint_spec} configuration.
 
     @raises Stdlib.Invalid_argument in case of programmer error (e.g., missing variables at a {!Types.Decl} statement).
+    @raises Stdlib.Failure if there is an attempt to read from a {!Types.EWildcard} expression.
 *)
 let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a StringMap.t) (stmt: 'i bidir) =
   (* print_endline @@ show_bidir pp_intrinsic stmt; *)
@@ -122,5 +123,5 @@ let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a Stri
       let _,set = spec.lens dst in
       let fs = List.map (spec.intrinsic_impl ~dir) fs in
       (match get with
-      | None -> st
+      | None -> failwith "refusing to load from wildcard expression"
       | Some f -> let x = f st in set (List.fold_left apply x fs) st)

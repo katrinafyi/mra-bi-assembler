@@ -49,12 +49,8 @@ choice {
 } or {
   (* In this branch, the forwards direction needs to check that N is not equal to 31.
      This is done by an intrinsic that asserts it is not in the given list of values,
-     throwing if it is.
-
-     The underscore expression is special. As the destination of an assignment, it
-     simply discards its input. Used as a value (i.e., when interpreting this statement
-     in the reverse direction), it skips the entire assignment. *)
-  assign N <-> NotIn([31]) <-> _;
+     throwing if it is. *)
+  assign N <-> NotIn([31]) <-> N;
 
   assign N <-> IntToDecimal <-> n;
 
@@ -93,7 +89,7 @@ let example_wd_register : Intrinsics.intrinsic Types.bidir = Sequential [
     ];
 
     Sequential [
-      Assign (EVar (VarName "N"), [NotIn [VInt 31]], EWildcard);
+      Assign (EVar (VarName "N"), [NotIn [VInt 31]], EVar (VarName "N"));
       Assign (EVar (VarName "N"), [IntToDecimal], EVar (VarName "n"));
 
       Assign (
