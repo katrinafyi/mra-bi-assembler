@@ -25,8 +25,6 @@ let () =
     CCList.of_iter
     (StringMap.values x.encodings)) iclasses in
 
-
-
   Printf.printf "\nprocessing %d encodings...\n" (List.length encs);
   let processed_encs = List.map (fun (x: InstEnc.t) ->
     print_endline @@ "encoding: " ^ x.encname;
@@ -47,34 +45,55 @@ let () =
     let asmtemplate = Result.get_ok res in
 
     print_endline "\n  converting parsed asmtemplates to parseables...\n";
-    let parseable = Arm.Convert.parseable_of_asmtemplate getfieldparser asmtemplate in
-    print_endline @@ show_parseable parseable;
+    let asm_parser = Arm.Convert.parseable_of_asmtemplate getfieldparser asmtemplate in
+    print_endline @@ show_parseable asm_parser;
 
-    Lang.Common.(Seq [bind x.encname empty; parseable]), (x.encname, bidir)
+    let bit_parser = Arm.Convert.parseable_of_instenc x in
+    print_endline @@ show_parseable bit_parser;
+
+    let bind_with_encname p = Lang.Common.(Seq [bind x.encname empty; p]) in
+
+    (bind_with_encname asm_parser, bind_with_encname bit_parser), (x.encname, bidir)
   ) encs in
 
   print_endline "\ncombining asm parsers for all encodings...\n";
   let parsers,bidirs = List.split processed_encs in
+  let asmparsers,bitparsers = List.split parsers in
   let bidirs = StringMap.of_list bidirs in
-  let combined_asm_parser = Or parsers in
+  let combined_asm_parser = Or asmparsers in
+  let combined_bit_parser = Or bitparsers in
   print_endline @@ show_parseable combined_asm_parser;
 
   let go s =
     print_endline @@ "\nparsing: " ^ s;
     let parseresult = Lang.Parse.run_parse_of_string combined_asm_parser s in
+    print_endline "asm parse result:";
     print_endline @@ show_parse_result parseresult;
 
     let _,asmfields = Result.get_ok parseresult in
     let bidirstate = Bidir.Parse.values_of_strings asmfields in
+    (* XXX: how to better identify which binding is the encname? *)
     let encname = StringMap.filter (fun k _ -> StringMap.mem k asmfields) bidirs in
     assert (StringMap.cardinal encname = 1);
     let encname,_ = StringMap.min_binding encname in
+    print_endline "\nidentified encoding name:";
     print_endline encname;
 
     let bidir = StringMap.find encname bidirs in
     let bidirresult = Bidir.Interpret.run_bidir ~intr:Bidir.Intrinsics.run_intrinsics ~dir:`Backwards bidirstate bidir in
+    print_endline "\nconverting field to asm text:";
     print_endline @@ show_stringmap Bidir.Types.show_value bidirresult;
 
+    let bindings = Arm.Convert.bindings_of_bidir_map bidirresult in
+    let bindings = StringMap.add encname [Lang.Common.output_str ""] bindings in
+
+    let unparseresult = Lang.Analysis.unparse_with_bindings combined_bit_parser bindings in
+    print_endline "\nunparse result:";
+    print_endline @@ show_parse_output unparseresult;
+
+    let opnum = Arm.Convert.opnum_of_unparse_output (fst unparseresult) in
+    print_endline "\nopnum (big-endian):";
+    print_endline @@ Printf.sprintf "%#08x" opnum;
   in
 
   Printexc.record_backtrace true;
