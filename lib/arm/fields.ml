@@ -66,7 +66,7 @@ let in_the_range (fld: AsmField.t): (int * int, string) result =
   Ok (lo, hi)
 
 let defaulting_to (fld: AsmField.t): (string option, string) result =
-  let re = Re.Perl.compile_pat {|defaulting to ([^ ,]+)|} in
+  let re = Re.Perl.compile_pat {|defaulting to ([^ ,]+(?: #\d+)?)|} in
   let matches = Re.all re fld.hover in
   match matches with
   | [] -> assert (not (CCString.mem ~sub:"default" fld.hover)); Ok None
