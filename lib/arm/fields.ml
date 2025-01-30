@@ -85,6 +85,13 @@ let be_absent_when (fld: AsmField.t): ('a, string) result =
   | _ ->
     Error "be-absent-when detected"
 
+let a_multiple_of (fld: AsmField.t): ('a, string) result =
+  let re = Re.Perl.compile_pat {|a multiple of (\d+)|} in
+  let matches = Re.all re fld.hover |> List.map (Fun.flip Re.Group.get 1) in
+  match matches with
+  | [] -> Ok 1
+  | _ -> let* mult = sole "a multiple of" matches in Ok (int_of_string mult)
+
 (** {1 Bidir constructors} *)
 
 let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:string): field_bidir =
@@ -116,7 +123,7 @@ let prefix_regnum_bidir ~(prefix:string) ~(asmfld:string) (regbidir: field_bidir
     Assign (ETup [ELit (VStr prefix); EVar (VarName asmfld)], [Concat [Some 1; None]], EVar (VarName asmfld));
   ]
 
-let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~lo ~hi ~(asmfld:string) ~(bitfld:string): field_bidir =
+let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~lo ~hi ~mult ~(asmfld:string) ~(bitfld:string): field_bidir =
   let open Bidir.Intrinsics in
   let bitstoint x = (match signed with | `Signed -> BitsToSint x | `Unsigned -> BitsToSint x) in
 
@@ -125,7 +132,7 @@ let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~lo ~hi ~(asmfld:string)
 
     (* XXX: need to check in range *)
     Assign (EVar (VarName bitfld), [bitstoint wd], EVar (VarName "N"));
-    Assign (EVar (VarName "N"), [InInterval (lo,hi); IntToDecimal], EVar (VarName asmfld));
+    Assign (EVar (VarName "N"), [Multiply mult; InInterval (lo,hi); IntToDecimal], EVar (VarName asmfld));
 
     Decl [VarName asmfld];
   ]
@@ -207,7 +214,7 @@ let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_
 module FieldData = struct
   type t =
     | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string; regwd: (int, string) result; prefix: (string, string) result}
-    | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; signed: signedness; asmdefault: string option}
+    | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; mult: int; signed: signedness; asmdefault: string option}
     | Assocs of {asmfld: string; asmdefault: string option}
     [@@deriving show]
 end
@@ -257,13 +264,14 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* lo,hi = in_the_range fld in
   let* signed = signed_or_unsigned fld in
 
-  let bidir = make_immediate_bidir ~wd ~lo ~hi ~signed ~asmfld ~bitfld in
+  let* mult = a_multiple_of fld in
+  let bidir = make_immediate_bidir ~wd ~lo ~hi ~mult ~signed ~asmfld ~bitfld in
 
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
 
   let* _ = be_absent_when fld in
-  Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; signed; asmdefault})
+  Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; mult; signed; asmdefault})
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in

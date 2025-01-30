@@ -13,12 +13,12 @@
   Is an unsigned immediate, in the range 0 to 15, encoded in the "imm4" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm4>"; bitfld = "imm4"; lo = 0; hi = 15;
-    signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is an unsigned immediate, a multiple of 16 in the range 0 to 1008, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm6>"; bitfld = "imm6"; lo = 0; hi = 1008;
-    signed = `Signed; asmdefault = None})
+    mult = 16; signed = `Signed; asmdefault = None})
   
   
   ADDPT_64_addsub_pt
@@ -40,7 +40,7 @@
   Is the left shift amount, in the range 0 to 7, defaulting to 0, encoded in the "imm3" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 7;
-    signed = `Unsigned; asmdefault = (Some "0")})
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   ADDS_32S_addsub_ext
@@ -107,7 +107,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -128,7 +128,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -154,7 +154,7 @@
   For the "32-bit" variant: is the shift amount, in the range 0 to 31, defaulting to 0 and encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm6"; lo = 0; hi = 31;
-    signed = `Unsigned; asmdefault = (Some "0")})
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   Is the optional shift type to be applied to the second source operand, defaulting to LSL and 
   ok(Fields.FieldData.Assocs {asmfld = "<shift>"; asmdefault = (Some "LSL")})
@@ -179,7 +179,7 @@
   For the "64-bit" variant: is the shift amount, in the range 0 to 63, defaulting to 0 and encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm6"; lo = 0; hi = 63;
-    signed = `Unsigned; asmdefault = (Some "0")})
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   Is the optional shift type to be applied to the second source operand, defaulting to LSL and 
   ok(Fields.FieldData.Assocs {asmfld = "<shift>"; asmdefault = (Some "LSL")})
@@ -249,7 +249,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -270,7 +270,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -296,7 +296,7 @@
   For the "32-bit" variant: is the shift amount, in the range 0 to 31, defaulting to 0 and encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm6"; lo = 0; hi = 31;
-    signed = `Unsigned; asmdefault = (Some "0")})
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   Is the optional shift type to be applied to the second source operand, defaulting to LSL and 
   ok(Fields.FieldData.Assocs {asmfld = "<shift>"; asmdefault = (Some "LSL")})
@@ -321,7 +321,7 @@
   For the "64-bit" variant: is the shift amount, in the range 0 to 63, defaulting to 0 and encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm6"; lo = 0; hi = 63;
-    signed = `Unsigned; asmdefault = (Some "0")})
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   Is the optional shift type to be applied to the second source operand, defaulting to LSL and 
   ok(Fields.FieldData.Assocs {asmfld = "<shift>"; asmdefault = (Some "LSL")})

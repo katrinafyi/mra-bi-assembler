@@ -14,7 +14,7 @@ let () =
   let iclasses = Result.get_ok result in
 
   let iclasses = List.filter
-    (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDS_addsub_imm")
+    (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDG")
     iclasses in
 
   let f (x: InstEnc.t) = x.instrclass = "general" && CCString.prefix ~pre:"ADD" x.encname in
