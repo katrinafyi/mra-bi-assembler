@@ -107,7 +107,7 @@ let prefix_regnum_bidir ~(prefix:string) ~(asmfld:string) (regbidir: field_bidir
     Assign (ETup [ELit (VStr prefix); EVar (VarName asmfld)], [Concat [Some 1; None]], EVar (VarName asmfld));
   ]
 
-let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~(asmfld:string) ~(bitfld:string): field_bidir =
+let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~lo ~hi ~(asmfld:string) ~(bitfld:string): field_bidir =
   let open Bidir.Intrinsics in
   let bitstoint x = (match signed with | `Signed -> BitsToSint x | `Unsigned -> BitsToSint x) in
 
@@ -115,7 +115,8 @@ let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~(asmfld:string) ~(bitfl
     Decl [VarName bitfld];
 
     (* XXX: need to check in range *)
-    Assign (EVar (VarName bitfld), [bitstoint wd; IntToDecimal], EVar (VarName asmfld));
+    Assign (EVar (VarName bitfld), [bitstoint wd], EVar (VarName "N"));
+    Assign (EVar (VarName "N"), [InInterval (lo,hi); IntToDecimal], EVar (VarName asmfld));
 
     Decl [VarName asmfld];
   ]
@@ -209,8 +210,7 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* lo,hi = in_the_range fld in
   let* signed = signed_or_unsigned fld in
 
-
-  let bidir = make_immediate_bidir ~wd ~signed ~asmfld ~bitfld in
+  let bidir = make_immediate_bidir ~wd ~lo ~hi ~signed ~asmfld ~bitfld in
 
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in

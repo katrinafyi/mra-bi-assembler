@@ -42,6 +42,7 @@ type intrinsic =
     (** Any -> Any.
         Asserts that the given value is {i not} contained in the intrinsic's list of literals.
         If successful, this acts as the identity function. Otherwise, throws. *)
+  | InInterval of int * int (** {!Types.VInt} -> {!Types.VInt}. Asserts that the given integer is within the interval (inclusive of bounds). *)
   | Inv of intrinsic (** Performs the inverse of the given intrinsic, i.e., swaps its forwards and backwards directions. *)
 [@@deriving eq, show]
 
@@ -108,6 +109,8 @@ let bits_of_sint wd x =
 
 let notin vals x = require (not (List.mem x vals)) "not-in failure"; x
 
+let ininterval ~lo ~hi x = require (CCInt.(lo <= x && x <= hi)) @@ Printf.sprintf "integer %d is outside the allowed interval [%d,%d]" x lo hi; x
+
 let concat_forwards wds strs = String.concat "" @@
   List.map2
     (fun wd x -> require (Option.fold ~none:true ~some:(Int.equal (String.length x)) wd) "concat element has unexpected length"; x) wds strs
@@ -159,6 +162,9 @@ let either_iso (f,f') (g,g'): ('a, ('b, 'c) Either.t) iso =
   (function|Left x -> f' x | Right x -> g' x)
 let both_iso (f,f') = (Either.map ~left:f ~right:f), (Either.map ~left:f' ~right:f')
 
+let invol_iso f = (f,f)
+
+
 (** {2 Final implementation } *)
 
 
@@ -170,7 +176,8 @@ let rec run_intrinsics (int: intrinsic) ~(dir:dir): value -> value =
   | BitsToUint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_uint w %%> isorev val_iso_int)
   | BitsToSint w -> make_intrinsic ~dir (val_iso_bits %%> bits_iso_sint w %%> isorev val_iso_int)
   | IntToDecimal -> make_intrinsic ~dir (val_iso_int %%> int_iso_string %%> isorev val_iso_str)
-  | NotIn vals -> make_intrinsic ~dir (notin vals,notin vals)
+  | NotIn vals -> make_intrinsic ~dir (invol_iso (notin vals))
+  | InInterval (lo,hi) -> make_intrinsic ~dir (val_iso_int %%> invol_iso (ininterval ~lo ~hi) %%> isorev val_iso_int)
   | Concat wds ->
       let n = List.length wds in
       let rep x = CCList.replicate n x in
