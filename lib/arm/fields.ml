@@ -34,7 +34,7 @@ type fieldconv = {
 open CCResult.Infix
 open Bidir.Types
 
-let register_char = function | 32 -> "w" | 64 -> "x"
+let register_char = function | 32 -> "W" | 64 -> "X"
 
 let extract_reg_bits (fld: AsmField.t): (int, string) result =
   let re = Re.Perl.compile_pat {|([0-9]+)-bit|} in
@@ -48,9 +48,9 @@ let encoded_in_the (fld: AsmField.t): (string, string) result =
 
 let allones_interpretation (fld: AsmField.t): (string option, string) result =
   match () with
-  | _ when CCString.mem ~sub:"ZR" fld.link -> Ok (Some "zr")
-  | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok (Some "sp")
-  | _ when CCString.mem ~sub:"or the name ZR" fld.hover -> Ok (Some "zr")
+  | _ when CCString.mem ~sub:"ZR" fld.link -> Ok (Some "ZR")
+  | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok (Some "SP")
+  | _ when CCString.mem ~sub:"or the name ZR" fld.hover -> Ok (Some "ZR")
   | _ -> Ok None
   (* | _ -> failwith @@ "unknown allones case for register " ^ fld.hover *)
 

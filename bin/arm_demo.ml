@@ -78,6 +78,7 @@ let () =
   (* List.iter (describe_parseable %> print_endline) asmparsers; *)
 
   let go s =
+    let s = CCString.uppercase_ascii s in
     print_endline @@ "\nparsing: " ^ s;
     let parseresult = Lang.Parse.run_parse_of_string combined_asm_parser s in
     print_endline "asm parse result:";
