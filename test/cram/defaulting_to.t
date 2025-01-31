@@ -1040,5 +1040,5 @@
   ok: Some "0"
   
   LDRH_32_ldst_regoff
-  Fatal error: exception File "lib/arm/fields.ml", line 75, characters 10-16: Assertion failed
+  Fatal error: exception File "lib/arm/fields.ml", line 76, characters 10-16: Assertion failed
   [2]

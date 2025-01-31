@@ -43,12 +43,13 @@ let encoded_in_the (fld: AsmField.t): (string, string) result =
   let matches = List.map (Fun.flip Re.Group.get 1) @@ Re.all re fld.hover in
   sole "encoding destination" @@ matches
 
-let allones_interpretation (fld: AsmField.t): (string, string) result =
+let allones_interpretation (fld: AsmField.t): (string option, string) result =
   match () with
-  | _ when CCString.mem ~sub:"ZR" fld.link -> Ok "zr"
-  | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok "sp"
-  | _ when CCString.mem ~sub:"or the name ZR" fld.hover -> Ok "zr"
-  | _ -> failwith @@ "unknown allones case for register " ^ fld.hover
+  | _ when CCString.mem ~sub:"ZR" fld.link -> Ok (Some "zr")
+  | _ when CCString.mem ~sub:"or stack pointer" fld.hover -> Ok (Some "sp")
+  | _ when CCString.mem ~sub:"or the name ZR" fld.hover -> Ok (Some "zr")
+  | _ -> Ok None
+  (* | _ -> failwith @@ "unknown allones case for register " ^ fld.hover *)
 
 type signedness = [ | `Unsigned | `Signed ]
 [@@deriving show]
@@ -106,9 +107,12 @@ let make_conditional ~(var:string) ~(value:value) (x: field_bidir): field_bidir 
     ]
   ]
 
-let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:string): field_bidir =
+let make_regnum_bidir ~(wd:int) ~(allones:string option) ~(bitfld:string) ~(asmfld:string): field_bidir =
   assert (wd <= 31);
   let max = (CCInt.pow 2 wd) - 1 in
+  let allones_case = match allones with
+    | Some allones -> Assign (ELit (VStr allones), [], EVar (VarName asmfld))
+    | None -> Choice [] in
   Sequential [
     Decl [VarName bitfld];
     Assign (EVar (VarName bitfld), [BitsToUint wd], EVar (VarName "N"));
@@ -116,7 +120,7 @@ let make_regnum_bidir ~(wd:int) ~(allones:string) ~(bitfld:string) ~(asmfld:stri
 
       Sequential [
         Assign (EVar (VarName "N"), [], ELit (VInt max));
-        Assign (ELit (VStr allones), [], EVar (VarName asmfld));
+        allones_case;
       ];
 
       Sequential [
@@ -225,7 +229,7 @@ let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_
 
 module FieldData = struct
   type t =
-    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string; regwd: (int, string) result; prefix: (string, string) result}
+    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result}
     | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; mult: int; signed: signedness; asmdefault: string option}
     | Assocs of {asmfld: string; asmdefault: string option}
     [@@deriving show]
@@ -254,17 +258,17 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
   let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix} in
 
   match prefix with
-  | Error _ -> Ok (bidir, data)
+  | Error _ -> Ok ([0, bidir], data)
   | Ok prefix ->
       let fixup_xsp =
         (match prefix, allones with
         (* HACK: replacing xsp with sp. *)
-        | "x", "sp" -> make_post_replacement ~asmfld ~old:(VStr "xsp") ~repl:(VStr "sp")
+        | "x", Some "sp" -> make_post_replacement ~asmfld ~old:(VStr "xsp") ~repl:(VStr "sp")
         | _ -> Fun.id) in
       let bidir = bidir
         |> prefix_regnum_bidir ~prefix ~asmfld
         |> fixup_xsp in
-      Ok (bidir, data)
+    Ok ([0, bidir], data)
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"; "shift amount,"] in
@@ -284,7 +288,7 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
 
   (* let* _ = be_absent_when fld in *)
-  Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; mult; signed; asmdefault})
+  Ok ([0, bidir], FieldData.Imm {asmfld; bitfld; lo; hi; mult; signed; asmdefault})
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* () = guard (fld.assocs <> []) "has no assocs" in
@@ -294,16 +298,17 @@ let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
 
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
-  Ok (bidir, FieldData.Assocs {asmfld; asmdefault})
+  Ok ([0, bidir], FieldData.Assocs {asmfld; asmdefault})
 
 let handle_all_supported_cases enc v =
     CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
 
 let build_field_converters (enc: InstEnc.t): field_bidir =
+  let pp = CCList.pp (CCPair.pp CCInt.pp (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic)) in
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in
-  let show_field_result = show (CCResult.pp' (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) (CCList.pp CCString.pp)) in
+  let show_field_result = show (CCResult.pp' pp (CCList.pp CCString.pp)) in
 
-  let bidirs = List.map (fun (k, v: string * AsmField.t) ->
+  let bidirs = CCList.concat_map (fun (k, v: string * AsmField.t) ->
     let res = handle_all_supported_cases enc v |> Result.map fst in
     match res with
     | Ok x -> x
@@ -311,6 +316,9 @@ let build_field_converters (enc: InstEnc.t): field_bidir =
     | Error _ -> failwith @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
   ) @@ StringMap.bindings enc.asm.asmfields in
 
-  Parallel bidirs
+  let grouped = CCList.group_by ~hash:fst ~eq:(fun (a,_) (b,_) -> Int.equal a b) bidirs in
+
+  let parallels = List.map (fun x -> Parallel (List.map snd x)) grouped in
+  Sequential parallels
 
 
