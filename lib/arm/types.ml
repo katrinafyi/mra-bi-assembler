@@ -8,7 +8,7 @@ module Assoc = struct
     bitfields: string StringMap.t;
     feature: string;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 end
 
 module AsmField = struct
@@ -20,7 +20,7 @@ module AsmField = struct
     after: string;
     assocs: Assoc.t list;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 end
 
 module Asm = struct
@@ -28,7 +28,7 @@ module Asm = struct
     text: string list;
     asmfields: AsmField.t StringMap.t;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 end
 
 module EncField = struct
@@ -39,7 +39,7 @@ module EncField = struct
     wd: int;
     pattern: bool option StringMap.t;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 
   let equal_sizes (x: t) (y: t) =
     x.name = y.name && x.hi = y.hi && x.lo = y.lo && x.wd = y.wd
@@ -63,7 +63,7 @@ module InstEnc = struct
     asm: Asm.t;
     assocs: Assoc.t list;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 end
 
 module InstClass = struct
@@ -75,7 +75,7 @@ module InstClass = struct
     classfields: EncField.t StringMap.t;
     encodings: InstEnc.t StringMap.t;
   }
-  [@@deriving show, of_yojson]
+  [@@deriving show, yojson]
 
   let overlay_onto (self: t) (x: InstEnc.t): InstEnc.t =
     {x with encfields = EncField.overlay self.classfields x.encfields}
@@ -83,4 +83,4 @@ module InstClass = struct
 end
 
 type instclasses = InstClass.t list
-[@@deriving show, of_yojson]
+[@@deriving show, yojson]

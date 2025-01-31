@@ -18,9 +18,10 @@ let guard (b: bool) (m: 'a): (unit, 'a) result =
 (** {1 Definitions} *)
 
 type intrinsic = Bidir.Intrinsics.intrinsic
-[@@deriving show]
+[@@deriving show, yojson]
 
 type field_bidir = intrinsic Bidir.Types.bidir
+[@@deriving show, yojson]
 
 type fieldconv = {
   encname: string;

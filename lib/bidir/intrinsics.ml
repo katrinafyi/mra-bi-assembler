@@ -45,7 +45,7 @@ type intrinsic =
   | InInterval of int * int (** {!Types.VInt} -> {!Types.VInt}. Asserts that the given integer is within the interval (inclusive of bounds). *)
   | Multiply of int (** {!Types.VInt} -> {!Types.VInt}. Multiplies by the given factor. Inverting this succeeds only when the input is a multiple of the factor. *)
   | Inv of intrinsic (** Performs the inverse of the given intrinsic, i.e., swaps its forwards and backwards directions. *)
-[@@deriving eq, show]
+[@@deriving eq, show, yojson]
 
 let pp_dummy_intrinsic fmt _ = Format.pp_print_string fmt "<unknown intrinsic>"
 

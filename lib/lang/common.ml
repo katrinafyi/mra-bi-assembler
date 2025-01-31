@@ -51,6 +51,9 @@ module StringMap = struct
     | `Assoc entries -> Ok (of_list @@ List.map (fun (k,v) -> (k, Result.get_ok (f v))) entries)
     | _ -> Error "StringMap.of_yojson"
 
+  let to_yojson (f: 'a -> Yojson.Safe.t) x: Yojson.Safe.t =
+    bindings x |> List.map (fun (k,v) -> (k, f v)) |> (fun x -> `Assoc x)
+
   (** Overrided to make the type signature compatible with deriving yojson. *)
   let pp f fmt x =
     let p = Format.pp_print_string fmt in

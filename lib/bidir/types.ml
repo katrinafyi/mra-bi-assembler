@@ -13,7 +13,7 @@ type value =
   | VStr of string
   | VBits of string (** Bitvectors are strings of only 0/1. Bitvector length is the string length. *)
   | VTup of value list
-[@@deriving eq, show]
+[@@deriving eq, show, yojson]
 
 let rec equal_value_types x y =
   match x, y with
@@ -27,7 +27,7 @@ let rec equal_value_types x y =
 (** {2 Varname type} *)
 
 type varname = VarName of string
-[@@deriving eq, show]
+[@@deriving eq, show, yojson]
 let str_of_varname (VarName x) = x
 
 
@@ -40,7 +40,7 @@ type expr =
   | EVar of varname
   | ETup of expr list
   | EWildcard
-[@@deriving eq, show]
+[@@deriving eq, show, yojson]
 
 
 (** {2 Stmt type} *)
@@ -55,7 +55,7 @@ type 'a bidir =
   | Choice of 'a bidir list (** A mutually-exclusive choice between the given alternatives. Exactly one alternative must succeed. *)
   | Parallel of 'a bidir list (** Parallel execution of the given bidirectional programs. All parallels must succeed. Each parallel should be independent (i.e., input and output disjoint variables) from the others. *)
   | Sequential of 'a bidir list (** A sequential composition of statements. In the backwards direction, the list is reversed. *)
-[@@deriving eq, show]
+[@@deriving eq, show, yojson]
 
 (** {2 State type} *)
 
