@@ -434,7 +434,7 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label whose address is to be calculated. Its offset from the address of this instruction, in the range +/-1MB, is encoded in "immhi:immlo".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs")
   
   
   ADRP_only_pcreladdr
@@ -818,7 +818,9 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   BFC_BFM_32M_bitfield
@@ -1057,7 +1059,9 @@
   
   BL_only_branch_imm
   Is the program label to be unconditionally branched to. Its offset from the address of this instruction, in the range +/-128MB, is encoded as "imm26" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm26"; lo = -134217728;
+    hi = 134217727; mult = 4; signed = `Signed; asmdefault = None})
   
   
   BLR_64_branch_reg
@@ -1155,12 +1159,16 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   B_only_branch_imm
   Is the program label to be unconditionally branched to. Its offset from the address of this instruction, in the range +/-128MB, is encoded as "imm26" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm26"; lo = -134217728;
+    hi = 134217727; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CASAL_C32_comswap
@@ -1815,7 +1823,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBGE_8_regs
@@ -1830,7 +1840,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBGT_8_regs
@@ -1845,7 +1857,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBHI_8_regs
@@ -1860,7 +1874,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBHS_8_regs
@@ -1875,7 +1891,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBNE_8_regs
@@ -1890,7 +1908,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBLE_CBBGE_8_regs
@@ -1905,7 +1925,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBLO_CBBHI_8_regs
@@ -1920,7 +1942,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBLS_CBBHS_8_regs
@@ -1935,7 +1959,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBBLT_CBBGT_8_regs
@@ -1950,7 +1976,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBEQ_32_imm
@@ -1965,7 +1993,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBEQ_64_imm
@@ -1980,7 +2010,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGT_32_imm
@@ -1995,7 +2027,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGT_64_imm
@@ -2010,7 +2044,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHI_32_imm
@@ -2025,7 +2061,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHI_64_imm
@@ -2040,7 +2078,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLO_32_imm
@@ -2055,7 +2095,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLO_64_imm
@@ -2070,7 +2112,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLT_32_imm
@@ -2085,7 +2129,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLT_64_imm
@@ -2100,7 +2146,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNE_32_imm
@@ -2115,7 +2163,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNE_64_imm
@@ -2130,7 +2180,9 @@
     mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBEQ_32_regs
@@ -2145,7 +2197,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBEQ_64_regs
@@ -2160,7 +2214,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGE_32_regs
@@ -2175,7 +2231,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGE_64_regs
@@ -2190,7 +2248,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGT_32_regs
@@ -2205,7 +2265,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGT_64_regs
@@ -2220,7 +2282,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHI_32_regs
@@ -2235,7 +2299,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHI_64_regs
@@ -2250,7 +2316,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHS_32_regs
@@ -2265,7 +2333,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHS_64_regs
@@ -2280,7 +2350,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNE_32_regs
@@ -2295,7 +2367,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNE_64_regs
@@ -2310,7 +2384,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGE_CBGT_32_imm
@@ -2320,10 +2396,14 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBGE_CBGT_64_imm
@@ -2333,10 +2413,14 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHEQ_16_regs
@@ -2351,7 +2435,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHGE_16_regs
@@ -2366,7 +2452,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHGT_16_regs
@@ -2381,7 +2469,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHHI_16_regs
@@ -2396,7 +2486,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHHS_16_regs
@@ -2411,7 +2503,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHNE_16_regs
@@ -2426,7 +2520,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHLE_CBHGE_16_regs
@@ -2441,7 +2537,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHLO_CBHHI_16_regs
@@ -2456,7 +2554,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHLS_CBHHS_16_regs
@@ -2471,7 +2571,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHLT_CBHGT_16_regs
@@ -2486,7 +2588,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHS_CBHI_32_imm
@@ -2496,10 +2600,14 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBHS_CBHI_64_imm
@@ -2509,10 +2617,14 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLE_CBLT_32_imm
@@ -2522,10 +2634,14 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is a signed immediate, in the range -1 to 62, encoded as "imm6" minus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imms1>"; bitfld = "imm6"; lo = -1; hi = 62;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLE_CBLT_64_imm
@@ -2535,10 +2651,14 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is a signed immediate, in the range -1 to 62, encoded as "imm6" minus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imms1>"; bitfld = "imm6"; lo = -1; hi = 62;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLE_CBGE_32_regs
@@ -2553,7 +2673,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLE_CBGE_64_regs
@@ -2568,7 +2690,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLO_CBHI_32_regs
@@ -2583,7 +2707,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLO_CBHI_64_regs
@@ -2598,7 +2724,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLS_CBLO_32_imm
@@ -2608,10 +2736,14 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is a signed immediate, in the range -1 to 62, encoded as "imm6" minus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imms1>"; bitfld = "imm6"; lo = -1; hi = 62;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLS_CBLO_64_imm
@@ -2621,10 +2753,14 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is a signed immediate, in the range -1 to 62, encoded as "imm6" minus 1.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imms1>"; bitfld = "imm6"; lo = -1; hi = 62;
+    mult = 1; signed = `Signed; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLS_CBHS_32_regs
@@ -2639,7 +2775,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLS_CBHS_64_regs
@@ -2654,7 +2792,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLT_CBGT_32_regs
@@ -2669,7 +2809,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBLT_CBGT_64_regs
@@ -2684,7 +2826,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm9"; lo = -1024;
+    hi = 1020; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNZ_32_compbranch
@@ -2694,7 +2838,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBNZ_64_compbranch
@@ -2704,7 +2850,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBZ_32_compbranch
@@ -2714,7 +2862,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CBZ_64_compbranch
@@ -2724,7 +2874,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   CCMN_32_condcmp_imm
@@ -7585,7 +7737,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label from which the data is to be loaded. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDRSW_64_ldst_regoff
@@ -7709,7 +7863,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the program label from which the data is to be loaded. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDR_64_loadlit
@@ -7719,7 +7875,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the program label from which the data is to be loaded. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDR_32_ldst_regoff
@@ -11172,7 +11330,9 @@
   ok(Fields.FieldData.Assocs {asmfld = "<prfop>"; asmdefault = None})
   
   Is the program label from which the data is to be loaded. Its offset from the address of this instruction, in the range +/-1MB, is encoded as "imm19" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm19"; lo = -1048576;
+    hi = 1048575; mult = 4; signed = `Signed; asmdefault = None})
   
   
   PRFM_P_ldst_regoff
@@ -17073,7 +17233,9 @@
   error("not a gpreg", "not an imm", "has no assocs")
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-32KB, is encoded as "imm14" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm14"; lo = -32768;
+    hi = 32767; mult = 4; signed = `Signed; asmdefault = None})
   
   
   TBZ_only_testbranch
@@ -17090,7 +17252,9 @@
   error("not a gpreg", "not an imm", "has no assocs")
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-32KB, is encoded as "imm14" times 4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<label>"; bitfld = "imm14"; lo = -32768;
+    hi = 32767; mult = 4; signed = `Signed; asmdefault = None})
   
   
   TST_ANDS_32S_log_imm

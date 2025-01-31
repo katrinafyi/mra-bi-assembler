@@ -1496,5 +1496,5 @@
   MNEG_MSUB_64A_dp_3src
   
   MOVK_32_movewide
-  Fatal error: exception File "lib/arm/fields.ml", line 79, characters 10-16: Assertion failed
+  Fatal error: exception File "lib/arm/fields.ml", line 100, characters 10-16: Assertion failed
   [2]

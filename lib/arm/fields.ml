@@ -42,7 +42,7 @@ let extract_reg_bits (fld: AsmField.t): (int, string) result =
   sole "reg bits" @@ List.map int_of_string matches
 
 let encoded_in_the (fld: AsmField.t): (string, string) result =
-  let re = Re.Perl.compile_pat {|encoded in the "([^"]+)"|} in
+  let re = Re.Perl.compile_pat {|encoded (?:in the|as) "([^"]+)"|} in
   let matches = List.map (Fun.flip Re.Group.get 1) @@ Re.all re fld.hover in
   sole "encoding destination" @@ matches
 
@@ -62,15 +62,36 @@ let signed_or_unsigned (fld: AsmField.t) =
   | _ when CCString.mem ~sub:"unsigned immediate" fld.link -> Ok `Unsigned
   | _ when CCString.mem ~sub:"signed immediate" fld.hover -> Ok `Signed
   | _ when CCString.mem ~sub:" shift amount" fld.hover -> Ok `Unsigned
+  | _ when CCString.mem ~sub:" the range -" fld.hover -> Ok `Signed
+  | _ when CCString.mem ~sub:" the range +/-" fld.hover -> Ok `Signed
   | _ -> failwith @@ "unknown signed or immediate " ^ fld.hover
 
+let si_multiplier =
+  function
+  | "K" -> 1024
+  | "M" -> 1024 * 1024
+  | x -> failwith @@ "unsup SI prefix: " ^ x
 
-let in_the_range (fld: AsmField.t): (int * int, string) result =
+let in_the_range_bytes (fld: AsmField.t): (int * int, string) result =
+  let re = Re.Perl.compile_pat {|in the range \+/-(\d+)([A-Z])B|} in
+  let* mat = sole "in the range bytes" @@ Re.all re fld.hover in
+  let num = Re.Group.get mat 1 |> int_of_string in
+  let scale = Re.Group.get mat 2 |> si_multiplier in
+  let lo = -(num * scale) in
+  let hi = num * scale - 1 in
+  Ok (lo, hi)
+
+let in_the_range_ints (fld: AsmField.t): (int * int, string) result =
   let re = Re.Perl.compile_pat {|in the range (-?\d+) to (-?\d+)|} in
-  let* mat = sole "in the range" @@ Re.all re fld.hover in
+  let* mat = sole "in the range ints" @@ Re.all re fld.hover in
   let lo,hi = Re.Group.(get mat 1, get mat 2) in
   let lo,hi = int_of_string lo, int_of_string hi in
   Ok (lo, hi)
+
+let in_the_range (fld: AsmField.t): (int * int, string) result =
+  CCResult.choose [in_the_range_bytes fld; in_the_range_ints fld]
+  |> CCResult.map_err (String.concat ", ")
+
 
 let defaulting_to (fld: AsmField.t): (string option, string) result =
   let re = Re.Perl.compile_pat {|default(?:ing|s) to ([^ ,.]+(?: #\d+)?)|} in
@@ -90,7 +111,7 @@ let be_absent_when (fld: AsmField.t): ('a, string) result =
     Error "be-absent-when detected"
 
 let a_multiple_of (fld: AsmField.t): ('a, string) result =
-  let re = Re.Perl.compile_pat {|a multiple of (\d+)|} in
+  let re = Re.Perl.compile_pat {| (?:a multiple of|times) (\d+)|} in
   let matches = Re.all re fld.hover |> List.map (Fun.flip Re.Group.get 1) in
   match matches with
   | [] -> Ok 1
@@ -289,7 +310,15 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
     Ok ([0, bidir], data)
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
-  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) ["s the shift amount,"; "n unsigned immediate"; "a signed immediate"; "shift to apply"; "shift amount to be"; "shift amount,"] in
+  let isimm s = List.exists (fun sub -> CCString.mem ~sub s) [
+    "s the shift amount,";
+    "n unsigned immediate";
+    "a signed immediate";
+    "shift to apply";
+    "shift amount to be";
+    "shift amount,";
+    "Its offset from the address"
+  ] in
 
   let* () = guard (isimm fld.hover) "not an imm" in
   let asmfld = fld.placeholder in
