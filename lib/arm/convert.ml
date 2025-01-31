@@ -41,9 +41,10 @@ let parseable_of_instenc (x: InstEnc.t) =
   |> List.map parseable_of_encfield
   |> (fun x -> Seq x)
 
-let bindings_of_bidir_map ?(conv = Bidir.Intrinsics.vbits_of_val) (x: Bidir.Types.value StringMap.t) =
+let bindings_of_bidir_map ?(conv = Bidir.Intrinsics.vbits_of_val) ?(rev=true) (x: Bidir.Types.value StringMap.t) =
+  let rev = if rev then CCString.rev else Fun.id in
   let open CCFun.Infix in
-  let make_output x = [Lang.Common.output_str (CCString.rev x)] in
+  let make_output x = [Lang.Common.output_str (rev x)] in
   StringMap.map (conv %> make_output) x
 
 let opnum_of_unparse_output ({output}: output) =

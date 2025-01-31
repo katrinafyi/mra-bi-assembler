@@ -75,18 +75,18 @@ let parsers_of_bidir ?state bidir =
     bot = (fun ~stmt -> failwith @@ "no feasible path at pars Choice: " ^ show_bidir pp_dummy_intrinsic stmt);
   } ~dir:`Forwards (Option.value state ~default) bidir
 
-(* XXX: we are actually unable to parse fields all at once; we will need to parse one or more fields in isolation to handle repeated fields. DOES THIS EVEN HAPPEN??? *)
-let values_of_strings ~fields ?(value=fun x -> VStr x) bindings =
-  let open CCFun.Infix in
 
-  let apply_default = Option.fold ~none:(value "") ~some:(String.concat "" %> value) in
+(* XXX: we are actually unable to parse fields all at once; we will need to parse one or more fields in isolation to handle repeated fields. DOES THIS EVEN HAPPEN??? *)
+let strings_of_bindings =
+  StringMap.map (fun x -> List.hd x |> (fun (x: Lang.Common.output) -> x.output) |> String.concat "")
+
+let values_of_strings ~fields ?(value=fun x -> VStr x) (bindings: string StringMap.t) =
 
   let conv fld =
-    let v = StringMap.find_opt fld bindings
-      |> Option.map List.hd
-      |> Option.map (fun (x: Lang.Common.output) -> x.output)
-      |> apply_default in
+    let v = StringMap.find_opt fld bindings in
+    let v = Option.fold ~none:(value "") ~some:value v in
     (fld, v)
+
   in List.map conv fields |> StringMap.of_list
 
 

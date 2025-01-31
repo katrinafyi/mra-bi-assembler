@@ -81,6 +81,7 @@ type output = { output: string list }
     @closed
 *)
 include struct
+  let get_output (x: output) = x.output
   let equal_output x y = List.equal String.equal x.output y.output
   let show_output xs = "[" ^ String.concat ", " (List.map quote xs.output) ^ "]"
   let compare_output x y = List.compare String.compare x.output y.output
