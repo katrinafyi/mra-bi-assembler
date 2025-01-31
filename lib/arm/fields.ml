@@ -352,22 +352,29 @@ let handle_all_supported_cases enc v =
       CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
     with e -> Error (["EXCEPTION: "^ Printexc.to_string e])
 
-let build_field_converters (enc: InstEnc.t): field_bidir =
+let build_field_converters (enc: InstEnc.t) =
   let pp = CCList.pp (CCPair.pp CCInt.pp (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic)) in
   let show_field_bidir = show (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic) in
   let show_field_result = show (CCResult.pp' pp (CCList.pp CCString.pp)) in
 
-  let bidirs = CCList.concat_map (fun (k, v: string * AsmField.t) ->
+  let bidirs = CCList.map (fun (k, v: string * AsmField.t) ->
     let res = handle_all_supported_cases enc v |> Result.map fst in
+
     match res with
-    | Ok x -> x
+    | Ok x -> Ok x
     (* | Ok _ -> () *)
-    | Error _ -> failwith @@ enc.encname ^ ": " ^ show_field_result res ^ "\t" ^ v.hover
+    | Error _ -> Error (enc.encname ^ ": " ^ v.placeholder ^ ": " ^ show_field_result res ^ "\t" ^ v.hover)
   ) @@ StringMap.bindings enc.asm.asmfields in
 
-  let grouped = CCList.group_by ~hash:fst ~eq:(fun (a,_) (b,_) -> Int.equal a b) bidirs in
+  let bidirs,errs = CCList.split_result bidirs in
+  match errs with
+  | [] ->
+    let bidirs = CCList.concat bidirs in
 
-  let parallels = List.map (fun x -> Parallel (List.map snd x)) grouped in
-  Sequential parallels
+    let grouped = CCList.group_by ~hash:fst ~eq:(fun (a,_) (b,_) -> Int.equal a b) bidirs in
+
+    let parallels = List.map (fun x -> Parallel (List.map snd x)) grouped in
+    Ok (Sequential parallels)
+  | errs -> Error (String.concat "\n" errs)
 
 

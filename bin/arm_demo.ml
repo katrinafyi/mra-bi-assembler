@@ -13,11 +13,11 @@ let () =
   (* print_endline @@ Lang.Common.show_result Arm.Types.show_instclasses result; *)
   let iclasses = Result.get_ok result in
 
-  let iclasses = List.filter
-    (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDG")
-    iclasses in
+  (* let iclasses = List.filter *)
+  (*   (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDG") *)
+  (*   iclasses in *)
 
-  let f (x: InstEnc.t) = x.instrclass = "general" && CCString.prefix ~pre:"ADD" x.encname in
+  let f (x: InstEnc.t) = x.instrclass = "general" && CCString.starts_with ~prefix:"RET_" x.encname in
 
   let encs = List.concat_map (fun (x: InstClass.t) ->
     List.filter f @@
@@ -26,11 +26,12 @@ let () =
     (StringMap.values x.encodings)) iclasses in
 
   Printf.printf "\nprocessing %d encodings...\n" (List.length encs);
-  let processed_encs = List.map (fun (x: InstEnc.t) ->
+  let processed_encs = CCList.map (fun (x: InstEnc.t) ->
+    let open CCResult.Infix in
     print_endline @@ "encoding: " ^ x.encname;
 
     print_endline "\n  building field converters...\n";
-    let bidir = Arm.Fields.build_field_converters x in
+    let* bidir = Arm.Fields.build_field_converters x in
     print_endline @@ Bidir.Types.show_bidir Bidir.Intrinsics.pp_intrinsic bidir;
 
     print_endline @@ "\n  abstract interpretation to get asm field parser...\n";
@@ -53,8 +54,13 @@ let () =
 
     let bind_with_encname p = Lang.Common.(Seq [bind x.encname empty; p]) in
 
-    (bind_with_encname asm_parser, bind_with_encname bit_parser), ((x.encname, x), (x.encname, bidir))
+    Ok ((bind_with_encname asm_parser, bind_with_encname bit_parser), ((x.encname, x), (x.encname, bidir)))
   ) encs in
+  let processed_encs,err_encs = CCList.split_result processed_encs in
+  Printf.printf "\n... %d encodings had errors:\n" (List.length err_encs);
+  List.iter (fun x -> print_endline @@ "    " ^ x) err_encs;
+  Printf.printf "\n... %d encodings succeeded\n" (List.length processed_encs);
+  print_endline @@ show_list (fun (_,((k,_),_)) -> k) processed_encs;
 
   print_endline "\ncombining asm parsers for all encodings...\n";
   let parsers,encs = List.split processed_encs in
@@ -66,10 +72,10 @@ let () =
 
   let combined_asm_parser = Or asmparsers in
   let combined_bit_parser = Or bitparsers in
-  print_endline @@ show_parseable combined_asm_parser;
+  (* print_endline @@ show_parseable combined_asm_parser; *)
 
-  print_endline "\nsupported asm formats:";
-  List.iter (describe_parseable %> print_endline) asmparsers;
+  (* print_endline "\nsupported asm formats:"; *)
+  (* List.iter (describe_parseable %> print_endline) asmparsers; *)
 
   let go s =
     print_endline @@ "\nparsing: " ^ s;
