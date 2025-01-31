@@ -26,8 +26,10 @@ let () =
     print_string "\nenter asm or opnum: ";
     flush stdout;
     let s = try input_line stdin with End_of_file -> exit 0 in
-    try ignore (Arm.Main.auto_detect_opcode_or_asm mra s)
-    with e -> (print_endline (Printexc.to_string e); Printexc.print_backtrace stderr)
+    if CCString.trim s <> "" then begin
+      try ignore (Arm.Main.auto_detect_opcode_or_asm mra s)
+      with e -> (print_endline (Printexc.to_string e); Printexc.print_backtrace stderr)
+    end
   done
 
 

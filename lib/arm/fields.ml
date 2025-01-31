@@ -187,7 +187,7 @@ let prefix_regnum_bidir ~(prefix:string) ~(asmfld:string) (regbidir: field_bidir
 
 let make_immediate_bidir ~(signed:signedness) ~(wd:int) ~lo ~hi ~mult ~(asmfld:string) ~(bitfld:string): field_bidir =
   let open Bidir.Intrinsics in
-  let bitstoint x = (match signed with | `Signed -> BitsToSint x | `Unsigned -> BitsToSint x) in
+  let bitstoint x = (match signed with | `Signed -> BitsToSint x | `Unsigned -> BitsToUint x) in
 
   Sequential [
     Decl [VarName bitfld];

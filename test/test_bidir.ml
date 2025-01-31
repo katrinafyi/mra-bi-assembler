@@ -150,8 +150,16 @@ let%expect_test "bidir choice" =
   [%expect {| failure: no feasible path at Choice: (Types.Choice []) |}];
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
-  [%expect {|
-    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel: (Types.Choice [(Types.Sequential []); (Types.Sequential [])]) |}]
+  [%expect.unreachable]
+[@@expect.uncaught_exn {|
+  (* CR expect_test_collector: This test expectation appears to contain a backtrace.
+     This is strongly discouraged as backtraces are fragile.
+     Please change this test to not include a backtrace. *)
+
+  "Assert_failure test/test_bidir.ml:12:22"
+  Raised at Expect_tests__Test_bidir.catch in file "test/test_bidir.ml", line 12, characters 22-34
+  Called from Expect_tests__Test_bidir.(fun) in file "test/test_bidir.ml", line 152, characters 2-132
+  Called from Expect_test_collector.Make.Instance_io.exec in file "collector/expect_test_collector.ml", line 262, characters 12-19 |}]
 
 
 let%expect_test "concat intrinsic" =
@@ -300,7 +308,7 @@ let%expect_test "parallel bidir" =
 
   catch (fun () -> run_bidir ~dir:`Forwards ~intr:dummy_intr (st2 "in1" (VInt 1) "in2" (VInt 2)) overlapping);
   [%expect {|
-    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel: (Types.Parallel
+    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel. (Types.VStr "one")(Types.VStr "two")(Types.Parallel
        [(Types.Sequential
            [(Types.Decl [(Types.VarName "in1")]);
              (Types.Assign ((Types.EVar (Types.VarName "in1")), [],
