@@ -105,12 +105,12 @@
   Is an unsigned immediate, in the range 0 to 15, encoded in the "imm4" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm4>"; bitfld = "imm4"; lo = 0; hi = 15;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is an unsigned immediate, a multiple of 16 in the range 0 to 1008, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm6>"; bitfld = "imm6"; lo = 0; hi = 1008;
-    mult = 16; signed = `Signed; asmdefault = None})
+    mult = 16; signed = `Unsigned; asmdefault = None})
   
   
   ADDPT_64_addsub_pt
@@ -203,7 +203,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -224,7 +224,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -349,7 +349,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -370,7 +370,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -1990,7 +1990,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2007,7 +2007,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2024,7 +2024,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2041,7 +2041,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2058,7 +2058,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2075,7 +2075,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2092,7 +2092,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2109,7 +2109,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2126,7 +2126,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2143,7 +2143,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2160,7 +2160,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2177,7 +2177,7 @@
   Is an unsigned immediate, in the range 0 to 63, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm6"; lo = 0; hi = 63;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2398,7 +2398,7 @@
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
   ok(
   Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2415,7 +2415,7 @@
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
   ok(
   Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2602,7 +2602,7 @@
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
   ok(
   Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -2619,7 +2619,7 @@
   Is an unsigned immediate, in the range 1 to 64, encoded as "imm6" plus 1.
   ok(
   Fields.FieldData.Imm {asmfld = "<immp1>"; bitfld = "imm6"; lo = 1; hi = 64;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range -1024 to 1020, is encoded as "imm9" times 4.
   ok(
@@ -3176,7 +3176,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -3192,7 +3192,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -3304,7 +3304,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -3320,7 +3320,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -10527,7 +10527,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -10540,7 +10542,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -10553,7 +10557,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -10566,7 +10572,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -10579,7 +10587,9 @@
     allones = (Some "zr"); regwd = (Ok 32); prefix = (Ok "w"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -10592,7 +10602,9 @@
     allones = (Some "zr"); regwd = (Ok 64); prefix = (Ok "x"); checks = []})
   
   Is the 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -16327,12 +16339,12 @@
   Is an unsigned immediate, in the range 0 to 15, encoded in the "imm4" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm4>"; bitfld = "imm4"; lo = 0; hi = 15;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is an unsigned immediate, a multiple of 16 in the range 0 to 1008, encoded in the "imm6" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm6>"; bitfld = "imm6"; lo = 0; hi = 1008;
-    mult = 16; signed = `Signed; asmdefault = None})
+    mult = 16; signed = `Unsigned; asmdefault = None})
   
   
   SUBP_64S_dp_2src
@@ -16459,7 +16471,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -16480,7 +16492,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -16605,7 +16617,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -16626,7 +16638,7 @@
   Is an unsigned immediate, in the range 0 to 4095, encoded in the "imm12" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm12"; lo = 0; hi = 4095;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   Is the optional left shift to apply to the immediate, defaulting to LSL #0 and 
   ok(
@@ -17427,7 +17439,9 @@
   
   UDF_only_perm_undef
   is a 16-bit unsigned immediate, in the range 0 to 65535, encoded in the "imm16" field. The PE ignores the value of this constant.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm16"; lo = 0; hi = 65535;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   UDIV_32_dp_2src
@@ -17500,7 +17514,7 @@
   Is an unsigned immediate, in the range 0 to 255, encoded in the "imm8" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm>"; bitfld = "imm8"; lo = 0; hi = 255;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   UMAX_64U_minmax_imm
@@ -17517,7 +17531,7 @@
   Is an unsigned immediate, in the range 0 to 255, encoded in the "imm8" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm>"; bitfld = "imm8"; lo = 0; hi = 255;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   UMAX_32_dp_2src
@@ -17568,7 +17582,7 @@
   Is an unsigned immediate, in the range 0 to 255, encoded in the "imm8" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm>"; bitfld = "imm8"; lo = 0; hi = 255;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   UMIN_64U_minmax_imm
@@ -17585,7 +17599,7 @@
   Is an unsigned immediate, in the range 0 to 255, encoded in the "imm8" field.
   ok(
   Fields.FieldData.Imm {asmfld = "<uimm>"; bitfld = "imm8"; lo = 0; hi = 255;
-    mult = 1; signed = `Signed; asmdefault = None})
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   UMIN_32_dp_2src

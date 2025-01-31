@@ -59,8 +59,8 @@ type signedness = [ | `Unsigned | `Signed ]
 
 let signed_or_unsigned (fld: AsmField.t) =
   match () with
-  | _ when CCString.mem ~sub:"unsigned immediate" fld.link -> Ok `Unsigned
-  | _ when CCString.mem ~sub:"signed immediate" fld.hover -> Ok `Signed
+  | _ when CCString.mem ~sub:"unsigned immediate" fld.hover -> Ok `Unsigned
+  | _ when CCString.mem ~sub:" signed immediate" fld.hover -> Ok `Signed
   | _ when CCString.mem ~sub:" shift amount" fld.hover -> Ok `Unsigned
   | _ when CCString.mem ~sub:" the range -" fld.hover -> Ok `Signed
   | _ when CCString.mem ~sub:" the range +/-" fld.hover -> Ok `Signed
@@ -312,7 +312,7 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) [
     "s the shift amount,";
-    "n unsigned immediate";
+    " unsigned immediate,";
     "a signed immediate";
     "shift to apply";
     "shift amount to be";
