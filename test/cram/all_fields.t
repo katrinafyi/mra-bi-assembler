@@ -5723,114 +5723,162 @@
   
   CRC32B_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32H_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32W_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32X_64C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 64-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Xm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 64); prefix = (Ok "X"); checks = [];
+    asmdefault = None})
   
   
   CRC32CB_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32CH_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32CW_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   
   CRC32CX_64C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wd>"; bitfld = "Rd"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Wn>"; bitfld = "Rn"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 32); prefix = (Ok "W"); checks = [];
+    asmdefault = None})
   
   Is the 64-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "no in the range bytes, no in the range ints",
-  "has no assocs", "not a second gpreg")
+  ok(
+  Fields.FieldData.Gpreg {asmfld = "<Xm>"; bitfld = "Rm"; wd = 5;
+    allones = (Some "ZR"); regwd = (Ok 64); prefix = (Ok "X"); checks = [];
+    asmdefault = None})
   
   
   CSEL_32_condsel

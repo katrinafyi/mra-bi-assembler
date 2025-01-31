@@ -308,7 +308,14 @@ end
 
 let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData.t, string) result =
 
-  let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"; "general-purpose base register"] in
+  let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) [
+    "general-purpose register";
+    "general-purpose destination register";
+    "general-purpose source register";
+    "general-purpose base register";
+    "general-purpose accumulator";
+    "general-purpose data";
+  ] in
 
   let* () = guard (isgpreg fld.hover) "not a gpreg" in
 
@@ -362,8 +369,6 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
     "immediate offset,";
     "rotate amount,";
     "amount by which to rotate,";
-    "general-purpose accumulator";
-    "general-purpose data";
   ] in
 
   let* () = guard (isimm fld.hover) "not an imm" in
