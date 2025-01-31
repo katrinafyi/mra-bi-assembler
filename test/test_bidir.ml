@@ -18,7 +18,7 @@ let catch (f: unit -> 'a): unit =
 
 let st n x = StringMap.singleton n x
 let st2 n x n2 x2 = StringMap.add n2 x2 (StringMap.singleton n x)
-let dummy_intr _ ~dir:_ _ = failwith "dummy intrinsics"
+let dummy_intr _ ~dir:_ _ = invalid_arg "dummy intrinsics"
 
 let print_value = show_value %> print_endline
 let print_state = show_state %> print_endline
@@ -149,17 +149,17 @@ let%expect_test "bidir choice" =
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice []));
   [%expect {| failure: no feasible path at Choice: (Types.Choice []) |}];
 
-  catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]));
-  [%expect.unreachable]
-[@@expect.uncaught_exn {|
-  (* CR expect_test_collector: This test expectation appears to contain a backtrace.
-     This is strongly discouraged as backtraces are fragile.
-     Please change this test to not include a backtrace. *)
+  print_state @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "in" (VInt 22)) (Choice [Sequential []; Sequential []]);
+  [%expect{| { "in" -> (Types.VInt 22) } |}];
 
-  "Assert_failure test/test_bidir.ml:12:22"
-  Raised at Expect_tests__Test_bidir.catch in file "test/test_bidir.ml", line 12, characters 22-34
-  Called from Expect_tests__Test_bidir.(fun) in file "test/test_bidir.ml", line 152, characters 2-132
-  Called from Expect_test_collector.Make.Instance_io.exec in file "collector/expect_test_collector.ml", line 262, characters 12-19 |}]
+  catch @@ (fun () -> run_bidir ~dir:`Backwards ~intr:run_intrinsics (st "in" (VInt 22)) (Choice [Assign (EVar (VarName "x"), [], EVar (VarName "in")); Assign (EVar (VarName "x"), [Add 1], EVar (VarName "in"))]));
+  [%expect{|
+    invalid_arg: ambiguous paths at Choice / overlapping outputs at Parallel. (Types.VInt 22)(Types.VInt 21)(Types.Choice
+       [(Types.Assign ((Types.EVar (Types.VarName "x")), [],
+           (Types.EVar (Types.VarName "in"))));
+         (Types.Assign ((Types.EVar (Types.VarName "x")), [<unknown intrinsic>],
+            (Types.EVar (Types.VarName "in"))))
+         ]) |}]
 
 
 let%expect_test "concat intrinsic" =
