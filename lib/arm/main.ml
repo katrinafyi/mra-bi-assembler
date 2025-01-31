@@ -2,6 +2,7 @@ open Types
 open Fields
 open Asmtemplate
 open Lang.Common
+open CCFun.Infix
 
 type mra_data = {encodings: InstEnc.t StringMap.t; bidirs: field_bidir StringMap.t; asmparser: parseable; bitparser: parseable}
 [@@deriving show, yojson]
@@ -65,7 +66,7 @@ let process_mra_data ?(filter = Fun.const true) iclasses =
   (* print_endline @@ show_parseable combined_asm_parser; *)
 
   (* print_endline "\nsupported asm formats:"; *)
-  (* List.iter (describe_parseable %> print_endline) asmparsers; *)
+  List.iter (describe_parseable %> print_endline) asmparsers;
   {encodings; bidirs; asmparser; bitparser}
 
 let asm_to_opcode ({encodings; bidirs; asmparser; bitparser}: mra_data) s =
@@ -106,7 +107,8 @@ let asm_to_opcode ({encodings; bidirs; asmparser; bitparser}: mra_data) s =
 
 let opcode_to_asm ({encodings; bidirs; asmparser; bitparser}: mra_data) op =
   print_endline @@ "\nparsing: " ^ Printf.sprintf "%#08x" op;
-  let op = op |> CCInt.to_string_binary |> CCString.drop 2 |> CCString.rev in
+  let op = op |> CCInt.to_string_binary |> CCString.drop 2 |> CCString.pad ~side:`Left ~c:'0' 32 |> CCString.rev in
+  print_endline @@ op;
   let parseresult = Lang.Parse.run_parse_of_string bitparser op in
   print_endline "op parse result:";
   print_endline @@ show_parse_result parseresult;

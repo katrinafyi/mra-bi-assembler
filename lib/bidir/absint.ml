@@ -102,6 +102,9 @@ let rec abstract_run_bidir (spec: ('i, 'a) absint_spec) ~(dir: dir) (st: 'a Stri
       if StringMap.cardinal st' <> List.length vars then
         invalid_arg @@ "missing declared values at " ^ show_bidir pp_dummy_intrinsic stmt ^ ". provided: " ^ show_string_list (List.map fst @@ StringMap.bindings st);
       st'
+  | Delete vars ->
+      let st' = StringMap.filter (fun k _ -> not (List.mem (VarName k) vars)) st in
+      st'
   | Sequential stmts ->
       List.fold_left (abstract_run_bidir spec ~dir) st stmts
   | Choice alts ->

@@ -129,6 +129,13 @@ let must_be_an_even_numbered (fld: AsmField.t): ('a, string) result =
   | [_] -> Ok true
   | _ -> failwith "too many must-be-even-numbered?"
 
+let the_second_general_purpose_register (fld: AsmField.t) =
+  let re = Re.Perl.compile_pat {|<([WX])\(([a-z]+)\+1\)>|} in
+  let matches = Re.all re fld.placeholder in
+  let* mat = sole "the-second-gpreg" matches in
+  let letter, reg = Re.Group.(get mat 1, get mat 2) in
+  Ok ("<" ^ letter ^ reg ^ ">")
+
 (** {1 Bidir constructors} *)
 
 let make_conditional ~(var:string) ~(value:value) (x: field_bidir): field_bidir =
@@ -264,11 +271,34 @@ let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_
     Decl [var];
   ]
 
+let make_second_gpreg ~asmfld ~basefld =
+  (* XXX: need to assert that the two register numbers are in fact adjacent. this just silently takes the first register number. *)
+  let open Bidir.Intrinsics in
+  let prefix,dig = EVar (VarName "__prefix"), EVar (VarName "__digit") in
+  let tempbase = EVar (VarName "__base") in
+  Sequential [
+    Delete [VarName "__prefix"; VarName "__digit"; VarName "__base"];
+    Choice [
+      Sequential [
+        Assign (ELit (VStr ""), [], EWildcard);
+        Assign (EVar (VarName basefld), [], tempbase);
+      ];
+      Sequential [
+        Assign (EWildcard, [], ELit (VStr ""));
+      ]
+    ];
+    Assign (tempbase, [Inv (Concat [Some 1; None])], ETup [prefix; dig]);
+    Assign (dig, [Inv (IntToDecimal); Add 1; IntToDecimal], dig);
+    Assign (ETup [prefix; dig], [Concat [Some 1; None]], EVar (VarName asmfld));
+    Delete [VarName "__prefix"; VarName "__digit"; VarName "__base"];
+  ]
+
 (** {1 Supported field cases} *)
 
 module FieldData = struct
   type t =
     | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result; checks: intrinsic list; asmdefault: string option}
+    | SecondGpreg of {asmfld: string; basefld: string}
     | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; mult: int; signed: signedness; asmdefault: string option}
     | Assocs of {asmfld: string; asmdefault: string option}
     [@@deriving show]
@@ -296,7 +326,6 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
 
   let regwd = extract_reg_bits fld in
   let prefix = Result.map register_char regwd in
-
 
 
   let* bidir = (match prefix with
@@ -362,9 +391,20 @@ let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
   Ok ([0, bidir], FieldData.Assocs {asmfld; asmdefault})
 
+let handle_second_gpreg (enc: InstEnc.t) (fld: AsmField.t) =
+  let cond s = List.exists (fun sub -> CCString.mem ~sub s) [
+    "second general-purpose register";
+  ] in
+
+  let* () = guard (cond fld.hover) "not a second gpreg" in
+  let* basefld = the_second_general_purpose_register fld in
+  let asmfld = fld.placeholder in
+  let bidir = make_second_gpreg ~asmfld ~basefld in
+  Ok ([10, bidir], FieldData.SecondGpreg {asmfld; basefld})
+
 let handle_all_supported_cases enc v =
     try
-      CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
+    CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v; handle_second_gpreg enc v]
     with e -> Error (["EXCEPTION: "^ Printexc.to_string e])
 
 let build_field_converters (enc: InstEnc.t) =
@@ -387,6 +427,7 @@ let build_field_converters (enc: InstEnc.t) =
     let bidirs = CCList.concat bidirs in
 
     let grouped = CCList.group_by ~hash:fst ~eq:(fun (a,_) (b,_) -> Int.equal a b) bidirs in
+    let grouped = CCList.sort (fun a b -> Int.compare (fst (List.hd a)) (fst (List.hd b))) grouped in
 
     let parallels = List.map (fun x -> Parallel (List.map snd x)) grouped in
     Ok (Sequential parallels)

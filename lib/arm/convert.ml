@@ -9,6 +9,9 @@ let rec parseable_of_asmtemplate (fld: string -> parseable) (x: parsed_template)
   | Literal x -> Lit x
   | Choice xs -> Or (List.map recurse xs)
   | Sequence xs -> Seq (List.map recurse xs)
+
+  (* XXX: hack! instructions such as CASPAL have {, #0} which is an undistinguishable optional. force a disambiguation here. *)
+  | Optional (Sequence [Literal ","; Spaces true; Literal "#0"] as opt) -> optional (bind "____" (parseable_of_asmtemplate fld opt))
   | Optional x -> optional (recurse x)
   | Placeholder x -> bind x (fld x)
 

@@ -17,7 +17,7 @@ let () =
   (*   (fun (x: Arm.Types.InstClass.t) -> x.instsection = "ADDG") *)
   (*   iclasses in *)
 
-  let f (x: InstEnc.t) = x.instrclass = "general" in
+  let f (x: InstEnc.t) = x.instrclass = "general" && x.encname = "CASPAL_CP64_comswappr" in
 
   let mra = Arm.Main.process_mra_data ~filter:f iclasses in
 

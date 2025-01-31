@@ -43,7 +43,10 @@ let run_bidir ~(intr: ('a, value) intrinsic_impl) =
     intrinsic_impl = intr;
 
     (* XXX: this will /not/ throw if choice paths return disjoint variables... *)
-    join = (fun ~stmt _ _ -> invalid_arg @@ "ambiguous paths at Choice / overlapping outputs at Parallel: " ^ show_bidir pp_dummy_intrinsic stmt);
+    join = (fun ~stmt x y ->
+      if equal_value x y
+      then x
+      else invalid_arg @@ "ambiguous paths at Choice / overlapping outputs at Parallel. " ^ show_value x ^ show_value y ^ show_bidir pp_dummy_intrinsic stmt);
 
     bot = (fun ~stmt -> failwith @@ "no feasible path at Choice: " ^ show_bidir pp_dummy_intrinsic stmt);
   }
