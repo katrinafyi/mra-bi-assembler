@@ -3,6 +3,7 @@
 /test/cram/mra.json
 /regs.txt
 /regsfull.txt
+/out.txt
 
 *.annot
 *.cmo

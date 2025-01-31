@@ -6756,7 +6756,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURH_32_ldapstl_unscaled
@@ -6773,7 +6775,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURSB_32_ldapstl_unscaled
@@ -6790,7 +6794,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURSB_64_ldapstl_unscaled
@@ -6807,7 +6813,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURSH_32_ldapstl_unscaled
@@ -6824,7 +6832,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURSH_64_ldapstl_unscaled
@@ -6841,7 +6851,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPURSW_64_ldapstl_unscaled
@@ -6858,7 +6870,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPUR_32_ldapstl_unscaled
@@ -6875,7 +6889,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAPUR_64_ldapstl_unscaled
@@ -6892,7 +6908,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDAR_LR32_ldstord
@@ -7982,7 +8000,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the optional signed immediate byte offset, a multiple of 4 in the range -256 to 252, defaulting to 0 and encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDNP_64_ldstnapair_offs
@@ -8005,7 +8025,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDPSW_64_ldstpair_post
@@ -8028,7 +8050,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDPSW_64_ldstpair_pre
@@ -8051,7 +8075,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDPSW_64_ldstpair_off
@@ -8074,7 +8100,9 @@
     asmdefault = None})
   
   For the "Signed offset" variant: is the optional signed immediate byte offset, a multiple of 4 in the range -256 to 252, defaulting to 0 and encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDP_32_ldstpair_post
@@ -8097,7 +8125,9 @@
     asmdefault = None})
   
   For the "32-bit Post-index" and "32-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDP_64_ldstpair_post
@@ -8120,7 +8150,9 @@
     asmdefault = None})
   
   For the "64-bit Post-index" and "64-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   LDP_32_ldstpair_pre
@@ -8143,7 +8175,9 @@
     asmdefault = None})
   
   For the "32-bit Post-index" and "32-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   LDP_64_ldstpair_pre
@@ -8166,7 +8200,9 @@
     asmdefault = None})
   
   For the "64-bit Post-index" and "64-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   LDP_32_ldstpair_off
@@ -8189,7 +8225,9 @@
     asmdefault = None})
   
   For the "32-bit Signed offset" variant: is the optional signed immediate byte offset, a multiple of 4 in the range -256 to 252, defaulting to 0 and encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDP_64_ldstpair_off
@@ -8212,7 +8250,9 @@
     asmdefault = None})
   
   For the "64-bit Signed offset" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDRB_32_ldst_immpost
@@ -8229,7 +8269,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRB_32_ldst_immpre
@@ -8246,7 +8288,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRB_32_ldst_pos
@@ -8263,7 +8307,9 @@
     asmdefault = None})
   
   Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 4095;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRB_32BL_ldst_regoff
@@ -8326,7 +8372,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRH_32_ldst_immpre
@@ -8343,7 +8391,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRH_32_ldst_pos
@@ -8360,7 +8410,9 @@
     asmdefault = None})
   
   For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 8190;
+    mult = 2; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRH_32_ldst_regoff
@@ -8403,7 +8455,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSB_64_ldst_immpost
@@ -8420,7 +8474,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSB_32_ldst_immpre
@@ -8437,7 +8493,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSB_64_ldst_immpre
@@ -8454,7 +8512,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSB_32_ldst_pos
@@ -8471,7 +8531,9 @@
     asmdefault = None})
   
   Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 4095;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRSB_64_ldst_pos
@@ -8488,7 +8550,9 @@
     asmdefault = None})
   
   Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 4095;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRSB_32BL_ldst_regoff
@@ -8597,7 +8661,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSH_64_ldst_immpost
@@ -8614,7 +8680,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSH_32_ldst_immpre
@@ -8631,7 +8699,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSH_64_ldst_immpre
@@ -8648,7 +8718,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSH_32_ldst_pos
@@ -8665,7 +8737,9 @@
     asmdefault = None})
   
   For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 8190;
+    mult = 2; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRSH_64_ldst_pos
@@ -8682,7 +8756,9 @@
     asmdefault = None})
   
   For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 8190;
+    mult = 2; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRSH_32_ldst_regoff
@@ -8751,7 +8827,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSW_64_ldst_immpre
@@ -8768,7 +8846,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDRSW_64_ldst_pos
@@ -8785,7 +8865,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the optional positive immediate byte offset, a multiple of 4 in the range 0 to 16380, defaulting to 0 and encoded in the "imm12" field as <pimm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 16380; mult = 4; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDRSW_64_loadlit
@@ -8841,7 +8923,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDR_64_ldst_immpost
@@ -8858,7 +8942,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDR_32_ldst_immpre
@@ -8875,7 +8961,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDR_64_ldst_immpre
@@ -8892,7 +8980,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   LDR_32_ldst_pos
@@ -8909,7 +8999,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the optional positive immediate byte offset, a multiple of 4 in the range 0 to 16380, defaulting to 0 and encoded in the "imm12" field as <pimm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 16380; mult = 4; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDR_64_ldst_pos
@@ -8926,7 +9018,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional positive immediate byte offset, a multiple of 8 in the range 0 to 32760, defaulting to 0 and encoded in the "imm12" field as <pimm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 32760; mult = 8; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   LDR_32_loadlit
@@ -10387,7 +10481,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTP_64_ldstpair_post
@@ -10410,7 +10506,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   LDTP_64_ldstpair_pre
@@ -10433,7 +10531,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   LDTP_64_ldstpair_off
@@ -10456,7 +10556,9 @@
     asmdefault = None})
   
   For the "Signed offset" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTR_32_ldst_unpriv
@@ -10473,7 +10575,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTR_64_ldst_unpriv
@@ -10490,7 +10594,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRB_32_ldst_unpriv
@@ -10507,7 +10613,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRH_32_ldst_unpriv
@@ -10524,7 +10632,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRSB_32_ldst_unpriv
@@ -10541,7 +10651,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRSB_64_ldst_unpriv
@@ -10558,7 +10670,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRSH_32_ldst_unpriv
@@ -10575,7 +10689,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRSH_64_ldst_unpriv
@@ -10592,7 +10708,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTRSW_64_ldst_unpriv
@@ -10609,7 +10727,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDTSETAL_32_memop_unpriv
@@ -11454,7 +11574,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURH_32_ldst_unscaled
@@ -11471,7 +11593,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURSB_32_ldst_unscaled
@@ -11488,7 +11612,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURSB_64_ldst_unscaled
@@ -11505,7 +11631,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURSH_32_ldst_unscaled
@@ -11522,7 +11650,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURSH_64_ldst_unscaled
@@ -11539,7 +11669,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDURSW_64_ldst_unscaled
@@ -11556,7 +11688,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDUR_32_ldst_unscaled
@@ -11573,7 +11707,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDUR_64_ldst_unscaled
@@ -11590,7 +11726,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDXP_LP32_ldstexclp
@@ -12896,7 +13034,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional positive immediate byte offset, a multiple of 8 in the range 0 to 32760, defaulting to 0 and encoded in the "imm12" field as <pimm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 32760; mult = 8; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   PRFM_P_loadlit
@@ -13082,7 +13222,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   RBIT_32_dp_1src
@@ -16626,7 +16768,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STLURH_32_ldapstl_unscaled
@@ -16643,7 +16787,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STLUR_32_ldapstl_unscaled
@@ -16660,7 +16806,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STLUR_64_ldapstl_unscaled
@@ -16677,7 +16825,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STLXP_SP32_ldstexclp
@@ -16874,7 +17024,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the optional signed immediate byte offset, a multiple of 4 in the range -256 to 252, defaulting to 0 and encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = (Some "0")})
   
   
   STNP_64_ldstnapair_offs
@@ -16897,7 +17049,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   STP_32_ldstpair_post
@@ -16920,7 +17074,9 @@
     asmdefault = None})
   
   For the "32-bit Post-index" and "32-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   STP_64_ldstpair_post
@@ -16943,7 +17099,9 @@
     asmdefault = None})
   
   For the "64-bit Post-index" and "64-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   STP_32_ldstpair_pre
@@ -16966,7 +17124,9 @@
     asmdefault = None})
   
   For the "32-bit Post-index" and "32-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 4 in the range -256 to 252, encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = None})
   
   
   STP_64_ldstpair_pre
@@ -16989,7 +17149,9 @@
     asmdefault = None})
   
   For the "64-bit Post-index" and "64-bit Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   STP_32_ldstpair_off
@@ -17012,7 +17174,9 @@
     asmdefault = None})
   
   For the "32-bit Signed offset" variant: is the optional signed immediate byte offset, a multiple of 4 in the range -256 to 252, defaulting to 0 and encoded in the "imm7" field as <imm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -256; hi = 252;
+    mult = 4; signed = `Signed; asmdefault = (Some "0")})
   
   
   STP_64_ldstpair_off
@@ -17035,7 +17199,9 @@
     asmdefault = None})
   
   For the "64-bit Signed offset" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   STRB_32_ldst_immpost
@@ -17052,7 +17218,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STRB_32_ldst_immpre
@@ -17069,7 +17237,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STRB_32_ldst_pos
@@ -17086,7 +17256,9 @@
     asmdefault = None})
   
   Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 4095;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   STRB_32BL_ldst_regoff
@@ -17149,7 +17321,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STRH_32_ldst_immpre
@@ -17166,7 +17340,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STRH_32_ldst_pos
@@ -17183,7 +17359,9 @@
     asmdefault = None})
   
   For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0; hi = 8190;
+    mult = 2; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   STRH_32_ldst_regoff
@@ -17226,7 +17404,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STR_64_ldst_immpost
@@ -17243,7 +17423,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STR_32_ldst_immpre
@@ -17260,7 +17442,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STR_64_ldst_immpre
@@ -17277,7 +17461,9 @@
     asmdefault = None})
   
   Is the signed immediate byte offset, in the range -256 to 255, encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = None})
   
   
   STR_32_ldst_pos
@@ -17294,7 +17480,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the optional positive immediate byte offset, a multiple of 4 in the range 0 to 16380, defaulting to 0 and encoded in the "imm12" field as <pimm>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 16380; mult = 4; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   STR_64_ldst_pos
@@ -17311,7 +17499,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional positive immediate byte offset, a multiple of 8 in the range 0 to 32760, defaulting to 0 and encoded in the "imm12" field as <pimm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<pimm>"; bitfld = "imm12"; lo = 0;
+    hi = 32760; mult = 8; signed = `Unsigned; asmdefault = (Some "0")})
   
   
   STR_32_ldst_regoff
@@ -17834,7 +18024,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTP_64_ldstpair_post
@@ -17857,7 +18049,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   STTP_64_ldstpair_pre
@@ -17880,7 +18074,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate byte offset, a multiple of 8 in the range -512 to 504, encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = None})
   
   
   STTP_64_ldstpair_off
@@ -17903,7 +18099,9 @@
     asmdefault = None})
   
   For the "Signed offset" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "imm7"; lo = -512; hi = 504;
+    mult = 8; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTR_32_ldst_unpriv
@@ -17920,7 +18118,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTR_64_ldst_unpriv
@@ -17937,7 +18137,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTRB_32_ldst_unpriv
@@ -17954,7 +18156,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTRH_32_ldst_unpriv
@@ -17971,7 +18175,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STTSETL_LDTSETL_32_memop_unpriv
@@ -18322,7 +18528,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STURH_32_ldst_unscaled
@@ -18339,7 +18547,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STUR_32_ldst_unscaled
@@ -18356,7 +18566,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STUR_64_ldst_unscaled
@@ -18373,7 +18585,9 @@
     asmdefault = None})
   
   Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -256;
+    hi = 255; mult = 1; signed = `Signed; asmdefault = (Some "0")})
   
   
   STXP_SP32_ldstexclp
