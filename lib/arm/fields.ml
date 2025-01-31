@@ -17,7 +17,10 @@ let guard (b: bool) (m: 'a): (unit, 'a) result =
 
 (** {1 Definitions} *)
 
-type field_bidir = Bidir.Intrinsics.intrinsic Bidir.Types.bidir
+type intrinsic = Bidir.Intrinsics.intrinsic
+[@@deriving show]
+
+type field_bidir = intrinsic Bidir.Types.bidir
 
 type fieldconv = {
   encname: string;
@@ -70,7 +73,7 @@ let in_the_range (fld: AsmField.t): (int * int, string) result =
   Ok (lo, hi)
 
 let defaulting_to (fld: AsmField.t): (string option, string) result =
-  let re = Re.Perl.compile_pat {|defaulting to ([^ ,]+(?: #\d+)?)|} in
+  let re = Re.Perl.compile_pat {|default(?:ing|s) to ([^ ,.]+(?: #\d+)?)|} in
   let matches = Re.all re fld.hover in
   match matches with
   | [] -> assert (not (CCString.mem ~sub:"default" fld.hover)); Ok None
@@ -93,6 +96,14 @@ let a_multiple_of (fld: AsmField.t): ('a, string) result =
   | [] -> Ok 1
   | _ -> let* mult = sole "a multiple of" matches in Ok (int_of_string mult)
 
+let must_be_an_even_numbered (fld: AsmField.t): ('a, string) result =
+  let re = Re.Perl.compile_pat {| (<[^>]+>) must be an even-numbered|} in
+  let matches = Re.all re fld.hover |> List.map (Fun.flip Re.Group.get 1) in
+  match matches with
+  | [] -> Ok false
+  | [_] -> Ok true
+  | _ -> failwith "too many must-be-even-numbered?"
+
 (** {1 Bidir constructors} *)
 
 let make_conditional ~(var:string) ~(value:value) (x: field_bidir): field_bidir =
@@ -107,12 +118,13 @@ let make_conditional ~(var:string) ~(value:value) (x: field_bidir): field_bidir 
     ]
   ]
 
-let make_regnum_bidir ~(wd:int) ~(allones:string option) ~(bitfld:string) ~(asmfld:string): field_bidir =
+let make_regnum_bidir ~(wd:int) ~(allones:string option) ~checks ~(bitfld:string) ~(asmfld:string): field_bidir =
   assert (wd <= 31);
   let max = (CCInt.pow 2 wd) - 1 in
   let allones_case = match allones with
     | Some allones -> Assign (ELit (VStr allones), [], EVar (VarName asmfld))
     | None -> Choice [] in
+  let check = Sequential (List.map (fun c -> Assign (EVar (VarName "N"), [c], EVar (VarName "N"))) checks) in
   Sequential [
     Decl [VarName bitfld];
     Assign (EVar (VarName bitfld), [BitsToUint wd], EVar (VarName "N"));
@@ -120,11 +132,13 @@ let make_regnum_bidir ~(wd:int) ~(allones:string option) ~(bitfld:string) ~(asmf
 
       Sequential [
         Assign (EVar (VarName "N"), [], ELit (VInt max));
+        check;
         allones_case;
       ];
 
       Sequential [
         Assign (EVar (VarName "N"), [NotIn [VInt max]], EVar (VarName "N"));
+        check;
         Assign (EVar (VarName "N"), [IntToDecimal], EVar (VarName "n"));
         Assign (EVar (VarName "n"), [], EVar (VarName asmfld));
       ];
@@ -229,7 +243,7 @@ let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_
 
 module FieldData = struct
   type t =
-    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result}
+    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result; checks: intrinsic list}
     | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; mult: int; signed: signedness; asmdefault: string option}
     | Assocs of {asmfld: string; asmdefault: string option}
     [@@deriving show]
@@ -248,14 +262,18 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
 
   let* allones = allones_interpretation fld in
 
+  let checks = [] in
+  let* iseven = must_be_an_even_numbered fld in
+  let checks : intrinsic list  = if iseven then (Inv (Multiply 2) :: checks) else checks in
+
   let asmfld = fld.placeholder in
-  let bidir = make_regnum_bidir ~wd ~allones ~bitfld ~asmfld in
+  let bidir = make_regnum_bidir ~wd ~allones ~checks ~bitfld ~asmfld in
 
   let regwd = extract_reg_bits fld in
   let prefix = Result.map register_char regwd in
 
 
-  let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix} in
+  let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix; checks} in
 
   match prefix with
   | Error _ -> Ok ([0, bidir], data)
@@ -301,7 +319,9 @@ let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   Ok ([0, bidir], FieldData.Assocs {asmfld; asmdefault})
 
 let handle_all_supported_cases enc v =
-    CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
+    try
+      CCResult.choose [handle_general_registers enc v; handle_immediate enc v; handle_assocs enc v]
+    with e -> Error (["EXCEPTION: "^ Printexc.to_string e])
 
 let build_field_converters (enc: InstEnc.t): field_bidir =
   let pp = CCList.pp (CCPair.pp CCInt.pp (Bidir.Types.pp_bidir Bidir.Intrinsics.pp_intrinsic)) in

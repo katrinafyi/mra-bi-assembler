@@ -1040,5 +1040,461 @@
   ok: Some "0"
   
   LDRH_32_ldst_regoff
-  Fatal error: exception File "lib/arm/fields.ml", line 76, characters 10-16: Assertion failed
+  For the "16-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDRSB_32_ldst_immpost
+  
+  LDRSB_64_ldst_immpost
+  
+  LDRSB_32_ldst_immpre
+  
+  LDRSB_64_ldst_immpre
+  
+  LDRSB_32_ldst_pos
+  Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
+  ok: Some "0"
+  
+  LDRSB_64_ldst_pos
+  Is the optional positive immediate byte offset, in the range 0 to 4095, defaulting to 0 and encoded in the "imm12" field.
+  ok: Some "0"
+  
+  LDRSB_32BL_ldst_regoff
+  
+  LDRSB_32B_ldst_regoff
+  
+  LDRSB_64BL_ldst_regoff
+  
+  LDRSB_64B_ldst_regoff
+  
+  LDRSH_32_ldst_immpost
+  
+  LDRSH_64_ldst_immpost
+  
+  LDRSH_32_ldst_immpre
+  
+  LDRSH_64_ldst_immpre
+  
+  LDRSH_32_ldst_pos
+  For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
+  ok: Some "0"
+  
+  LDRSH_64_ldst_pos
+  For the "16-bit" variant: is the optional positive immediate byte offset, a multiple of 2 in the range 0 to 8190, defaulting to 0 and encoded in the "imm12" field as <pimm>/2.
+  ok: Some "0"
+  
+  LDRSH_32_ldst_regoff
+  For the "16-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDRSH_64_ldst_regoff
+  For the "16-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDRSW_64_ldst_immpost
+  
+  LDRSW_64_ldst_immpre
+  
+  LDRSW_64_ldst_pos
+  For the "32-bit" variant: is the optional positive immediate byte offset, a multiple of 4 in the range 0 to 16380, defaulting to 0 and encoded in the "imm12" field as <pimm>/4.
+  ok: Some "0"
+  
+  LDRSW_64_loadlit
+  
+  LDRSW_64_ldst_regoff
+  For the "32-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDR_32_ldst_immpost
+  
+  LDR_64_ldst_immpost
+  
+  LDR_32_ldst_immpre
+  
+  LDR_64_ldst_immpre
+  
+  LDR_32_ldst_pos
+  For the "32-bit" variant: is the optional positive immediate byte offset, a multiple of 4 in the range 0 to 16380, defaulting to 0 and encoded in the "imm12" field as <pimm>/4.
+  ok: Some "0"
+  
+  LDR_64_ldst_pos
+  For the "64-bit" variant: is the optional positive immediate byte offset, a multiple of 8 in the range 0 to 32760, defaulting to 0 and encoded in the "imm12" field as <pimm>/8.
+  ok: Some "0"
+  
+  LDR_32_loadlit
+  
+  LDR_64_loadlit
+  
+  LDR_32_ldst_regoff
+  For the "32-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDR_64_ldst_regoff
+  For the "64-bit" variant: is the index shift amount, optional only when <extend> is not LSL. Where it is permitted to be optional, it defaults to #0. It is 
+  ok: Some "#0"
+  For the "128-bit", "16-bit", "32-bit", and "64-bit" variants: is the index extend/shift specifier, defaulting to LSL, and which must be omitted for the LSL option when <amount> is omitted, 
+  ok: Some "LSL"
+  
+  LDSETAL_32_memop
+  
+  LDSETAL_64_memop
+  
+  LDSETA_32_memop
+  
+  LDSETA_64_memop
+  
+  LDSETL_32_memop
+  
+  LDSETL_64_memop
+  
+  LDSET_32_memop
+  
+  LDSET_64_memop
+  
+  LDSETAB_32_memop
+  
+  LDSETALB_32_memop
+  
+  LDSETB_32_memop
+  
+  LDSETLB_32_memop
+  
+  LDSETAH_32_memop
+  
+  LDSETALH_32_memop
+  
+  LDSETH_32_memop
+  
+  LDSETLH_32_memop
+  
+  LDSETPAL_128_memop_128
+  
+  LDSETPA_128_memop_128
+  
+  LDSETPL_128_memop_128
+  
+  LDSETP_128_memop_128
+  
+  LDSMAXAL_32_memop
+  
+  LDSMAXAL_64_memop
+  
+  LDSMAXA_32_memop
+  
+  LDSMAXA_64_memop
+  
+  LDSMAXL_32_memop
+  
+  LDSMAXL_64_memop
+  
+  LDSMAX_32_memop
+  
+  LDSMAX_64_memop
+  
+  LDSMAXAB_32_memop
+  
+  LDSMAXALB_32_memop
+  
+  LDSMAXB_32_memop
+  
+  LDSMAXLB_32_memop
+  
+  LDSMAXAH_32_memop
+  
+  LDSMAXALH_32_memop
+  
+  LDSMAXH_32_memop
+  
+  LDSMAXLH_32_memop
+  
+  LDSMINAL_32_memop
+  
+  LDSMINAL_64_memop
+  
+  LDSMINA_32_memop
+  
+  LDSMINA_64_memop
+  
+  LDSMINL_32_memop
+  
+  LDSMINL_64_memop
+  
+  LDSMIN_32_memop
+  
+  LDSMIN_64_memop
+  
+  LDSMINAB_32_memop
+  
+  LDSMINALB_32_memop
+  
+  LDSMINB_32_memop
+  
+  LDSMINLB_32_memop
+  
+  LDSMINAH_32_memop
+  
+  LDSMINALH_32_memop
+  
+  LDSMINH_32_memop
+  
+  LDSMINLH_32_memop
+  
+  LDTADDAL_32_memop_unpriv
+  
+  LDTADDAL_64_memop_unpriv
+  
+  LDTADDA_32_memop_unpriv
+  
+  LDTADDA_64_memop_unpriv
+  
+  LDTADDL_32_memop_unpriv
+  
+  LDTADDL_64_memop_unpriv
+  
+  LDTADD_32_memop_unpriv
+  
+  LDTADD_64_memop_unpriv
+  
+  LDTCLRAL_32_memop_unpriv
+  
+  LDTCLRAL_64_memop_unpriv
+  
+  LDTCLRA_32_memop_unpriv
+  
+  LDTCLRA_64_memop_unpriv
+  
+  LDTCLRL_32_memop_unpriv
+  
+  LDTCLRL_64_memop_unpriv
+  
+  LDTCLR_32_memop_unpriv
+  
+  LDTCLR_64_memop_unpriv
+  
+  LDTNP_64_ldstnapair_offs
+  For the "64-bit" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
+  ok: Some "0"
+  
+  LDTP_64_ldstpair_post
+  
+  LDTP_64_ldstpair_pre
+  
+  LDTP_64_ldstpair_off
+  For the "Signed offset" variant: is the optional signed immediate byte offset, a multiple of 8 in the range -512 to 504, defaulting to 0 and encoded in the "imm7" field as <imm>/8.
+  ok: Some "0"
+  
+  LDTR_32_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTR_64_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRB_32_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRH_32_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRSB_32_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRSB_64_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRSH_32_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRSH_64_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTRSW_64_ldst_unpriv
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDTSETAL_32_memop_unpriv
+  
+  LDTSETAL_64_memop_unpriv
+  
+  LDTSETA_32_memop_unpriv
+  
+  LDTSETA_64_memop_unpriv
+  
+  LDTSETL_32_memop_unpriv
+  
+  LDTSETL_64_memop_unpriv
+  
+  LDTSET_32_memop_unpriv
+  
+  LDTSET_64_memop_unpriv
+  
+  LDTXR_LR32_ldstexclr_unpriv
+  
+  LDTXR_LR64_ldstexclr_unpriv
+  
+  LDUMAXAL_32_memop
+  
+  LDUMAXAL_64_memop
+  
+  LDUMAXA_32_memop
+  
+  LDUMAXA_64_memop
+  
+  LDUMAXL_32_memop
+  
+  LDUMAXL_64_memop
+  
+  LDUMAX_32_memop
+  
+  LDUMAX_64_memop
+  
+  LDUMAXAB_32_memop
+  
+  LDUMAXALB_32_memop
+  
+  LDUMAXB_32_memop
+  
+  LDUMAXLB_32_memop
+  
+  LDUMAXAH_32_memop
+  
+  LDUMAXALH_32_memop
+  
+  LDUMAXH_32_memop
+  
+  LDUMAXLH_32_memop
+  
+  LDUMINAL_32_memop
+  
+  LDUMINAL_64_memop
+  
+  LDUMINA_32_memop
+  
+  LDUMINA_64_memop
+  
+  LDUMINL_32_memop
+  
+  LDUMINL_64_memop
+  
+  LDUMIN_32_memop
+  
+  LDUMIN_64_memop
+  
+  LDUMINAB_32_memop
+  
+  LDUMINALB_32_memop
+  
+  LDUMINB_32_memop
+  
+  LDUMINLB_32_memop
+  
+  LDUMINAH_32_memop
+  
+  LDUMINALH_32_memop
+  
+  LDUMINH_32_memop
+  
+  LDUMINLH_32_memop
+  
+  LDURB_32_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURH_32_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURSB_32_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURSB_64_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURSH_32_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURSH_64_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDURSW_64_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDUR_32_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDUR_64_ldst_unscaled
+  Is the optional signed immediate byte offset, in the range -256 to 255, defaulting to 0 and encoded in the "imm9" field.
+  ok: Some "0"
+  
+  LDXP_LP32_ldstexclp
+  
+  LDXP_LP64_ldstexclp
+  
+  LDXR_LR32_ldstexclr
+  
+  LDXR_LR64_ldstexclr
+  
+  LDXRB_LR32_ldstexclr
+  
+  LDXRH_LR32_ldstexclr
+  
+  LSLV_32_dp_2src
+  
+  LSLV_64_dp_2src
+  
+  LSL_LSLV_32_dp_2src
+  
+  LSL_LSLV_64_dp_2src
+  
+  LSL_UBFM_32M_bitfield
+  
+  LSL_UBFM_64M_bitfield
+  
+  LSRV_32_dp_2src
+  
+  LSRV_64_dp_2src
+  
+  LSR_LSRV_32_dp_2src
+  
+  LSR_LSRV_64_dp_2src
+  
+  LSR_UBFM_32M_bitfield
+  
+  LSR_UBFM_64M_bitfield
+  
+  MADD_32A_dp_3src
+  
+  MADD_64A_dp_3src
+  
+  MADDPT_64A_dp_3src
+  
+  MNEG_MSUB_32A_dp_3src
+  
+  MNEG_MSUB_64A_dp_3src
+  
+  MOVK_32_movewide
+  Fatal error: exception File "lib/arm/fields.ml", line 79, characters 10-16: Assertion failed
   [2]
