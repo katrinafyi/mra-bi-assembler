@@ -8,7 +8,7 @@ let load_json jsonpath =
   let result = Arm.Types.instclasses_of_yojson json in
   let iclasses = Result.get_ok result in
 
-  let f (x: InstEnc.t) = x.instrclass = "general" && CCString.prefix ~pre:"ADD" x.encname in
+  let f (x: InstEnc.t) = x.instrclass = "general" in
 
   let encs = List.concat_map (fun (x: InstClass.t) ->
     List.filter f @@

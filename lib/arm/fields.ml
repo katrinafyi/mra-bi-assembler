@@ -235,7 +235,7 @@ end
 
 let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData.t, string) result =
 
-  let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"] in
+  let isgpreg s = List.exists (fun sub -> CCString.mem ~sub s) ["general-purpose register"; "general-purpose destination register"; "general-purpose source register"; "general-purpose base register"] in
 
   let* () = guard (isgpreg fld.hover) "not a gpreg" in
 
