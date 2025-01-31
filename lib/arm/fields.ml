@@ -258,6 +258,7 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
   | Ok prefix ->
       let fixup_xsp =
         (match prefix, allones with
+        (* HACK: replacing xsp with sp. *)
         | "x", "sp" -> make_post_replacement ~asmfld ~old:(VStr "xsp") ~repl:(VStr "sp")
         | _ -> Fun.id) in
       let bidir = bidir
@@ -282,7 +283,7 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let* asmdefault = defaulting_to fld in
   let bidir = make_with_default ~asmfld ~asmdefault bidir in
 
-  let* _ = be_absent_when fld in
+  (* let* _ = be_absent_when fld in *)
   Ok (bidir, FieldData.Imm {asmfld; bitfld; lo; hi; mult; signed; asmdefault})
 
 let handle_assocs (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =

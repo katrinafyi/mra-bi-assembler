@@ -60,7 +60,9 @@
     allones = "sp"; regwd = (Ok 32); prefix = (Ok "w")})
   
   Is the left shift amount to be applied after extension in the range 0 to 4, defaulting to 0, encoded in the "imm3" field. It must be absent when <extend> is absent, is required when <extend> is LSL, and is optional when <extend> is present but not LSL.
-  error("not a gpreg", "be-absent-when detected", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 4;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   For the "32-bit" variant: is the extension to be applied to the second source operand, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -87,7 +89,9 @@
     allones = "sp"; regwd = (Ok 64); prefix = (Ok "x")})
   
   Is the left shift amount to be applied after extension in the range 0 to 4, defaulting to 0, encoded in the "imm3" field. It must be absent when <extend> is absent, is required when <extend> is LSL, and is optional when <extend> is present but not LSL.
-  error("not a gpreg", "be-absent-when detected", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 4;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   For the "64-bit" variant: is the extension to be applied to the second source operand, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -202,7 +206,9 @@
     allones = "sp"; regwd = (Ok 32); prefix = (Ok "w")})
   
   Is the left shift amount to be applied after extension in the range 0 to 4, defaulting to 0, encoded in the "imm3" field. It must be absent when <extend> is absent, is required when <extend> is LSL, and is optional when <extend> is present but not LSL.
-  error("not a gpreg", "be-absent-when detected", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 4;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   For the "32-bit" variant: is the extension to be applied to the second source operand, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -229,7 +235,9 @@
     allones = "sp"; regwd = (Ok 64); prefix = (Ok "x")})
   
   Is the left shift amount to be applied after extension in the range 0 to 4, defaulting to 0, encoded in the "imm3" field. It must be absent when <extend> is absent, is required when <extend> is LSL, and is optional when <extend> is present but not LSL.
-  error("not a gpreg", "be-absent-when detected", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<amount>"; bitfld = "imm3"; lo = 0; hi = 4;
+    mult = 1; signed = `Unsigned; asmdefault = (Some "0")})
   
   For the "64-bit" variant: is the extension to be applied to the second source operand, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
