@@ -66,6 +66,8 @@ let signed_or_unsigned (fld: AsmField.t) =
   | _ when CCString.mem ~sub:" the range -" fld.hover -> Ok `Signed
   | _ when CCString.mem ~sub:" the range +/-" fld.hover -> Ok `Signed
   | _ when CCString.mem ~sub:" positive " fld.hover -> Ok `Unsigned
+  | _ when CCString.mem ~sub:" right rotate amount" fld.hover -> Ok `Unsigned
+  | _ when CCString.mem ~sub:" amount by which to rotate" fld.hover -> Ok `Unsigned
   | _ -> failwith @@ "unknown signed or immediate " ^ fld.hover
 
 let si_multiplier =
@@ -328,6 +330,9 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
     "shift amount,";
     "Its offset from the address";
     "immediate byte offset,";
+    "immediate offset,";
+    "rotate amount,";
+    "amount by which to rotate,";
   ] in
 
   let* () = guard (isimm fld.hover) "not an imm" in

@@ -1008,7 +1008,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the right rotate amount, in the range 0 to 31, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 31;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -1028,7 +1030,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the right rotate amount, in the range 0 to 63, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 63;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -7827,7 +7831,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   LDGM_64bulk_ldsttags
@@ -14775,7 +14781,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to rotate, in the range 0 to 31, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<shift>"; bitfld = "imms"; lo = 0; hi = 31;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   ROR_EXTR_64_extract
@@ -14792,7 +14800,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to rotate, in the range 0 to 63, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<shift>"; bitfld = "imms"; lo = 0; hi = 63;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   
   ROR_RORV_32_dp_2src
@@ -15011,7 +15021,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the right rotate amount, in the range 0 to 31, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 31;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -15031,7 +15043,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the right rotate amount, in the range 0 to 63, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 63;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -15895,7 +15909,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   ST2G_64Spre_ldsttags
@@ -15912,7 +15928,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   ST2G_64Soffset_ldsttags
@@ -15929,7 +15947,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   ST64B_64L_memop
@@ -16360,7 +16380,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STG_64Spre_ldsttags
@@ -16377,7 +16399,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STG_64Soffset_ldsttags
@@ -16394,7 +16418,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STGM_64bulk_ldsttags
@@ -16431,7 +16457,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate offset, a multiple of 16 in the range -1024 to 1008, encoded in the "simm7" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "simm7"; lo = -1024;
+    hi = 1008; mult = 16; signed = `Signed; asmdefault = None})
   
   
   STGP_64_ldstpair_pre
@@ -16454,7 +16482,9 @@
     asmdefault = None})
   
   For the "Post-index" and "Pre-index" variants: is the signed immediate offset, a multiple of 16 in the range -1024 to 1008, encoded in the "simm7" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "simm7"; lo = -1024;
+    hi = 1008; mult = 16; signed = `Signed; asmdefault = None})
   
   
   STGP_64_ldstpair_off
@@ -16477,7 +16507,9 @@
     asmdefault = None})
   
   For the "Signed offset" variant: is the optional signed immediate offset, a multiple of 16 in the range -1024 to 1008, defaulting to 0 and encoded in the "simm7" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<imm>"; bitfld = "simm7"; lo = -1024;
+    hi = 1008; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STILP_32SE_ldiappstilp
@@ -18778,7 +18810,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZ2G_64Spre_ldsttags
@@ -18795,7 +18829,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZ2G_64Soffset_ldsttags
@@ -18812,7 +18848,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZG_64Spost_ldsttags
@@ -18829,7 +18867,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZG_64Spre_ldsttags
@@ -18846,7 +18886,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZG_64Soffset_ldsttags
@@ -18863,7 +18905,9 @@
     asmdefault = None})
   
   Is the optional signed immediate offset, a multiple of 16 in the range -4096 to 4080, defaulting to 0 and encoded in the "imm9" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<simm>"; bitfld = "imm9"; lo = -4096;
+    hi = 4080; mult = 16; signed = `Signed; asmdefault = (Some "0")})
   
   
   STZGM_64bulk_ldsttags
@@ -20079,7 +20123,9 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the right rotate amount, in the range 0 to 31, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 31;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
@@ -20099,7 +20145,9 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the right rotate amount, in the range 0 to 63, encoded in the "immr" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  ok(
+  Fields.FieldData.Imm {asmfld = "<immr>"; bitfld = "immr"; lo = 0; hi = 63;
+    mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
   error("not a gpreg", "not an imm", "has no assocs")
