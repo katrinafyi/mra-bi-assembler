@@ -362,6 +362,8 @@ let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
     "immediate offset,";
     "rotate amount,";
     "amount by which to rotate,";
+    "general-purpose accumulator";
+    "general-purpose data";
   ] in
 
   let* () = guard (isimm fld.hover) "not an imm" in

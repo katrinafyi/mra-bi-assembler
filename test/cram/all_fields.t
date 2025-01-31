@@ -486,7 +486,8 @@
     asmdefault = None})
   
   Is the program label whose address is to be calculated. Its offset from the address of this instruction, in the range +/-1MB, is encoded in "immhi:immlo".
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   ADRP_only_pcreladdr
@@ -497,7 +498,7 @@
     asmdefault = None})
   
   Is the program label whose 4KB page address is to be calculated. Its offset from the page address of this instruction, in the range +/-4GB, is encoded as "immhi:immlo" times 4096.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   ANDS_32S_log_imm
@@ -514,12 +515,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   ANDS_64S_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose destination register, encoded in the "Rd" field.
   ok(
@@ -604,12 +605,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   AND_64_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the destination general-purpose register or stack pointer, encoded in the "Rd" field.
   ok(
@@ -876,7 +877,7 @@
   
   AUTIASPPC_only_dp_1src_imm
   Is the program label whose address is to be calculated. Its negative offset from the address of this instruction, a multiple of 4 in the range -262140 to 0, is encoded as an unsigned value in the "imm16" field as <label>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   AUTIB_64P_dp_1src
@@ -913,7 +914,7 @@
   
   AUTIBSPPC_only_dp_1src_imm
   Is the program label whose address is to be calculated. Its negative offset from the address of this instruction, a multiple of 4 in the range -262140 to 0, is encoded as an unsigned value in the "imm16" field as <label>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BC_only_condbranch
@@ -934,10 +935,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFC_BFM_64M_bitfield
@@ -948,10 +949,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFI_BFM_32M_bitfield
@@ -968,10 +969,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFI_BFM_64M_bitfield
@@ -988,10 +989,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFM_32M_bitfield
@@ -1013,7 +1014,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFM_64M_bitfield
@@ -1035,7 +1036,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFXIL_BFM_32M_bitfield
@@ -1052,10 +1053,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BFXIL_BFM_64M_bitfield
@@ -1072,10 +1073,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   BICS_32_log_shift
@@ -1646,7 +1647,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(s+1)>"; basefld = "<Ws>"})
   
   Is the 32-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Wt> must be an even-numbered register.
   ok(
@@ -1655,7 +1656,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(t+1)>"; basefld = "<Wt>"})
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -1678,7 +1679,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1687,7 +1688,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPA_CP32_comswappr
@@ -1698,7 +1699,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(s+1)>"; basefld = "<Ws>"})
   
   Is the 32-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Wt> must be an even-numbered register.
   ok(
@@ -1707,7 +1708,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(t+1)>"; basefld = "<Wt>"})
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -1730,7 +1731,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1739,7 +1740,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPL_CP32_comswappr
@@ -1750,7 +1751,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(s+1)>"; basefld = "<Ws>"})
   
   Is the 32-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Wt> must be an even-numbered register.
   ok(
@@ -1759,7 +1760,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(t+1)>"; basefld = "<Wt>"})
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -1782,7 +1783,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1791,7 +1792,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASP_CP32_comswappr
@@ -1802,7 +1803,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(s+1)>"; basefld = "<Ws>"})
   
   Is the 32-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Wt> must be an even-numbered register.
   ok(
@@ -1811,7 +1812,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 32-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<W(t+1)>"; basefld = "<Wt>"})
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -1834,7 +1835,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1843,7 +1844,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPALT_CP64_comswappr_unpriv
@@ -1860,7 +1861,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1869,7 +1870,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPAT_CP64_comswappr_unpriv
@@ -1886,7 +1887,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1895,7 +1896,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPLT_CP64_comswappr_unpriv
@@ -1912,7 +1913,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1921,7 +1922,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASPT_CP64_comswappr_unpriv
@@ -1938,7 +1939,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -1947,7 +1948,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   CASALT_C64_comswap_unpriv
@@ -3213,10 +3214,10 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is a five bit unsigned (positive) immediate encoded in the "imm5" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMN_64_condcmp_imm
@@ -3230,10 +3231,10 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is a five bit unsigned (positive) immediate encoded in the "imm5" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMN_32_condcmp_reg
@@ -3253,7 +3254,7 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMN_64_condcmp_reg
@@ -3273,7 +3274,7 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMP_32_condcmp_imm
@@ -3287,10 +3288,10 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is a five bit unsigned (positive) immediate encoded in the "imm5" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMP_64_condcmp_imm
@@ -3304,10 +3305,10 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is a five bit unsigned (positive) immediate encoded in the "imm5" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMP_32_condcmp_reg
@@ -3327,7 +3328,7 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CCMP_64_condcmp_reg
@@ -3347,7 +3348,7 @@
   ok(Fields.FieldData.Assocs {asmfld = "<cond>"; asmdefault = None})
   
   Is the flag bit specifier, an immediate in the range 0 to 15, giving the alternative state for the 4-bit NZCV condition flags, encoded in the "nzcv" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   CINC_CSINC_32_condsel
@@ -5722,90 +5723,114 @@
   
   CRC32B_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32H_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32W_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32X_64C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32CB_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32CH_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32CW_32C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CRC32CX_64C_dp_2src
   Is the 32-bit name of the general-purpose accumulator output register, encoded in the "Rd" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose accumulator input register, encoded in the "Rn" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose data source register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "no in the range bytes, no in the range ints",
+  "has no assocs", "not a second gpreg")
   
   
   CSEL_32_condsel
@@ -6134,12 +6159,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   EOR_64_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the destination general-purpose register or stack pointer, encoded in the "Rd" field.
   ok(
@@ -6234,7 +6259,7 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the least significant bit position from which to extract, in the range 0 to 31, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   EXTR_64_extract
@@ -6257,7 +6282,7 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the least significant bit position from which to extract, in the range 0 to 63, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   GCSSTR_64_ldst_gcs
@@ -8326,7 +8351,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8335,12 +8360,13 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   LDRB_32B_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -8349,7 +8375,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8358,7 +8384,8 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   Is the index extend specifier, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -8423,7 +8450,7 @@
   
   LDRH_32_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -8432,7 +8459,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8569,7 +8596,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8578,12 +8605,13 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   LDRSB_32B_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -8592,7 +8620,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8601,7 +8629,8 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   Is the index extend specifier, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -8609,7 +8638,7 @@
   
   LDRSB_64BL_ldst_regoff
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8624,15 +8653,16 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   LDRSB_64B_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8647,7 +8677,8 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   Is the index extend specifier, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -8769,7 +8800,7 @@
   
   LDRSH_32_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -8778,7 +8809,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8795,10 +8826,10 @@
   
   LDRSH_64_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -8891,10 +8922,10 @@
   
   LDRSW_64_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -9057,7 +9088,7 @@
   
   LDR_32_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -9066,7 +9097,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -9083,10 +9114,10 @@
   
   LDR_64_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -11927,7 +11958,8 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the shift amount, in the range 0 to 31.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   LSL_UBFM_64M_bitfield
@@ -11944,7 +11976,8 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the shift amount, in the range 0 to 63.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   LSRV_32_dp_2src
@@ -12196,7 +12229,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOVK_64_movewide
@@ -12212,7 +12245,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOVN_32_movewide
@@ -12228,7 +12261,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOVN_64_movewide
@@ -12244,7 +12277,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOVZ_32_movewide
@@ -12260,7 +12293,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the amount by which to shift the immediate left, either 0 (the default) or 16, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOVZ_64_movewide
@@ -12276,7 +12309,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the amount by which to shift the immediate left, either 0 (the default), 16, 32 or 48, encoded in the "hw" field as <shift>/16.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_ADD_32_addsub_imm
@@ -12315,7 +12348,7 @@
     asmdefault = None})
   
   For the "32-bit" variant: is a 32-bit immediate, the bitwise inverse of which can be encoded in "imm16:hw", but excluding 0xffff0000 and 0x0000ffff
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_MOVN_64_movewide
@@ -12326,7 +12359,7 @@
     asmdefault = None})
   
   For the "64-bit" variant: is a 64-bit immediate, the bitwise inverse of which can be encoded in "imm16:hw".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_MOVZ_32_movewide
@@ -12337,7 +12370,7 @@
     asmdefault = None})
   
   For the "32-bit" variant: is a 32-bit immediate which can be encoded in "imm16:hw".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_MOVZ_64_movewide
@@ -12348,7 +12381,7 @@
     asmdefault = None})
   
   For the "64-bit" variant: is a 64-bit immediate which can be encoded in "imm16:hw".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_ORR_32_log_imm
@@ -12359,12 +12392,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr", but excluding values which could be encoded by MOVZ or MOVN.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   MOV_ORR_64_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr", but excluding values which could be encoded by MOVZ or MOVN.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the destination general-purpose register or stack pointer, encoded in the "Rd" field.
   ok(
@@ -12777,12 +12810,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   ORR_64_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the destination general-purpose register or stack pointer, encoded in the "Rd" field.
   ok(
@@ -12977,7 +13010,7 @@
   Is the prefetch operation encoding as an immediate, in the range 0 to 31, encoded in the "Rt" field.
   
   This syntax is only for encodings that are not accessible using <syntax><prfop></syntax>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the prefetch operation, defined as <syntax><type><target><policy></syntax>.
   
@@ -13049,7 +13082,7 @@
   Is the prefetch operation encoding as an immediate, in the range 0 to 31, encoded in the "Rt" field.
   
   This syntax is only for encodings that are not accessible using <syntax><prfop></syntax>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the prefetch operation, defined as <syntax><type><target><policy></syntax>.
   
@@ -13106,7 +13139,7 @@
   Is the prefetch operation encoding as an immediate, in the range 0 to 31, encoded in the "Rt" field.
   
   This syntax is only for encodings that are not accessible using <syntax><prfop></syntax>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the prefetch operation, defined as <syntax><type><target><policy></syntax>.
   
@@ -13154,10 +13187,10 @@
   ok(Fields.FieldData.Assocs {asmfld = "<prfop>"; asmdefault = None})
   
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -13176,7 +13209,7 @@
   Is the prefetch operation encoding as an immediate, in the range 0 to 31, encoded in the "Rt" field.
   
   This syntax is only for encodings that are not accessible using <syntax><prfop></syntax>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the prefetch operation, defined as <syntax><type><target><policy></syntax>.
   
@@ -13355,7 +13388,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13364,7 +13397,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWCASPA_C64_rcwcomswappr
@@ -13381,7 +13414,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13390,7 +13423,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWCASPL_C64_rcwcomswappr
@@ -13407,7 +13440,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13416,7 +13449,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWCASP_C64_rcwcomswappr
@@ -13433,7 +13466,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13442,7 +13475,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWCLRAL_64_memop
@@ -13699,7 +13732,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13708,7 +13741,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWSCASPA_C64_rcwcomswappr
@@ -13725,7 +13758,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13734,7 +13767,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWSCASPL_C64_rcwcomswappr
@@ -13751,7 +13784,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13760,7 +13793,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWSCASP_C64_rcwcomswappr
@@ -13777,7 +13810,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be compared and loaded.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(s+1)>"; basefld = "<Xs>"})
   
   Is the 64-bit name of the first general-purpose register to be conditionally stored, encoded in the "Rt" field. <Xt> must be an even-numbered register.
   ok(
@@ -13786,7 +13819,7 @@
     checks = [(Intrinsics.Inv (Intrinsics.Multiply 2))]; asmdefault = None})
   
   Is the 64-bit name of the second general-purpose register to be conditionally stored.
-  error("no encoding destination", "not an imm", "has no assocs")
+  ok(Fields.FieldData.SecondGpreg {asmfld = "<X(t+1)>"; basefld = "<Xt>"})
   
   
   RCWSCLRAL_64_memop
@@ -14619,12 +14652,12 @@
   
   RETAASPPC_only_miscbranch
   Is the program label whose address is to be calculated. Its negative offset from the address of this instruction, a multiple of 4 in the range -262140 to 0, is encoded as an unsigned value in the "imm16" field as <label>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   RETABSPPC_only_miscbranch
   Is the program label whose address is to be calculated. Its negative offset from the address of this instruction, a multiple of 4 in the range -262140 to 0, is encoded as an unsigned value in the "imm16" field as <label>/4.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   REV_32_dp_1src
@@ -14719,7 +14752,7 @@
     asmdefault = None})
   
   Is the flag bit mask, an immediate in the range 0 to 15, which selects the bits that are inserted into the NZCV condition flags, encoded in the "mask" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the shift amount, in the range 0 to 63, defaulting to 0 and encoded in the "imm6" field.
   ok(
@@ -14847,7 +14880,7 @@
   
   RPRFM_R_ldst_regoff
   Is the range prefetch operation encoding as an immediate, in the range 0 to 63, encoded in "option<2>:option<0>:S:Rt<2:0>". This syntax is only for encodings that are not representable using <syntax><rprfop></syntax>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the range prefetch operation, defined as <syntax><type><policy></syntax>.
   
@@ -14981,10 +15014,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SBFIZ_SBFM_64M_bitfield
@@ -15001,10 +15034,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SBFM_32M_bitfield
@@ -15026,7 +15059,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SBFM_64M_bitfield
@@ -15048,7 +15081,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SBFX_SBFM_32M_bitfield
@@ -15065,10 +15098,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SBFX_SBFM_64M_bitfield
@@ -15085,10 +15118,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   SDIV_32_dp_2src
@@ -17301,7 +17334,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -17310,12 +17343,13 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   
   STRB_32B_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -17324,7 +17358,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -17333,7 +17367,8 @@
     asmdefault = None})
   
   Is the index shift amount, it must be <value>#0</value>, encoded in "S" as 0 if omitted, or as 1 if present.
-  error("not a gpreg", "no encoding destination", "has no assocs")
+  error("not a gpreg", "no encoding destination", "has no assocs",
+  "not a second gpreg")
   
   Is the index extend specifier, 
   ok(Fields.FieldData.Assocs {asmfld = "<extend>"; asmdefault = None})
@@ -17398,7 +17433,7 @@
   
   STRH_32_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -17407,7 +17442,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -17538,7 +17573,7 @@
   
   STR_32_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 32-bit name of the general-purpose register to be transferred, encoded in the "Rt" field.
   ok(
@@ -17547,7 +17582,7 @@
     asmdefault = None})
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -17564,10 +17599,10 @@
   
   STR_64_ldst_regoff
   When <field>option<0></field> is set to 0, is the 32-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   When <field>option<0></field> is set to 1, is the 64-bit name of the general-purpose index register, encoded in the "Rm" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose base register or stack pointer, encoded in the "Rn" field.
   ok(
@@ -19976,7 +20011,7 @@
     prefix = (Error "no reg bits"); checks = []; asmdefault = None})
   
   Is the bit number to be tested, in the range 0 to 63, encoded in "b5:b40".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-32KB, is encoded as "imm14" times 4.
   ok(
@@ -19995,7 +20030,7 @@
     prefix = (Error "no reg bits"); checks = []; asmdefault = None})
   
   Is the bit number to be tested, in the range 0 to 63, encoded in "b5:b40".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the program label to be conditionally branched to. Its offset from the address of this instruction, in the range +/-32KB, is encoded as "imm14" times 4.
   ok(
@@ -20011,12 +20046,12 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bitmask immediate, encoded in "imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   TST_ANDS_64S_log_imm
   For the "64-bit" variant: is the bitmask immediate, encoded in "N:imms:immr".
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   Is the 64-bit name of the general-purpose source register, encoded in the "Rn" field.
   ok(
@@ -20083,10 +20118,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UBFIZ_UBFM_64M_bitfield
@@ -20103,10 +20138,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the destination bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UBFM_32M_bitfield
@@ -20128,7 +20163,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "32-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 31, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UBFM_64M_bitfield
@@ -20150,7 +20185,7 @@
     mult = 1; signed = `Unsigned; asmdefault = None})
   
   For the "64-bit" variant: is the leftmost bit number to be moved from the source, in the range 0 to 63, encoded in the "imms" field.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UBFX_UBFM_32M_bitfield
@@ -20167,10 +20202,10 @@
     asmdefault = None})
   
   For the "32-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 31.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "32-bit" variant: is the width of the bitfield, in the range 1 to 32-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UBFX_UBFM_64M_bitfield
@@ -20187,10 +20222,10 @@
     asmdefault = None})
   
   For the "64-bit" variant: is the bit number of the lsb of the source bitfield, in the range 0 to 63.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   For the "64-bit" variant: is the width of the bitfield, in the range 1 to 64-<lsb>.
-  error("not a gpreg", "not an imm", "has no assocs")
+  error("not a gpreg", "not an imm", "has no assocs", "not a second gpreg")
   
   
   UDF_only_perm_undef
