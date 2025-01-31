@@ -94,7 +94,7 @@ let in_the_range (fld: AsmField.t): (int * int, string) result =
 
 
 let defaulting_to (fld: AsmField.t): (string option, string) result =
-  let re = Re.Perl.compile_pat {|default(?:ing|s) to ([^ ,.]+(?: #\d+)?)|} in
+  let re = Re.Perl.compile_pat {|[Dd]efault(?:ing|s) to ([^ ,.]+(?: #\d+)?)|} in
   let matches = Re.all re fld.hover in
   match matches with
   | [] -> assert (not (CCString.mem ~sub:"default" fld.hover)); Ok None
@@ -264,7 +264,7 @@ let make_post_replacement ~(asmfld:string) ~(old:value) ~(repl:value) (x: field_
 
 module FieldData = struct
   type t =
-    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result; checks: intrinsic list}
+    | Gpreg of {asmfld: string; bitfld: string; wd: int; allones: string option; regwd: (int, string) result; prefix: (string, string) result; checks: intrinsic list; asmdefault: string option}
     | Imm of {asmfld: string; bitfld: string; lo: int; hi: int; mult: int; signed: signedness; asmdefault: string option}
     | Assocs of {asmfld: string; asmdefault: string option}
     [@@deriving show]
@@ -294,10 +294,9 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
   let prefix = Result.map register_char regwd in
 
 
-  let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix; checks} in
 
-  match prefix with
-  | Error _ -> Ok ([0, bidir], data)
+  let* bidir = (match prefix with
+  | Error _ -> Ok bidir
   | Ok prefix ->
       let fixup_xsp =
         (match prefix, allones with
@@ -307,7 +306,15 @@ let handle_general_registers (enc: InstEnc.t) (fld: AsmField.t): ('a * FieldData
       let bidir = bidir
         |> prefix_regnum_bidir ~prefix ~asmfld
         |> fixup_xsp in
-    Ok ([0, bidir], data)
+      Ok bidir) in
+
+  let* asmdefault = defaulting_to fld in
+  let bidir = make_with_default ~asmfld ~asmdefault bidir in
+
+  let data = FieldData.Gpreg {asmfld; bitfld; wd; allones; regwd; prefix; checks; asmdefault} in
+  Ok ([0, bidir], data)
+
+
 
 let handle_immediate (enc: InstEnc.t) (fld: AsmField.t): ('a, string) result =
   let isimm s = List.exists (fun sub -> CCString.mem ~sub s) [

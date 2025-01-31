@@ -786,6 +786,8 @@
   GMI_64G_dp_2src
   
   IRG_64I_dp_2src
+  Is the 64-bit name of the second general-purpose source register, encoded in the "Rm" field. Defaults to XZR if absent.
+  ok: Some "XZR"
   
   LD64B_64L_memop
   

@@ -26,7 +26,7 @@ let lens_of_expr: expr -> (state -> value) option * (value -> state -> state) =
         if not (equal_value_types x x') then
           invalid_arg @@ "type mismatch when assigning into literal of " ^ show_value x;
         if not (equal_value x x') then
-          failwith @@ "value mismatch when assigning into literal of " ^ show_value x;
+          failwith @@ "value mismatch when assigning " ^ show_value x' ^ " into literal of " ^ show_value x;
         st
       in Some (Fun.const x), do_match;
   }

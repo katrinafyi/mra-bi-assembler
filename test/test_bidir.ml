@@ -102,7 +102,7 @@ let%expect_test "lens" =
   ignore (set (VInt 555) m);
 
   catch (fun () -> ignore (set (VInt 22) m));
-  [%expect {| failure: value mismatch when assigning into literal of (Types.VInt 555) |}];
+  [%expect {| failure: value mismatch when assigning (Types.VInt 22) into literal of (Types.VInt 555) |}];
 
   catch (fun () -> ignore (set (VStr "s") m));
   [%expect {| invalid_arg: type mismatch when assigning into literal of (Types.VInt 555) |}]
@@ -121,7 +121,7 @@ let%expect_test "bidir basic" =
   [%expect {| { "out" -> (Types.VInt 200) } |}];
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Forwards ~intr:dummy_intr (st "in" (VInt 22)) one_pattern);
-  [%expect {| failure: value mismatch when assigning into literal of (Types.VInt 123) |}];
+  [%expect {| failure: value mismatch when assigning (Types.VInt 22) into literal of (Types.VInt 123) |}];
 
   catch (fun () -> ignore @@ run_bidir ~dir:`Backwards ~intr:dummy_intr (st "not the waanted value" (VInt 22)) one_pattern);
   [%expect {| invalid_arg: missing declared values at (Types.Decl [(Types.VarName "out")]). provided: ["not the waanted value"] |}];
